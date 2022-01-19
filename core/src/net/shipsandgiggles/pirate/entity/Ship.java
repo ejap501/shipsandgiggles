@@ -38,6 +38,7 @@ public class Ship implements Entity {
 		this.width = width;
 		this.height = height;
 	}
+
 	public void draw(Batch batch){
 		batch.draw(this.boatTexture, this.xPosition, this.yPosition, this.width, this.height);
 	}

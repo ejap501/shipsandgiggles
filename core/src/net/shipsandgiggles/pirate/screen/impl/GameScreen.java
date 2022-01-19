@@ -24,11 +24,12 @@ public class GameScreen implements Screen {
 	private Texture[] boats;
 
 	//implement world size?
-	private int _height = 256;
-	private int _width = 256;
+	private int _height = 1080;
+	private int _width = 1920;
 
 	//objects
 	private Ship playerShips;
+	private Ship enemyShips;
 
 
 
@@ -43,7 +44,8 @@ public class GameScreen implements Screen {
 
 		//objects setup
 		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
-		playerShips = new Ship(boats[random], 10, viewport.getWorldHeight()/ 2, viewport.getWorldWidth()/ 2, 50, 100);
+		playerShips = new Ship(boats[random], 10, _width / 2, _height/ 4, 50, 100);
+		enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 40, 90);
 	}
 
 
@@ -63,6 +65,7 @@ public class GameScreen implements Screen {
 		batch.begin();
 		//player
 		playerShips.draw(batch);
+		enemyShips.draw(batch);
 
 		batch.end();
 	}

@@ -34,14 +34,16 @@ public class GameScreen implements Screen {
 
 	public GameScreen(){
 		boats = new Texture[3];
-		boats[0] = new Texture(Gdx.files.internal("ship1.png"));
-		boats[1] = new Texture(Gdx.files.internal("ship2.png"));
-		boats[2] = new Texture(Gdx.files.internal("ship3.png"));
+		boats[0] = new Texture(Gdx.files.internal("models/ship1.png"));
+		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
+		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
 		camera = new OrthographicCamera();
 		viewport = new StretchViewport(_width, _height, camera);
+		batch = new SpriteBatch();
 
 		//objects setup
-		playerShips = new Ship(boats[1], 10, viewport.getWorldHeight()/ 2, viewport.getWorldWidth()/ 2, 10, 10);
+		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
+		playerShips = new Ship(boats[random], 10, viewport.getWorldHeight()/ 2, viewport.getWorldWidth()/ 2, 50, 100);
 	}
 
 
@@ -55,12 +57,14 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(.1f,.36f,.70f,1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+
+
+		batch.begin();
 		//player
 		playerShips.draw(batch);
 
-		//batch.begin();
-		//render here
-		//batch.end();
+		batch.end();
 	}
 
 	@Override

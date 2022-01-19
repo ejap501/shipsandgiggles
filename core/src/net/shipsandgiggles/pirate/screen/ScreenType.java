@@ -9,8 +9,8 @@ import net.shipsandgiggles.pirate.screen.impl.PreferenceScreen;
 public enum ScreenType {
 
 	LOADING(LoadingScreen.class),
-	PREFERENCE(PreferenceScreen.class),
-	GAME(GameScreen.class);
+	GAME(GameScreen.class),
+	PREFERENCE(PreferenceScreen.class);
 
 	private static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
 

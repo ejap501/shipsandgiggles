@@ -1,5 +1,8 @@
 package net.shipsandgiggles.pirate.entity;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.college.College;
 
 import java.io.File;
@@ -12,11 +15,31 @@ public class Ship implements Entity {
 
 	private double health;
 
-	protected Ship(File skin, College.Type type) {
-		this.skin = skin;
-		this.uniqueId = type.getId();
+	float movementSpeed; // m per s
+	Texture boatTexture;
+	float xPosition, yPosition;
+	int width, height;
 
+	//protected Ship(File skin, College.Type type) {
+	//	this.skin = skin;
+	//	this.uniqueId = type.getId();
+	//
+	//
+	//	}
+
+	public Ship(Texture texture, float speed, float xPosition, float yPosition, int width, int height){
+		this.uniqueId = UUID.randomUUID();
+		this.boatTexture = texture;
+		this.skin = null;
 		this.health = this.getMaximumHealth();
+		this.movementSpeed = speed;
+		this.xPosition = xPosition;
+		this.yPosition = yPosition;
+		this.width = width;
+		this.height = height;
+	}
+	public void draw(Batch batch){
+		batch.draw(this.boatTexture, this.xPosition, this.yPosition, this.width, this.height);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package net.shipsandgiggles.pirate.entity;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 import java.io.File;
 import java.util.UUID;
 

@@ -56,7 +56,7 @@ public class GameScreen implements Screen {
 
 		//objects setup
 		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
-		playerShips = new Ship(boats[random], 10, _width / 2, _height/ 2, 50, 100);
+		playerShips = new Ship(boats[random], 100, _width / 2, _height/ 2, 50, 100);
 		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
 	}
 
@@ -148,7 +148,7 @@ public class GameScreen implements Screen {
 
 	public void updateCamera(){
 		if(cameraState == 0){
-			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.01f);
+			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
 		}
 	}
 

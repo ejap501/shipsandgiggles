@@ -17,7 +17,7 @@ public class CameraManager {
     public static void lerpOn(Camera camera, Vector2 target, float lerpValue){
         Vector3 cameraPosition = camera.position;
         cameraPosition.x = cameraPosition.x + (target.x - cameraPosition.x) * lerpValue * PixelPerMeter;
-        cameraPosition.y = target.y + (target.y - cameraPosition.y) * lerpValue * PixelPerMeter;
+        cameraPosition.y = cameraPosition.y + (target.y - cameraPosition.y) * lerpValue * PixelPerMeter;
         camera.position.set(cameraPosition);
         camera.update();
     }

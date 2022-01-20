@@ -46,7 +46,7 @@ public class Ship implements Entity {
 		Body body;
 		BodyDef def = new BodyDef();
 		def.type = BodyDef.BodyType.DynamicBody;
-		def.position.set(1000,1000);
+		def.position.set(xPosition,yPosition);
 		def.fixedRotation = true;
 		body = GameScreen.world.createBody(def);
 		PolygonShape shape = new PolygonShape();

@@ -7,11 +7,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import net.shipsandgiggles.pirate.CameraManager;
+import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.Ship;
 import static net.shipsandgiggles.pirate.conf.Configuration.PixelPerMeter;
@@ -27,7 +31,8 @@ public class GameScreen implements Screen {
 	//graphics
 	private SpriteBatch batch; //batch of images "objects"
 	//private Texture background; changed to colour of "deep water"
-	private Body[] islands;
+	//private Body[] islands;
+	//private Texture[] islandsTextures;
 	private Texture[] boats;
 
 	//implement world
@@ -35,6 +40,8 @@ public class GameScreen implements Screen {
 	private Box2DDebugRenderer renderer;
 	private int _height = Gdx.graphics.getHeight();
 	private int _width = Gdx.graphics.getWidth();
+	private OrthoCachedTiledMapRenderer tmr;
+	private TiledMap map;
 
 	//objects
 	private Ship playerShips;
@@ -44,6 +51,10 @@ public class GameScreen implements Screen {
 
 	public GameScreen(){
 		//for (int x = 0; x < islands.length; x++) islands[x] = createBox(22, 34, true, new Vector2(29,39));
+		//islands = new Body[1];
+		//islandsTextures = new Texture[1];
+		//islandsTextures[0] = new Texture(Gdx.files.internal("models/island1.png"));
+
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0,0), false);
 		boats = new Texture[3];
@@ -57,8 +68,13 @@ public class GameScreen implements Screen {
 
 		//objects setup
 		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
-		playerShips = new Ship(boats[0], 100, _width / 2, _height/ 2,  boats[0].getWidth() ,  boats[0].getHeight());
+		playerShips = new Ship(boats[0], 100, _width / 2, _height/ 4,  boats[0].getWidth() ,  boats[0].getHeight());
+		//islands[0] = createBox(islandsTextures[0].getWidth(), islandsTextures[0].getHeight(), true , new Vector2(300,300));
 		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
+		map = new TmxMapLoader().load("models/map.tmx");
+		tmr = new OrthoCachedTiledMapRenderer(map);
+
+		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 	}
 
 
@@ -76,12 +92,17 @@ public class GameScreen implements Screen {
 
 		renderer.render(world, camera.combined.scl(PixelPerMeter));
 
+		tmr.render();
+
 		batch.begin();
 		//player
 		batch.draw(playerShips.getBoatTexture(), playerShips.getEntityBody().getPosition().x * PixelPerMeter - (playerShips.getBoatTexture().getWidth()/2), playerShips.getEntityBody().getPosition().y * PixelPerMeter - (playerShips.getBoatTexture().getHeight()/2));
+		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
 
 		batch.end();
+
+
 
 
 	}
@@ -90,6 +111,7 @@ public class GameScreen implements Screen {
 		world.step(1/ 60f, 6,2);
 		updateCamera();
 		inputUpdate(deltaTime);
+		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 	}
 
@@ -113,8 +135,14 @@ public class GameScreen implements Screen {
 			System.out.println("current ship position is x = " + playerShips.getEntityBody().getPosition().x + " and y = " + playerShips.getEntityBody().getPosition().y);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.C)){
-			if(cameraState == 0) cameraState++;
-			else cameraState--;
+			if(cameraState == 0) cameraState = 1;
+			else if(cameraState == 1) cameraState = 0;
+			else if(cameraState == -1) cameraState = 1;
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.X)){
+			if(cameraState == 0) cameraState = -1;
+			else if (cameraState == 1) cameraState = -1;
+			else if (cameraState == -1) cameraState = 0;
 		}
 
 		playerShips.getEntityBody().setLinearVelocity(new Vector2(xForce * playerShips.getMovementSpeed(),yForce * playerShips.getMovementSpeed()));
@@ -146,11 +174,17 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		renderer.dispose();
 		world.dispose();
+		tmr.dispose();
+		batch.dispose();
+		map.dispose();
 	}
 
 	public void updateCamera(){
 		if(cameraState == 0){
 			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
+		}
+		if(cameraState == -1){
+			CameraManager.lockOn(camera, playerShips.getEntityBody().getPosition());
 		}
 	}
 
@@ -163,9 +197,9 @@ public class GameScreen implements Screen {
 
 		def.position.set(position);
 		def.fixedRotation = true;
-		body = GameScreen.world.createBody(def);
+		body = world.createBody(def);
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width/6) / PixelPerMeter, (height/6)/ PixelPerMeter);
+		shape.setAsBox((width/2) / PixelPerMeter, (height/2)/ PixelPerMeter);
 		body.createFixture(shape, 1f);
 		shape.dispose();
 

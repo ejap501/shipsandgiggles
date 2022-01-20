@@ -23,7 +23,7 @@ public class Ship implements Entity {
 	float movementSpeed; // m per s
 	Texture boatTexture;
 	float xPosition, yPosition;
-	int width, height;
+	float width, height;
 	Body entityBody;
 
 	//protected Ship(File skin, College.Type type) {
@@ -33,7 +33,7 @@ public class Ship implements Entity {
 	//
 	//	}
 
-	public Ship(Texture texture, float speed, float xPosition, float yPosition, int width, int height){
+	public Ship(Texture texture, float speed, float xPosition, float yPosition, float width, float height){
 		this.uniqueId = UUID.randomUUID();
 		this.boatTexture = texture;
 		this.skin = null;
@@ -50,7 +50,7 @@ public class Ship implements Entity {
 		def.fixedRotation = true;
 		body = GameScreen.world.createBody(def);
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width/6) / Configuration.PixelPerMeter, (height/6)/ Configuration.PixelPerMeter);
+		shape.setAsBox((width/2) / Configuration.PixelPerMeter, (height/2)/ Configuration.PixelPerMeter);
 		body.createFixture(shape, 1f);
 		shape.dispose();
 		this.entityBody = body;
@@ -75,6 +75,10 @@ public class Ship implements Entity {
 	@Override
 	public void getLocation() {
 
+	}
+
+	public Texture getBoatTexture() {
+		return boatTexture;
 	}
 
 	@Override

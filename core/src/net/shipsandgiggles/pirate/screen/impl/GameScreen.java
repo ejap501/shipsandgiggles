@@ -21,6 +21,7 @@ public class GameScreen implements Screen {
 	//camera work
 	private OrthographicCamera camera;
 	int cameraState = 0;
+	private float Scale = 2;
 	//private Viewport viewport;
 
 	//graphics
@@ -50,13 +51,13 @@ public class GameScreen implements Screen {
 		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
 		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, _width/2, _height/2);
+		camera.setToOrtho(false, _width/Scale, _height/Scale);
 		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
 
 		//objects setup
 		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
-		playerShips = new Ship(boats[random], 100, _width / 2, _height/ 2, 50, 100);
+		playerShips = new Ship(boats[0], 100, _width / 2, _height/ 2,  boats[0].getWidth() ,  boats[0].getHeight());
 		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
 	}
 
@@ -75,12 +76,12 @@ public class GameScreen implements Screen {
 
 		renderer.render(world, camera.combined.scl(PixelPerMeter));
 
-		//batch.begin();
+		batch.begin();
 		//player
-		//playerShips.draw(batch);
+		batch.draw(playerShips.getBoatTexture(), playerShips.getEntityBody().getPosition().x * PixelPerMeter - (playerShips.getBoatTexture().getWidth()/2), playerShips.getEntityBody().getPosition().y * PixelPerMeter - (playerShips.getBoatTexture().getHeight()/2));
 		//enemyShips.draw(batch);
 
-		//batch.end();
+		batch.end();
 
 
 	}
@@ -89,6 +90,7 @@ public class GameScreen implements Screen {
 		world.step(1/ 60f, 6,2);
 		updateCamera();
 		inputUpdate(deltaTime);
+		batch.setProjectionMatrix(camera.combined);
 	}
 
 	public void inputUpdate(float deltaTime){

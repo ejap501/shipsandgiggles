@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
 
 		//objects setup
 		int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
-		playerShips = new Ship(boats[0], 100, _width / 2, _height/ 4,  boats[0].getWidth() ,  boats[0].getHeight());
+		playerShips = new Ship(boats[0], 40000, 6000, 0f, 2f, _width / 2, _height/ 4,  boats[0].getWidth() ,  boats[0].getHeight());
 		//islands[0] = createBox(islandsTextures[0].getWidth(), islandsTextures[0].getHeight(), true , new Vector2(300,300));
 		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
 		map = new TmxMapLoader().load("models/map.tmx");
@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
-		renderer.render(world, camera.combined.scl(PixelPerMeter));
+
 
 		tmr.render();
 
@@ -102,6 +102,7 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
+		renderer.render(world, camera.combined.scl(PixelPerMeter));
 
 
 
@@ -111,26 +112,36 @@ public class GameScreen implements Screen {
 		world.step(1/ 60f, 6,2);
 		updateCamera();
 		inputUpdate(deltaTime);
+		processInput();
+		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 	}
 
 	public void inputUpdate(float deltaTime){
-		int xForce = 0;
-		int yForce = 0;
+		//int xForce = 0;
+		//int yForce = 0;
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)){
-			xForce -= 1;
+			 playerShips.setTurnDirection(2);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) | Gdx.input.isKeyPressed(Input.Keys.D)){
-			xForce += 1;
+		else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) | Gdx.input.isKeyPressed(Input.Keys.D)){
+			playerShips.setTurnDirection(1);
 		}
+		else{
+			playerShips.setTurnDirection(0);
+		}
+
 		if(Gdx.input.isKeyPressed(Input.Keys.UP) | Gdx.input.isKeyPressed(Input.Keys.W)){
-			yForce += 1;
+			playerShips.setDriveDirection(1);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN) | Gdx.input.isKeyPressed(Input.Keys.S)){
-			yForce -=1;
+		else if(Gdx.input.isKeyPressed(Input.Keys.DOWN) | Gdx.input.isKeyPressed(Input.Keys.S)){
+			playerShips.setDriveDirection(2);
 		}
+		else{
+			playerShips.setDriveDirection(0);
+		}
+
 		if(Gdx.input.isKeyPressed(Input.Keys.P)){
 			System.out.println("current ship position is x = " + playerShips.getEntityBody().getPosition().x + " and y = " + playerShips.getEntityBody().getPosition().y);
 		}
@@ -145,7 +156,36 @@ public class GameScreen implements Screen {
 			else if (cameraState == -1) cameraState = 0;
 		}
 
-		playerShips.getEntityBody().setLinearVelocity(new Vector2(xForce * playerShips.getMovementSpeed(),yForce * playerShips.getMovementSpeed()));
+		//playerShips.getEntityBody().setLinearVelocity(new Vector2(xForce * playerShips.getMovementSpeed(),yForce * playerShips.getMovementSpeed()));
+	}
+
+	private void processInput() {
+		Vector2 baseVector = new Vector2(0,0);
+
+		if(playerShips.getTurnDirection() == 1){
+			playerShips.getEntityBody().setAngularVelocity(-playerShips.getTurnSpeed());
+		} else if(playerShips.getTurnDirection() == 2){
+			playerShips.getEntityBody().setAngularVelocity(playerShips.getTurnSpeed());
+		} else if(playerShips.getTurnDirection() == 0 && playerShips.getEntityBody().getAngularVelocity() != 0){
+			playerShips.getEntityBody().setAngularVelocity(0);
+		}
+
+		if(playerShips.getDriveDirection() == 1){
+			baseVector.set(0, playerShips.getMovementSpeed());
+		} else if(playerShips.getDriveDirection() == 2){
+			baseVector.set(0, -playerShips.getMovementSpeed());
+		}
+
+		if(!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < playerShips.getMaxSpeed())){
+			playerShips.getEntityBody().applyForceToCenter(playerShips.getEntityBody().getWorldVector(baseVector), true);
+		}
+	}
+
+	private void handleDirft(){
+		Vector2 forwardSpeed = playerShips.getForwardVelocity();
+		Vector2 lateralSpeed = playerShips.getLateralVelocity();
+
+		playerShips.getEntityBody().setLinearVelocity(forwardSpeed.x + lateralSpeed.x * playerShips.getDriftFactor(), forwardSpeed.y + lateralSpeed.y * playerShips.getDriftFactor());
 	}
 
 	@Override

@@ -25,6 +25,11 @@ public class Ship implements Entity {
 	float xPosition, yPosition;
 	float width, height;
 	Body entityBody;
+	float turnSpeed;
+	float maxSpeed;
+	float driftFactor;
+	float turnDirection;
+	float driveDirection;
 
 	//protected Ship(File skin, College.Type type) {
 	//	this.skin = skin;
@@ -33,12 +38,17 @@ public class Ship implements Entity {
 	//
 	//	}
 
-	public Ship(Texture texture, float speed, float xPosition, float yPosition, float width, float height){
+	public Ship(Texture texture, float speed, float maxSpeed, float driftFactor, float turnSpeed, float xPosition, float yPosition, float width, float height){
 		this.uniqueId = UUID.randomUUID();
 		this.boatTexture = texture;
 		this.skin = null;
 		this.health = this.getMaximumHealth();
 		this.movementSpeed = speed;
+		this.turnDirection = 0;
+		this.driveDirection = 0;
+		this.maxSpeed = maxSpeed;
+		this.driftFactor = driftFactor;
+		this.turnSpeed = turnSpeed;
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.width = width;
@@ -47,13 +57,49 @@ public class Ship implements Entity {
 		BodyDef def = new BodyDef();
 		def.type = BodyDef.BodyType.DynamicBody;
 		def.position.set(xPosition,yPosition);
-		def.fixedRotation = true;
+		def.fixedRotation = false;
 		body = GameScreen.world.createBody(def);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox((width/2) / Configuration.PixelPerMeter, (height/2)/ Configuration.PixelPerMeter);
 		body.createFixture(shape, 1f);
 		shape.dispose();
 		this.entityBody = body;
+	}
+
+	public float getTurnDirection(){
+		return this.turnDirection;
+	}
+	public float getTurnSpeed(){
+		return this.turnSpeed;
+	}
+	public float getMaxSpeed(){
+		return this.maxSpeed;
+	}
+	public float getDriveDirection(){
+		return this.driveDirection;
+	}
+	public float getWidth(){
+		return this.width;
+	}
+	public float getHeight(){
+		return this.height;
+	}
+	public float getyPosition(){
+		return this.yPosition;
+	}
+	public float getxPosition(){
+		return this.xPosition;
+	}
+	public float getDriftFactor(){
+		return this.driftFactor;
+	}
+
+	public void setTurnDirection(float turnDirection) {
+		this.turnDirection = turnDirection;
+	}
+
+	public void setDriveDirection(float driveDirection) {
+		this.driveDirection = driveDirection;
 	}
 
 	public float getMovementSpeed(){return this.movementSpeed;}
@@ -114,4 +160,20 @@ public class Ship implements Entity {
 	}
 
 	public Body getEntityBody(){return this.entityBody;}
+
+	public Vector2 getForwardVelocity(){
+		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(0,1));
+		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		return multiply(dotProduct, currentNormal);
+	}
+
+	public Vector2 multiply(float a, Vector2 v){
+		return new Vector2(a*v.x, a * v.y);
+	}
+
+	public Vector2 getLateralVelocity() {
+		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(1,0));
+		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		return multiply(dotProduct, currentNormal);
+	}
 }

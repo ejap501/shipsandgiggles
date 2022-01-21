@@ -5,12 +5,11 @@ import com.badlogic.gdx.Preferences;
 
 public class GamePreferences {
 
-	private static GamePreferences INSTANCE;
-
 	private static final String PREF_NAME = "ShipsAndGiggles";
 	private static final String PREF_MUSIC_ENABLED = "music.enabled";
 	private static final String PREF_VOLUME_ENABLED = "volume.enabled";
 	private static final String PREF_VOLUME_LEVEL = "volume.level";
+	private static GamePreferences INSTANCE;
 
 	private GamePreferences() {
 		if (INSTANCE != null) {

@@ -1,8 +1,8 @@
 package net.shipsandgiggles.pirate.entity;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
-import java.io.File;
 import java.util.UUID;
 
 // TODO: Implement with actual engine (mainly return types).
@@ -10,59 +10,109 @@ import java.util.UUID;
 /**
  * Base class of all entities in the game.
  */
-public interface Entity {
+public abstract class Entity {
+
+	private final UUID uuid;
+	private final Texture texture;
+	private final Location location;
+	private final EntityType entityType;
+	private final float maximumHealth;
+	private final float height;
+	private final float width;
+
+	private float health;
+
+
+	public Entity(UUID uuid, Texture texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
+		this.uuid = uuid;
+		this.texture = texture;
+		this.location = location;
+		this.entityType = entityType;
+		this.maximumHealth = maximumHealth;
+		this.height = height;
+		this.width = width;
+
+		this.health = maximumHealth;
+	}
 
 	/**
 	 * The randomly generated {@link UUID} representing the entity.
 	 *
 	 * @return Current UUID.
 	 */
-	UUID getUniqueId();
+	public UUID getUniqueId() {
+		return this.uuid;
+	}
 
 	/**
 	 * The skin that should be displayed to the user for this entity.
 	 *
 	 * @return Skin to be displayed.
 	 */
-	File getSkin();
+	public Texture getSkin() {
+		return this.texture;
+	}
 
 	/**
 	 * Current location of the entity.
 	 *
 	 * @return X
 	 */
-	void getLocation();
+	public Location getLocation() {
+		return this.location;
+	}
 
 	/**
 	 * @return EntityType representing (e.g. Ship, College)
 	 */
-	EntityType getEntityType();
+	public EntityType getEntityType() {
+		return this.entityType;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public float getWidth() {
+		return width;
+	}
 
 	/**
 	 * Current health of the entity, where <= 0 represents a dead entity.
 	 *
 	 * @return Current Health.
 	 */
-	double getHealth();
+	public double getHealth() {
+		return this.health;
+	}
 
 	/**
 	 * Maximum health of the entity when it spawns. If this is infinite, it will be -1.
 	 *
 	 * @return Defined maximum health.
 	 */
-	double getMaximumHealth();
-
-	/**
-	 * Speed of the entity when it is moving. If it is static, it will be -1.
-	 *
-	 * @return Current Speed.
-	 */
-	double getSpeed();
+	public double getMaximumHealth() {
+		return this.maximumHealth;
+	}
 
 	/**
 	 * @param damage Damage you wish the entity to take.
 	 * @return Current health after damage (i.e. {@link #getHealth() - damage}
 	 */
-	double damage(double damage);
+	public float damage(float damage) {
+		if ((this.health = (this.health - damage)) <= 0f) {
+			this.death();
+			return 0f;
+		}
+
+		return this.health;
+	}
+
+	/**
+	 * Draw the entity onto the batch.
+	 */
+	public abstract void draw(Batch batch);
+
+	public abstract void death();
 
 }

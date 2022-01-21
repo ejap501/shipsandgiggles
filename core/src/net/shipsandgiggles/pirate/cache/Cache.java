@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 public class Cache<K, V> {
 
-	private final Map<K, V>    cache;
+	private final Map<K, V> cache;
 	private final Predicate<V> argumentCheck;
 
 	public Cache(Predicate<V> argumentCheck) {

@@ -1,68 +1,23 @@
 package net.shipsandgiggles.pirate.entity.college;
 
+import com.badlogic.gdx.graphics.Texture;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
+import net.shipsandgiggles.pirate.entity.Location;
 
-import java.io.File;
 import java.util.UUID;
 
 /**
  * College data that allows us to perform animations / fights more easily.
  */
-public abstract class College implements Entity {
+public abstract class College extends Entity {
 
-	private final UUID uniqueId;
-	private final File skin;
-	private final Type type;
+	private final College.Type type;
 
-	private double health;
+	public College(UUID uuid, College.Type type, Texture texture, Location location, float maximumHealth, float height, float width) {
+		super(uuid, texture, location, EntityType.COLLEGE, maximumHealth, height, width);
 
-	protected College(File skin, Type type) {
-		this.skin = skin;
-		this.uniqueId = type.getId();
 		this.type = type;
-
-		this.health = this.getMaximumHealth();
-	}
-
-	@Override
-	public double getMaximumHealth() {
-		return 20;
-	}
-
-	@Override
-	public UUID getUniqueId() {
-		return this.uniqueId;
-	}
-
-	@Override
-	public File getSkin() {
-		return this.skin;
-	}
-
-	@Override
-	public void getLocation() {
-
-	}
-
-	@Override
-	public EntityType getEntityType() {
-		return EntityType.COLLEGE;
-	}
-
-	@Override
-	public double getHealth() {
-		return 20;
-	}
-
-	@Override
-	public double damage(double damage) {
-		return (this.health = this.health - damage);
-	}
-
-	@Override
-	public double getSpeed() {
-		return -1;
 	}
 
 	public Type getType() {
@@ -70,6 +25,7 @@ public abstract class College implements Entity {
 	}
 
 	public abstract boolean perform();
+
 
 	/**
 	 * Types of college - allows us to keep track.

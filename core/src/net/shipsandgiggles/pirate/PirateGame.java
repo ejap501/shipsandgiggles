@@ -8,6 +8,10 @@ public class PirateGame extends Game {
 
 	private static PirateGame INSTANCE;
 
+	public static PirateGame get() {
+		return INSTANCE;
+	}
+
 	@Override
 	public void create() {
 		INSTANCE = this;
@@ -25,9 +29,5 @@ public class PirateGame extends Game {
 	public void changeScreen(ScreenType screenType) {
 		Screen screen = screenType.create();
 		this.setScreen(screen);
-	}
-
-	public static PirateGame get() {
-		return INSTANCE;
 	}
 }

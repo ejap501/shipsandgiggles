@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
 	float recordedSpeed = 0;
 	int cameraState = 0;
 
-	EntityAi enemy, player;
+	EntityAi bob, player;
 	//private Ship enemyShips;
 
 
@@ -86,16 +86,16 @@ public class GameScreen implements Screen {
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 
 		Body body = createBox(20, 50, false, new Vector2(_width / 3f, _height / 6f));
-		enemy = new EntityAi(body, 3f);
+		bob = new EntityAi(body, 3f);
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
 
 
-		Arrive<Vector2> arrives = new Arrive<Vector2>(enemy, player)
+		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, player)
 				.setTimeToTarget(0.01f)
 				.setArrivalTolerance(2f)
 				.setDecelerationRadius(10);
-		enemy.setBehavior(arrives);
+		bob.setBehavior(arrives);
 	}
 
 
@@ -132,7 +132,7 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
-		enemy.update(deltaTime);
+		bob.update(deltaTime);
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -158,21 +158,27 @@ public class GameScreen implements Screen {
 			playerShips.setDriveDirection(0);
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println("current ship position is x = " + playerShips.getEntityBody().getPosition().x + " and y = " + playerShips.getEntityBody().getPosition().y);
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.C)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
 			else if (cameraState == 1) cameraState = 0;
 			else if (cameraState == -1) cameraState = 1;
 		}
-		if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
 			if (cameraState == 0) cameraState = -1;
 			else if (cameraState == 1) cameraState = -1;
 			else if (cameraState == -1) cameraState = 0;
 		}
 
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+			if(cameraState == 5){
+				cameraState = 0;
+			}
+			else{
+				cameraState = 5;
+			}
 
 		}
 
@@ -181,7 +187,7 @@ public class GameScreen implements Screen {
 
 	private void processInput() {
 		Vector2 baseVector = new Vector2(0, 0);
-		System.out.println(enemy.getBody().getLinearVelocity().len());
+		System.out.println(bob.getBody().getLinearVelocity().len());
 
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
@@ -266,6 +272,9 @@ public class GameScreen implements Screen {
 		}
 		if (cameraState == -1) {
 			CameraManager.lockOn(camera, playerShips.getEntityBody().getPosition());
+		}
+		if (cameraState == 5) {
+			CameraManager.lerpOn(camera, bob.getBody().getPosition(), 0.1f);
 		}
 	}
 

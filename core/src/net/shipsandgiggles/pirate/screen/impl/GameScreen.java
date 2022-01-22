@@ -3,6 +3,7 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
 
@@ -21,10 +23,8 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 
 // To Do:
-// 1- apply drifting to the moving boats (completing movement) and add a breaking function
 // 2- implement Ai?
 // 3- create proper map and ship models
-// add friction
 // fix batches
 
 public class GameScreen implements Screen {
@@ -50,7 +50,9 @@ public class GameScreen implements Screen {
 	private final TiledMap map;
 	float recordedSpeed = 0;
 	int cameraState = 0;
-	private Ship enemyShips;
+
+	EntityAi enemy, player;
+	//private Ship enemyShips;
 
 
 	public GameScreen() {
@@ -82,6 +84,18 @@ public class GameScreen implements Screen {
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
 		playerShips.getEntityBody().setLinearDamping(0.5f);
+
+		Body body = createBox(20, 50, false, new Vector2(_width / 3f, _height / 6f));
+		enemy = new EntityAi(body, 3f);
+
+		player = new EntityAi(playerShips.getEntityBody(), 3);
+
+
+		Arrive<Vector2> arrives = new Arrive<Vector2>(enemy, player)
+				.setTimeToTarget(0.01f)
+				.setArrivalTolerance(2f)
+				.setDecelerationRadius(10);
+		enemy.setBehavior(arrives);
 	}
 
 
@@ -118,6 +132,7 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
+		enemy.update(deltaTime);
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -166,7 +181,7 @@ public class GameScreen implements Screen {
 
 	private void processInput() {
 		Vector2 baseVector = new Vector2(0, 0);
-		System.out.println(playerShips.getEntityBody().getLinearVelocity().len());
+		System.out.println(enemy.getBody().getLinearVelocity().len());
 
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {

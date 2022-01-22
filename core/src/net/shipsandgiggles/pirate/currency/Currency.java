@@ -9,6 +9,14 @@ public class Currency {
 
 	private final Map<Type, Integer> currencyValues;
 
+	private Currency() {
+		if (INSTANCE != null) {
+			throw new IllegalStateException("Cannot initialise duplicate Singleton Class (Currency!)");
+		}
+
+		this.currencyValues = new ConcurrentHashMap<>();
+	}
+
 	/**
 	 * Singleton class.
 	 *
@@ -22,17 +30,8 @@ public class Currency {
 		return INSTANCE;
 	}
 
-	private Currency() {
-		if (INSTANCE != null) {
-			throw new IllegalStateException("Cannot initialise duplicate Singleton Class (Currency!)");
-		}
-
-		this.currencyValues = new ConcurrentHashMap<>();
-	}
-
 	/**
 	 * @param type Currency Type you wish to receive.
-	 *
 	 * @return Current balance of that currency.
 	 */
 	public int balance(Type type) {
@@ -40,9 +39,8 @@ public class Currency {
 	}
 
 	/**
-	 * @param type Type of currency you wish to give.
+	 * @param type   Type of currency you wish to give.
 	 * @param amount Amount you wish to give the player.
-	 *
 	 * @return New updated balance.
 	 */
 	public int give(Type type, int amount) {
@@ -56,10 +54,9 @@ public class Currency {
 	}
 
 	/**
-	 * @param type Type of currency you wish to take.
-	 * @param amount Amount you wish to take.
+	 * @param type      Type of currency you wish to take.
+	 * @param amount    Amount you wish to take.
 	 * @param onSuccess Action to perform if they can afford it.
-	 *
 	 * @return Whether they can afford the action.
 	 */
 	public boolean take(Type type, int amount, Runnable onSuccess) {

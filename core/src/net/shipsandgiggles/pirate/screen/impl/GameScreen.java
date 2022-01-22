@@ -36,8 +36,6 @@ public class GameScreen implements Screen {
 	//private Viewport viewport;
 	//objects
 	private final Ship playerShips;
-	float recordedSpeed = 0;
-	int cameraState = 0;
 	//camera work
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -50,6 +48,8 @@ public class GameScreen implements Screen {
 	private final Box2DDebugRenderer renderer;
 	private final OrthoCachedTiledMapRenderer tmr;
 	private final TiledMap map;
+	float recordedSpeed = 0;
+	int cameraState = 0;
 	private Ship enemyShips;
 
 
@@ -124,7 +124,7 @@ public class GameScreen implements Screen {
 		//int xForce = 0;
 		//int yForce = 0;
 
-		if(playerShips.getEntityBody().getLinearVelocity().len() > 20f){
+		if (playerShips.getEntityBody().getLinearVelocity().len() > 20f) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)) {
 				playerShips.setTurnDirection(2);
 			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) | Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -139,7 +139,7 @@ public class GameScreen implements Screen {
 			playerShips.setDriveDirection(1);
 		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) | Gdx.input.isKeyPressed(Input.Keys.S)) {
 			playerShips.setDriveDirection(2);
-		}  else {
+		} else {
 			playerShips.setDriveDirection(0);
 		}
 
@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
 			else if (cameraState == -1) cameraState = 0;
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 
 		}
 
@@ -169,16 +169,13 @@ public class GameScreen implements Screen {
 		System.out.println(playerShips.getEntityBody().getLinearVelocity().len());
 
 		float turnPercentage = 0;
-		if(playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)){
+		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
 			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (playerShips.getMaximumSpeed());
-		}
-		else{
+		} else {
 			turnPercentage = 1;
 		}
 
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
-
-
 
 
 		if (playerShips.getTurnDirection() == 1) {
@@ -192,19 +189,17 @@ public class GameScreen implements Screen {
 		if (playerShips.getDriveDirection() == 1) {
 			baseVector.set(0, playerShips.getSpeed());
 		} else if (playerShips.getDriveDirection() == 2) {
-			baseVector.set(0, -playerShips.getSpeed()*4/5);
+			baseVector.set(0, -playerShips.getSpeed() * 4 / 5);
 		}
-		if(playerShips.getEntityBody().getLinearVelocity().len() > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+		if (playerShips.getEntityBody().getLinearVelocity().len() > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 			playerShips.getEntityBody().setLinearDamping(1.75f);
-		}
-		else{
+		} else {
 			playerShips.getEntityBody().setLinearDamping(0.5f);
 		}
 		//recordedSpeed = playerShips.getEntityBody().getLinearVelocity().len();
-		if(playerShips.getEntityBody().getLinearVelocity().len() > playerShips.getMaximumSpeed()/3f){
+		if (playerShips.getEntityBody().getLinearVelocity().len() > playerShips.getMaximumSpeed() / 3f) {
 			playerShips.setSpeed(playerShips.getOriginalSpeed() * 2);
-		}
-		else{
+		} else {
 			playerShips.setSpeed(playerShips.getOriginalSpeed());
 		}
 		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < playerShips.getMaximumSpeed())) {

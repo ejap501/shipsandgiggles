@@ -1,6 +1,6 @@
 package net.shipsandgiggles.pirate.entity.college;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -14,7 +14,7 @@ public abstract class College extends Entity {
 
 	private final College.Type type;
 
-	public College(UUID uuid, College.Type type, Texture texture, Location location, float maximumHealth, float height, float width) {
+	public College(UUID uuid, College.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
 		super(uuid, texture, location, EntityType.COLLEGE, maximumHealth, height, width);
 
 		this.type = type;

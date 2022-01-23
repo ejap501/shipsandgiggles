@@ -2,6 +2,7 @@ package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -19,14 +20,16 @@ public class Ship extends MovableEntity {
 
 	private float turnDirection;
 	private float driveDirection;
+	private Sprite texture;
 
-	public Ship(Texture texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width) {
+	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
 
 		this.turnDirection = 0;
 		this.driveDirection = 0;
 		this.driftFactor = driftFactor;
 		this.turnSpeed = turnSpeed;
+		this.texture = texture;
 
 		// Creation of Body
 		BodyDef bodyDef = new BodyDef();
@@ -60,6 +63,10 @@ public class Ship extends MovableEntity {
 		return position;
 	}
 
+	public Sprite getSprite(){
+		return this.texture;
+	}
+
 	public Body getEntityBody() {
 		return this.entityBody;
 	}
@@ -80,6 +87,10 @@ public class Ship extends MovableEntity {
 		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
 
 		return multiply(dotProduct, currentNormal);
+	}
+
+	public void setTexture(Sprite texture){
+		this.texture = texture;
 	}
 
 	public float getTurnDirection() {

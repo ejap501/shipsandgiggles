@@ -1,6 +1,6 @@
 package net.shipsandgiggles.pirate.entity;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ public abstract class MovableEntity extends Entity {
 	private final float originalSpeed;
 	private float speed;
 
-	public MovableEntity(UUID uuid, Texture texture, Location location, EntityType entityType, float maximumHealth, float spawnSpeed, float maximumSpeed, float height, float width) {
+	public MovableEntity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float spawnSpeed, float maximumSpeed, float height, float width) {
 		super(uuid, texture, location, entityType, maximumHealth, height, width);
 
 		this.maximumSpeed = maximumSpeed;

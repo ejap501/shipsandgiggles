@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -23,9 +24,9 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 
 // To Do:
-// 2- implement Ai?
+// 2- upgrade Ai?
 // 3- create proper map and ship models
-// fix batches
+
 
 public class GameScreen implements Screen {
 
@@ -41,6 +42,8 @@ public class GameScreen implements Screen {
 	private final float Scale = 2;
 	//graphics
 	private final SpriteBatch batch; //batch of images "objects"
+	public Sprite playerModel;
+	public float magicNumber = 57.297f;
 	//private Texture background; changed to colour of "deep water"
 	//private Body[] islands;
 	//private Texture[] islandsTextures;
@@ -72,14 +75,25 @@ public class GameScreen implements Screen {
 		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
 
+
+
 		//objects setup
+
 		//int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
 
-		playerShips = new Ship(boats[0], 40000f, 120f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), boats[0].getHeight(), boats[0].getWidth());
+		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
+
+		playerShips = new Ship(playerModel, 40000f, 120f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
+
+
+		playerShips.setTexture(playerModel);
+
 		//islands[0] = createBox(islandsTextures[0].getWidth(), islandsTextures[0].getHeight(), true , new Vector2(300,300));
 		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
 		map = new TmxMapLoader().load("models/map.tmx");
 		tmr = new OrthoCachedTiledMapRenderer(map);
+
+
 
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
@@ -113,13 +127,19 @@ public class GameScreen implements Screen {
 
 		tmr.render();
 
-		//batch.begin();
+		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
+		playerShips.getSprite().setRotation(playerShips.getEntityBody().getAngle() * magicNumber);
+
+		batch.begin();
+
+		playerShips.getSprite().draw(batch);
+
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
 
-		//batch.end();
+		batch.end();
 
 		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 	}
@@ -187,7 +207,7 @@ public class GameScreen implements Screen {
 
 	private void processInput() {
 		Vector2 baseVector = new Vector2(0, 0);
-		System.out.println(bob.getBody().getLinearVelocity().len());
+		System.out.println(playerShips.getEntityBody().getAngle());
 
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {

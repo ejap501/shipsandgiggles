@@ -2,6 +2,7 @@ package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 public abstract class Entity {
 
 	private final UUID uuid;
-	private final Texture texture;
+	private final Sprite texture;
 	private final Location location;
 	private final EntityType entityType;
 	private final float maximumHealth;
@@ -23,7 +24,7 @@ public abstract class Entity {
 	private float health;
 
 
-	public Entity(UUID uuid, Texture texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
+	public Entity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
 		this.uuid = uuid;
 		this.texture = texture;
 		this.location = location;
@@ -49,7 +50,7 @@ public abstract class Entity {
 	 *
 	 * @return Skin to be displayed.
 	 */
-	public Texture getSkin() {
+	public Sprite getSkin() {
 		return this.texture;
 	}
 

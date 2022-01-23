@@ -43,7 +43,6 @@ public class GameScreen implements Screen {
 	//graphics
 	private final SpriteBatch batch; //batch of images "objects"
 	public Sprite playerModel;
-	public float magicNumber = 57.297f;
 	//private Texture background; changed to colour of "deep water"
 	//private Body[] islands;
 	//private Texture[] islandsTextures;
@@ -128,7 +127,7 @@ public class GameScreen implements Screen {
 		tmr.render();
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
-		playerShips.getSprite().setRotation(playerShips.getEntityBody().getAngle() * magicNumber);
+		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 		batch.begin();
 

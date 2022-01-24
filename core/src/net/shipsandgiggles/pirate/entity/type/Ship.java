@@ -1,6 +1,5 @@
-package net.shipsandgiggles.pirate.entity;
+package net.shipsandgiggles.pirate.entity.type;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -8,13 +7,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.EntityType;
+import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import java.util.UUID;
 
-public class Ship extends MovableEntity {
+public class Ship extends ControlledEntity {
 
-	private final Body entityBody;
 	private final float turnSpeed;
 	private final float driftFactor;
 
@@ -22,8 +22,8 @@ public class Ship extends MovableEntity {
 	private float driveDirection;
 	private Sprite texture;
 
-	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width) {
-		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
+	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float boundingBox, Type type) {
+		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, texture.getHeight(), texture.getWidth(), boundingBox); // TODO: Implement health.
 
 		this.turnDirection = 0;
 		this.driveDirection = 0;
@@ -37,16 +37,14 @@ public class Ship extends MovableEntity {
 		bodyDef.position.set(location.getX(), location.getY());
 		bodyDef.fixedRotation = false;
 
-		this.entityBody = GameScreen.world.createBody(bodyDef);
+		Body entityBody = GameScreen.world.createBody(bodyDef);
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);
-		this.entityBody.createFixture(shape, 1f);
+		shape.setAsBox((this.getWidth() / 2) / Configuration.PIXEL_PER_METER, (this.getHeight() / 2) / Configuration.PIXEL_PER_METER);
+		entityBody.createFixture(shape, 1f);
+		this.setBody(entityBody);
 		shape.dispose();
-	}
 
-	@Override
-	public void draw(Batch batch) {
-		batch.draw(super.getSkin(), super.getLocation().getX(), super.getLocation().getY(), super.getWidth(), super.getHeight());
+		this.init(type);
 	}
 
 	@Override
@@ -63,17 +61,13 @@ public class Ship extends MovableEntity {
 		return position;
 	}
 
-	public Sprite getSprite(){
+	public Sprite getSprite() {
 		return this.texture;
 	}
 
-	public Body getEntityBody() {
-		return this.entityBody;
-	}
-
 	public Vector2 getForwardVelocity() {
-		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(0, 1));
-		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		Vector2 currentNormal = this.getBody().getWorldVector(new Vector2(0, 1));
+		float dotProduct = currentNormal.dot(this.getBody().getLinearVelocity());
 
 		return multiply(dotProduct, currentNormal);
 	}
@@ -83,13 +77,13 @@ public class Ship extends MovableEntity {
 	}
 
 	public Vector2 getLateralVelocity() {
-		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(1, 0));
-		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		Vector2 currentNormal = this.getBody().getWorldVector(new Vector2(1, 0));
+		float dotProduct = currentNormal.dot(this.getBody().getLinearVelocity());
 
 		return multiply(dotProduct, currentNormal);
 	}
 
-	public void setTexture(Sprite texture){
+	public void setTexture(Sprite texture) {
 		this.texture = texture;
 	}
 

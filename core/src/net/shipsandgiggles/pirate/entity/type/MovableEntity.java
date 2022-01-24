@@ -1,6 +1,9 @@
-package net.shipsandgiggles.pirate.entity;
+package net.shipsandgiggles.pirate.entity.type;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import net.shipsandgiggles.pirate.entity.Entity;
+import net.shipsandgiggles.pirate.entity.EntityType;
+import net.shipsandgiggles.pirate.entity.Location;
 
 import java.util.UUID;
 

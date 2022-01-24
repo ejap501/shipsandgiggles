@@ -3,6 +3,7 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -98,13 +99,17 @@ public class GameScreen implements Screen {
 
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 
-		Body body = createBox(20, 50, false, new Vector2(_width / 3f, _height / 6f));
-		bob = new EntityAi(body, 3f);
+		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
+
+		Body body = createBox((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
+		bob = new EntityAi(body, 300f, bobsSprite);
+		bob.setTarget(playerShips.getEntityBody());
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
+		Steerable<Vector2> pp = player;
 
 
-		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, player)
+		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
 				.setTimeToTarget(0.01f)
 				.setArrivalTolerance(2f)
 				.setDecelerationRadius(10);
@@ -141,6 +146,7 @@ public class GameScreen implements Screen {
 		batch.end();
 
 		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		bob.update(deltaTime, batch);
 	}
 
 	public void update(float deltaTime) {
@@ -151,7 +157,6 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
-		bob.update(deltaTime);
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -206,7 +211,7 @@ public class GameScreen implements Screen {
 
 	private void processInput() {
 		Vector2 baseVector = new Vector2(0, 0);
-		System.out.println(playerShips.getEntityBody().getAngle());
+		//System.out.println(playerShips.getEntityBody().getAngle());
 
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
@@ -298,6 +303,7 @@ public class GameScreen implements Screen {
 	}
 
 	public Body createBox(int width, int height, boolean isStatic, Vector2 position) {
+		System.out.println("kk");
 		Body body;
 		BodyDef def = new BodyDef();
 

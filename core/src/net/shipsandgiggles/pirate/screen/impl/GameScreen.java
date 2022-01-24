@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
 
 		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
 				.setTimeToTarget(0.01f)
-				.setArrivalTolerance(200f)
+				.setArrivalTolerance(175f)
 				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
 	}
@@ -311,6 +311,7 @@ public class GameScreen implements Screen {
 		else def.type = BodyDef.BodyType.DynamicBody;
 
 		def.position.set(position);
+
 		def.fixedRotation = true;
 		body = world.createBody(def);
 		PolygonShape shape = new PolygonShape();

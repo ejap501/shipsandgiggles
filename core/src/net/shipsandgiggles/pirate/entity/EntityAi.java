@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.MassData;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -48,8 +49,10 @@ public class EntityAi implements Steerable<Vector2> {
 
         this.tagged = false;
         this.body.setFixedRotation(false);
-
-
+        MassData MassData = new MassData();
+        MassData.mass= 6000f;
+        MassData.center.set(this.getPosition().x/2, this.getPosition().y/2);
+        this.body.setMassData(MassData);
 
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.body.setUserData(this);
@@ -134,8 +137,15 @@ public class EntityAi implements Steerable<Vector2> {
             // If we haven't got any velocity, then we can do nothing.
             Vector2 linVel = this.getLinearVelocity();
             if (steeringOutput.linear.len() > 25f) {
+                if(Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) > 175 || Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) < -175){
+                    System.out.println("yeye  " + Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)));
+                    this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x));
+                }
+                else{
+
+
                 float newOrientation = vectorToAngle(linVel);
-                System.out.println();
+                //System.out.println();
                 //body.setAngularVelocity((newOrientation - getAngularVelocity()) * turnMultiplier * deltaTime); // this is superfluous if independentFacing is always true
                 //body.setTransform(body.getPosition(), newOrientation)
                 //System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
@@ -145,6 +155,7 @@ public class EntityAi implements Steerable<Vector2> {
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
 
                 //System.out.println(newOrientation +""+ getAngularVelocity());
+            }
             }
         }
 

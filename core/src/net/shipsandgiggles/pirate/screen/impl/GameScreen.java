@@ -111,8 +111,8 @@ public class GameScreen implements Screen {
 
 		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
 				.setTimeToTarget(0.01f)
-				.setArrivalTolerance(2f)
-				.setDecelerationRadius(10);
+				.setArrivalTolerance(200f)
+				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
 	}
 
@@ -145,7 +145,7 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
-		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
 	}
 

@@ -93,7 +93,7 @@ public class createNewBall {
                 this.angle = this.body.getAngle();
             }
             if(this.body.getAngle() != this.angle){
-                this.body.setTransform(1000,1000,0);
+                this.body.setTransform(10000,10000,0);
             }
 
             this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true);

@@ -17,9 +17,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
+import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.ballsManager;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -55,6 +57,8 @@ public class GameScreen implements Screen {
 	int cameraState = 0;
 
 	EntityAi bob, player;
+
+	Sprite cannonBall;
 	//private Ship enemyShips;
 
 
@@ -70,6 +74,9 @@ public class GameScreen implements Screen {
 		boats[0] = new Texture(Gdx.files.internal("models/ship1.png"));
 		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
 		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
+
+		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
 		//viewport = new StretchViewport(_width, _height, camera);
@@ -83,7 +90,7 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 
-		playerShips = new Ship(playerModel, 40000f, 120f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
+		playerShips = new Ship(playerModel, 40000f, 80f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
 
 
 		playerShips.setTexture(playerModel);
@@ -101,7 +108,7 @@ public class GameScreen implements Screen {
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
-		Body body = createBox((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
+		Body body = createEnemy((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
 		bob = new EntityAi(body, 300f, bobsSprite);
 		bob.setTarget(playerShips.getEntityBody());
 
@@ -145,7 +152,7 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
-		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
 	}
 
@@ -157,6 +164,7 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
+		ballsManager.updateBalls();
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -204,6 +212,10 @@ public class GameScreen implements Screen {
 				cameraState = 5;
 			}
 
+		}
+
+		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+			playerShips.shoot(world, cannonBall, camera, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
 		}
 
 
@@ -302,7 +314,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public Body createBox(int width, int height, boolean isStatic, Vector2 position) {
+	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {
 		System.out.println("kk");
 		Body body;
 		BodyDef def = new BodyDef();
@@ -316,7 +328,11 @@ public class GameScreen implements Screen {
 		body = world.createBody(def);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
-		body.createFixture(shape, 1f);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef. density = 1f;
+		fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+		body.createFixture(fixtureDef);
 		shape.dispose();
 
 		return body;

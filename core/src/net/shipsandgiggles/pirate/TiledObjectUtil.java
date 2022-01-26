@@ -21,7 +21,11 @@ public class TiledObjectUtil {
 			def.type = BodyDef.BodyType.StaticBody;
 
 			Body body = world.createBody(def);
-			body.createFixture(shape, 1);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = shape;
+			fixtureDef. density = 1f;
+			fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+			body.createFixture(fixtureDef);
 			shape.dispose();
 		}
 	}

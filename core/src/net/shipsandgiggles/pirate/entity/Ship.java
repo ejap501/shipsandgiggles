@@ -3,6 +3,7 @@ package net.shipsandgiggles.pirate.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -24,6 +25,17 @@ public class Ship extends MovableEntity {
 	private float driveDirection;
 	private Sprite texture;
 	createNewBall ball;
+
+	public boolean rapidShot = false;
+	public float timeBetweenRapidShots = 0.2f;
+	public float rapidShotCoolDown = 0.2f;
+	public int numberOfShotsLeft = 3;
+	public int shotsInRapidShot = 3;
+
+	public float shootingCoolDown = 0.3f;
+	public float burstCoolDown = 4f;
+	public float shootingTimer = 0f;
+	public float burstTimer = 0f;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
@@ -47,7 +59,7 @@ public class Ship extends MovableEntity {
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
-		this.entityBody.createFixture(fixtureDef);
+		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 	}
 
@@ -68,6 +80,61 @@ public class Ship extends MovableEntity {
 		ballsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex);
 	}
 
+	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
+		float angle = this.getEntityBody().getAngle();
+		System.out.println(Math.toDegrees(angle));
+		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
+		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		this.rapidShot = true;
+		this.numberOfShotsLeft = this.shotsInRapidShot;
+	}
+
+	public void rapidShot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
+		float angle = this.getEntityBody().getAngle();
+		if(this.rapidShot && this.timeBetweenRapidShots <= 0){
+			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) + 90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			this.timeBetweenRapidShots = this.rapidShotCoolDown;
+			this.numberOfShotsLeft--;
+		}
+		if(this.numberOfShotsLeft <= 0){
+			this.rapidShot = false;
+		}
+		if(this.timeBetweenRapidShots <= 0){
+			this.timeBetweenRapidShots = 0;
+		}
+		if(this.timeBetweenRapidShots >= 0){
+			this.timeBetweenRapidShots -= Gdx.graphics.getDeltaTime();
+		}
+
+	}
+	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
+		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
+
+		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
+			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+			this.shootingTimer = shootingCoolDown;
+		}
+
+		if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+			this.burstTimer = burstCoolDown;
+		}
+
+		if(burstTimer >= 0){
+			burstTimer -= Gdx.graphics.getDeltaTime();
+		}
+		else{
+			burstTimer = 0;
+		}
+		if(shootingTimer >= 0){
+			shootingTimer -= Gdx.graphics.getDeltaTime();
+		}
+		else {
+			shootingTimer = 0;
+		}
+
+	}
 
 
 
@@ -134,3 +201,4 @@ public class Ship extends MovableEntity {
 		return this.driftFactor;
 	}
 }
+

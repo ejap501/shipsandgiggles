@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.conf.worldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
@@ -81,6 +82,8 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
 		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
+
+		world.setContactListener(new worldContactListener());
 
 
 
@@ -152,8 +155,9 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
-		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
+		ballsManager.updateBalls(batch);
 	}
 
 	public void update(float deltaTime) {
@@ -164,7 +168,7 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
-		ballsManager.updateBalls();
+		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -214,9 +218,6 @@ public class GameScreen implements Screen {
 
 		}
 
-		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-			playerShips.shoot(world, cannonBall, camera, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
-		}
 
 
 	}
@@ -332,7 +333,7 @@ public class GameScreen implements Screen {
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
 		fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
-		body.createFixture(fixtureDef);
+		body.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 
 		return body;

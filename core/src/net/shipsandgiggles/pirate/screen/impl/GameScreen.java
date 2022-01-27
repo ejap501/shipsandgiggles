@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 
-		playerShips = new Ship(playerModel, 40000f, 80f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
+		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
 
 
 		playerShips.setTexture(playerModel);
@@ -140,9 +140,11 @@ public class GameScreen implements Screen {
 
 
 		tmr.render();
+		ballsManager.updateBalls(batch);
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
+		Vector2 pp = new Vector2(playerShips.getEntityBody().getWorldPoint(new Vector2(-playerShips.getWidth()/2,playerShips.getHeight()/2)));
 
 		batch.begin();
 
@@ -155,9 +157,8 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
-		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
-		ballsManager.updateBalls(batch);
 	}
 
 	public void update(float deltaTime) {
@@ -169,6 +170,7 @@ public class GameScreen implements Screen {
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -316,7 +318,6 @@ public class GameScreen implements Screen {
 	}
 
 	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {
-		System.out.println("kk");
 		Body body;
 		BodyDef def = new BodyDef();
 

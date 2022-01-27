@@ -137,11 +137,11 @@ public class EntityAi implements Steerable<Vector2> {
             // If we haven't got any velocity, then we can do nothing.
             Vector2 linVel = this.getLinearVelocity();
             if (steeringOutput.linear.len() > 25f) {
-                if(Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) > 175 || Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) < -175){
-                    System.out.println("yeye  " + Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)));
-                    this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x));
-                }
-                else{
+             //   if(Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) > 175 || Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) < -175){
+             //       System.out.println("yeye  " + Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)));
+             //       this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x));
+             //   }
+             //   else{
 
 
                 float newOrientation = vectorToAngle(linVel);
@@ -150,13 +150,13 @@ public class EntityAi implements Steerable<Vector2> {
                 //body.setTransform(body.getPosition(), newOrientation)
                 //System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
 
-               this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
-               // this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
+               //this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
+                this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
 
                 //System.out.println(newOrientation +""+ getAngularVelocity());
             }
-            }
+
         }
 
         if (anyAccelerations) {

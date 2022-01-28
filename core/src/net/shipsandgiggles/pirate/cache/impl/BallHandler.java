@@ -32,7 +32,6 @@ public class BallHandler {
 	}
 
 	public void createBall(World world, Vector2 position, Vector2 target, Sprite texture, short categoryBits, short maskBit, short groupIndex) {
-
 		CannonBall cannonBall = new CannonBall(texture, position, target, world, categoryBits, maskBit, groupIndex);
 		this.cache.cache(cannonBall.getUniqueId(), cannonBall);
 	}

@@ -37,7 +37,7 @@ public class LoadingScreen implements Screen {
 		newGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				PirateGame.get().changeScreen(ScreenType.GAME);
+				PirateGame.get().changeScreen(ScreenType.INFORMATION);
 			}
 		});
 

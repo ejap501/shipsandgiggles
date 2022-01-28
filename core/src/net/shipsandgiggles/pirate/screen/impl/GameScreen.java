@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
 	float recordedSpeed = 0;
 	int cameraState = 0;
 
-	private final Ship enemyShips;
+	private Ship enemyShips;
 
 
 	public GameScreen() {

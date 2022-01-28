@@ -23,8 +23,8 @@ public class TiledObjectUtil {
 			Body body = world.createBody(def);
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = shape;
-			fixtureDef. density = 1f;
-			fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+			fixtureDef.density = 1f;
+			fixtureDef.filter.categoryBits = Configuration.CAT_ENEMY;
 			body.createFixture(fixtureDef);
 			shape.dispose();
 		}

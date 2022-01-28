@@ -1,14 +1,15 @@
-package net.shipsandgiggles.pirate.conf;
+package net.shipsandgiggles.pirate.listener;
 
-import com.badlogic.gdx.physics.box2d.*;
-import net.shipsandgiggles.pirate.entity.createNewBall;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
-public class worldContactListener implements ContactListener {
-    @Override
-    public void beginContact(Contact contact) {
+public class ContactListener implements com.badlogic.gdx.physics.box2d.ContactListener {
+	@Override
+	public void beginContact(Contact contact) {
 //       Fixture fixtureA = contact.getFixtureA();
 //       Fixture fixtureB = contact.getFixtureB();
-       // System.out.println("pp");
+		// System.out.println("pp");
 //       if(fixtureA == null || fixtureB == null || fixtureB.getUserData() == null || fixtureA.getUserData() == null) return;
 //       System.out.println("oo");
 //       if(fixtureA.getUserData() instanceof createNewBall){
@@ -20,20 +21,20 @@ public class worldContactListener implements ContactListener {
 //           ball.hitsSth();
 //       }
 
-    }
+	}
 
-    @Override
-    public void endContact(Contact contact) {
+	@Override
+	public void endContact(Contact contact) {
 
-    }
+	}
 
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
 
-    }
+	}
 
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
 
-    }
+	}
 }

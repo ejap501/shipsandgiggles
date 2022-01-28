@@ -135,7 +135,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float deltaTime) { //yay c# less goooooo (i changed it to deltaTime cuz im used to it being that from c#)
 		update(Gdx.graphics.getDeltaTime());
-		Gdx.gl.glClearColor(.1f, .36f, .70f, 1f);
+		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
 
 		batch.end();
 
-		renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
+		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
 	}
 

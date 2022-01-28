@@ -32,7 +32,7 @@ public class PreferenceScreen implements Screen {
 
 		GamePreferences gamePreferences = GamePreferences.get();
 
-		Label preferencesLabel = new Label("Game Preferences", Configuration.SKIN, "big");
+		Label preferencesLabel = new Label("Game Preferences", Configuration.SKIN, "title");
 		preferencesLabel.setAlignment(Align.center);
 
 		// Music Volume Settings

@@ -14,7 +14,7 @@ public enum ScreenType {
 	GAME(GameScreen.class),
 	PREFERENCE(PreferenceScreen.class);
 
-	private static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
+	public static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
 
 	private final Class<? extends Screen> screen;
 

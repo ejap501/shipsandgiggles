@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
+import net.shipsandgiggles.pirate.PirateGame;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.cache.impl.BallHandler;
 import net.shipsandgiggles.pirate.conf.Configuration;
@@ -22,6 +23,7 @@ import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.type.ControlledEntity;
 import net.shipsandgiggles.pirate.entity.type.Ship;
 import net.shipsandgiggles.pirate.listener.ContactListener;
+import net.shipsandgiggles.pirate.screen.ScreenType;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -204,10 +206,13 @@ public class GameScreen implements Screen {
 			} else {
 				cameraState = 5;
 			}
-
 		}
 
-
+		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+			this.dispose(); // TODO: Make it... not crash.
+			ScreenType.SCREEN_CACHE.remove(ScreenType.GAME);
+			PirateGame.get().changeScreen(ScreenType.LOADING);
+		}
 	}
 
 	private void processInput() {

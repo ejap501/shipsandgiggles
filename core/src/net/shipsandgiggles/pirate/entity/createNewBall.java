@@ -97,6 +97,7 @@ public class createNewBall {
                 this.body.setTransform(10000,10000,0);
             }
 
+            this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true);
             Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight())));
             Vector2 position = this.body.getPosition();
             position.x = position.x + (direction.x - position.x) * speed * PIXEL_PER_METER;

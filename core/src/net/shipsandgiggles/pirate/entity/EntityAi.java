@@ -150,8 +150,9 @@ public class EntityAi implements Steerable<Vector2> {
                 //body.setTransform(body.getPosition(), newOrientation)
                 //System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
 
-               //this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
-                this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
+               this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
+                //this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
+               // this.getBody().setAngularVelocity(this.getAngleToTarget());
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
 
                 //System.out.println(newOrientation +""+ getAngularVelocity());

@@ -1,8 +1,10 @@
 package net.shipsandgiggles.pirate.conf;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 public class Configuration {
 
@@ -12,7 +14,7 @@ public class Configuration {
 	public static final short Cat_walls = 2;
 	public static final short Cat_Enemy = 4;
 	public static final short Cat_College = 8;
-
+	public static final World world = GameScreen.world;
 	public static final Label SPACER_LABEL = new Label(" ", Configuration.SKIN);
 
 }

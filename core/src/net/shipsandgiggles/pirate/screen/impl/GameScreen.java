@@ -23,6 +23,10 @@ import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.ballsManager;
+import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.GoodrickCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -33,6 +37,12 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 
 public class GameScreen implements Screen {
+
+	public LangwithCollege langwith;
+	public ConstantineCollege constantine;
+	public AlcuinCollege alcuin;
+	public GoodrickCollege goodrick;
+	public Sprite collegeSprite;
 
 	//implement world
 	public static World world;
@@ -75,6 +85,7 @@ public class GameScreen implements Screen {
 		boats[0] = new Texture(Gdx.files.internal("models/ship1.png"));
 		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
 		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
+		collegeSprite = new Sprite(new Texture("models/castle.png"));
 
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
@@ -124,6 +135,13 @@ public class GameScreen implements Screen {
 				.setArrivalTolerance(175f)
 				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
+
+		//set up college
+		langwith = new LangwithCollege(collegeSprite, new Location(150f,151f), 200f, world);
+		goodrick = new GoodrickCollege(collegeSprite, new Location(150f,975f), 200f, world);
+		alcuin = new AlcuinCollege(collegeSprite, new Location(1750f,151f), 200f, world);
+		constantine = new ConstantineCollege(collegeSprite, new Location(1750f,975f), 200f, world);
+
 	}
 
 
@@ -144,8 +162,6 @@ public class GameScreen implements Screen {
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
-		Vector2 pp = new Vector2(playerShips.getEntityBody().getWorldPoint(new Vector2(-playerShips.getWidth()/2,playerShips.getHeight()/2)));
-
 		batch.begin();
 
 		playerShips.getSprite().draw(batch);
@@ -156,6 +172,11 @@ public class GameScreen implements Screen {
 		//enemyShips.draw(batch);
 
 		batch.end();
+
+		langwith.draw(batch);
+		constantine.draw(batch);
+		goodrick.draw(batch);
+		alcuin.draw(batch);
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
@@ -197,7 +218,7 @@ public class GameScreen implements Screen {
 		}
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			System.out.println("current ship position is x = " + playerShips.getEntityBody().getPosition().x + " and y = " + playerShips.getEntityBody().getPosition().y);
+			System.out.println(camera.zoom);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
@@ -219,8 +240,12 @@ public class GameScreen implements Screen {
 			}
 
 		}
-
-
+		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
+			if(camera.zoom < 2)camera.zoom += 0.02f;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
+			if(camera.zoom > 1)camera.zoom -= 0.02f;
+		}
 
 	}
 
@@ -338,5 +363,9 @@ public class GameScreen implements Screen {
 		shape.dispose();
 
 		return body;
+	}
+
+	public static World getWorld(){
+		return world;
 	}
 }

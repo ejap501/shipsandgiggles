@@ -112,12 +112,12 @@ public class Ship extends MovableEntity {
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
-			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
-			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player,  (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 

@@ -12,7 +12,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 public class createNewBall {
 
-    public float timer = 5;
+    public float timer = 1.1f;
     public World world;
     public Body body;
     public boolean isDestroyed = false;
@@ -21,6 +21,7 @@ public class createNewBall {
     public float angle;
     public Sprite cannonBall;
     public float speed = 1.2f;
+    public float damageDelt = 50f;
 
     createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
         this.world = world;
@@ -42,9 +43,9 @@ public class createNewBall {
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
         fixtureDef.filter.categoryBits = categoryBits;
-        fixtureDef.filter.maskBits = (short) (maskBit | Configuration.Cat_walls);
+        fixtureDef.filter.maskBits = (short) (maskBit);
         fixtureDef.filter.groupIndex = groupIndex;
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
 
@@ -70,7 +71,7 @@ public class createNewBall {
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
         fixtureDef.filter.categoryBits = categoryBits;
-        fixtureDef.filter.maskBits = (short) (maskBit | Configuration.Cat_walls);
+        fixtureDef.filter.maskBits = (short) (maskBit);
         fixtureDef.filter.groupIndex = groupIndex;
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
@@ -93,7 +94,7 @@ public class createNewBall {
                 this.setAngle = true;
                 this.angle = this.body.getAngle();
             }
-            if(this.body.getAngle() != this.angle){
+            if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().x > 1920 | this.body.getPosition().y < 0 | this.body.getPosition().y > 1080){
                 this.body.setTransform(10000,10000,0);
             }
 
@@ -113,4 +114,7 @@ public class createNewBall {
             batch.end();
         }
 
+    public float getDamageDelt() {
+        return this.damageDelt;
+    }
 }

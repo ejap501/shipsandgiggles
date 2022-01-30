@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class LangwithCollege extends College {
 
-	public LangwithCollege(UUID uuid, Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
+	public LangwithCollege(Sprite texture, Location location, float maximumHealth, float height, float width) {
 		super(UUID.randomUUID(), Type.LANGWITH, texture, location, maximumHealth, height, width);
 	}
 

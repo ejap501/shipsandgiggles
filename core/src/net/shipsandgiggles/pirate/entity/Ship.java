@@ -137,6 +137,7 @@ public class Ship extends MovableEntity {
 
 	}
 	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
+		if(this.dead) return;
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
@@ -145,7 +146,7 @@ public class Ship extends MovableEntity {
 		}
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
-			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player,  (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 

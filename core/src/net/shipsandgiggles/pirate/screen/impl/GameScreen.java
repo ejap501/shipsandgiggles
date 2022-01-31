@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
+import net.shipsandgiggles.pirate.ExplosionController;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.conf.worldContactListener;
@@ -28,6 +29,8 @@ import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.GoodrickCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
+
+import java.util.ArrayList;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -44,6 +47,8 @@ public class GameScreen implements Screen {
 	public AlcuinCollege alcuin;
 	public GoodrickCollege goodrick;
 	public Sprite collegeSprite;
+
+	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
 
 	//implement world
 	public static World world;
@@ -191,8 +196,20 @@ public class GameScreen implements Screen {
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
+		updateExplosions();
 
+	}
 
+	private void updateExplosions() {
+		ArrayList<ExplosionController> removeExplosion = new ArrayList<ExplosionController>();
+		for(ExplosionController explosion : Explosions){
+			explosion.update();
+
+			explosion.draw(batch);
+			System.out.println("pp");
+			if(explosion.remove)removeExplosion.add(explosion);
+		}
+		Explosions.removeAll(removeExplosion);
 	}
 
 	public void update(float deltaTime) {
@@ -230,8 +247,9 @@ public class GameScreen implements Screen {
 			playerShips.setDriveDirection(0);
 		}
 
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			playerShips.takeDamage(200);
+			System.out.println(playerShips.getEntityBody().getPosition());
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
@@ -378,6 +396,7 @@ public class GameScreen implements Screen {
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
 		fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+
 		body.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 
@@ -387,5 +406,7 @@ public class GameScreen implements Screen {
 	public static World getWorld(){
 		return world;
 	}
-
+	public static void add(Vector2 pp){
+		Explosions.add(new ExplosionController(pp));
+	}
 }

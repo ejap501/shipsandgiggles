@@ -5,7 +5,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import net.shipsandgiggles.pirate.ExplosionController;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+
+import java.util.ArrayList;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -22,6 +26,7 @@ public class createNewBall {
     public Sprite cannonBall;
     public float speed = 1.2f;
     public float damageDelt = 50f;
+    public boolean teleported = false;
 
     createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
         this.world = world;
@@ -95,7 +100,7 @@ public class createNewBall {
                 this.angle = this.body.getAngle();
             }
             if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().x > 1920 | this.body.getPosition().y < 0 | this.body.getPosition().y > 1080){
-                this.body.setTransform(10000,10000,0);
+                teleportBall();
             }
 
             this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true);
@@ -116,5 +121,11 @@ public class createNewBall {
 
     public float getDamageDelt() {
         return this.damageDelt;
+    }
+
+    public void teleportBall(){
+        if(teleported) return;
+        this.body.setTransform(10000,10000,0);
+        this.teleported = true;
     }
 }

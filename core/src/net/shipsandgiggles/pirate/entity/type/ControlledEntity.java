@@ -28,25 +28,16 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 	private boolean independentFacing = false; // defines if the entity can move in a direction other than the way it faces)
 	private float angleToTarget = 0;
 
-	public ControlledEntity(UUID uuid, Sprite texture, net.shipsandgiggles.pirate.entity.Location location, EntityType entityType, float maximumHealth, float spawnSpeed, float maximumSpeed, float height, float width, float boundingBox) {
+	public ControlledEntity(UUID uuid, Sprite texture, net.shipsandgiggles.pirate.entity.Location location, EntityType entityType, float maximumHealth, float spawnSpeed, float maximumSpeed, float height, float width, float boundingBox, Type type) {
 		super(uuid, texture, location, entityType, maximumHealth, spawnSpeed, maximumSpeed, height, width);
 
 		this.boundingBox = boundingBox;
-	}
-
-	public void init(Type type) {
 		this.maxLinearSpeed = 5000;
 		this.maxLinearAcceleration = 5000;
 		this.maxAngularSpeed = 90;
 		this.maxAngularAcceleration = 30;
-		this.zeroLinearSpeedThreshold = (type == Type.PLAYER) ? 0.1f : 0.01f;
-		this.type = type;
-		this.tagged = false;
 		this.steeringOutput = new SteeringAcceleration<>(new Vector2());
-
-		this.getBody().setFixedRotation(type == Type.ENEMY);
-		this.getBody().setUserData(this);
-		this.getBody().setLinearDamping(1f);
+		this.type = type;
 	}
 
 	public boolean isIndependentFacing() {
@@ -90,7 +81,7 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 				//System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
 
 				//this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
-				this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
+				this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
 				this.getBody().setTransform(this.getBody().getPosition().x, this.getBody().getPosition().y, this.getAngleToTarget());
 			}
 		}
@@ -268,7 +259,7 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 	public void draw(Batch batch) {
 		if (!this.type.equals(Type.PLAYER)) {
 			this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f));
-			this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
+			this.getSkin().setRotation((float) Math.toDegrees(this.getAngleToTarget()));
 
 			batch.begin();
 			this.getSkin().draw(batch);

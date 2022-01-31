@@ -33,7 +33,7 @@ public class Ship extends ControlledEntity {
 	private Sprite texture;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float boundingBox, Type type) {
-		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, texture.getHeight(), texture.getWidth(), boundingBox); // TODO: Implement health.
+		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, texture.getHeight(), texture.getWidth(), boundingBox, type); // TODO: Implement health.
 
 		this.turnDirection = 0;
 		this.driveDirection = 0;
@@ -67,7 +67,6 @@ public class Ship extends ControlledEntity {
 
 		this.setBody(entityBody);
 		shape.dispose();
-		this.init(type);
 	}
 
 	@Override

@@ -45,18 +45,26 @@ public class Ship extends ControlledEntity {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(location.getX(), location.getY());
-		bodyDef.fixedRotation = false;
+		bodyDef.fixedRotation = type == Type.ENEMY;
 
 		Body entityBody = GameScreen.world.createBody(bodyDef);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox((this.getWidth() / 2) / Configuration.PIXEL_PER_METER, (this.getHeight() / 2) / Configuration.PIXEL_PER_METER);
 
-		entityBody.createFixture(shape, 1f);
+		//entityBody.createFixture(shape, 1f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 1f;
-		fixtureDef.filter.categoryBits = Configuration.CAT_PLAYER;
+		fixtureDef.filter.categoryBits = (type == Type.PLAYER) ? Configuration.CAT_PLAYER : Configuration.CAT_ENEMY;
 		entityBody.createFixture(fixtureDef).setUserData(this);
+
+		if (type.equals(Type.ENEMY)) {
+			MassData MassData = new MassData();
+			MassData.mass= 6000f;
+			MassData.center.set(this.getPosition().x/2, this.getPosition().y/2);
+			entityBody.setMassData(MassData);
+		}
+
 		this.setBody(entityBody);
 
 		shape.dispose();

@@ -60,15 +60,13 @@ public class Ship extends ControlledEntity {
 
 		if (type.equals(Type.ENEMY)) {
 			MassData MassData = new MassData();
-			MassData.mass= 6000f;
-			MassData.center.set(this.getPosition().x/2, this.getPosition().y/2);
+			MassData.mass = 6000f;
+			MassData.center.set(this.getPosition().x / 2, this.getPosition().y / 2);
 			entityBody.setMassData(MassData);
 		}
 
 		this.setBody(entityBody);
-
 		shape.dispose();
-
 		this.init(type);
 	}
 

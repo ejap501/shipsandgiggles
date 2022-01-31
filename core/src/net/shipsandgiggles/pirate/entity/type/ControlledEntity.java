@@ -39,12 +39,12 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 		this.maxLinearAcceleration = 5000;
 		this.maxAngularSpeed = 90;
 		this.maxAngularAcceleration = 30;
-		this.zeroLinearSpeedThreshold = 0.1f;
+		this.zeroLinearSpeedThreshold = (type == Type.PLAYER) ? 0.1f : 0.01f;
 		this.type = type;
 		this.tagged = false;
 		this.steeringOutput = new SteeringAcceleration<>(new Vector2());
 
-		this.getBody().setFixedRotation(false);
+		this.getBody().setFixedRotation(type == Type.ENEMY);
 		this.getBody().setUserData(this);
 		this.getBody().setLinearDamping(1f);
 	}
@@ -82,9 +82,15 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 			}
 		} else {
 			// If we haven't got any velocity, then we can do nothing.
-			Vector2 linVel = this.getLinearVelocity();
-			if (!linVel.isZero(getZeroLinearSpeedThreshold())) {
-				this.setAngleToTarget((float) Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
+			if (this.steeringOutput.linear.len() > 25f) {
+				float newOrientation = vectorToAngle(this.getLinearVelocity());
+				//System.out.println();
+				//body.setAngularVelocity((newOrientation - getAngularVelocity()) * turnMultiplier * deltaTime); // this is superfluous if independentFacing is always true
+				//body.setTransform(body.getPosition(), newOrientation)
+				//System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
+
+				//this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
+				this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
 				this.getBody().setTransform(this.getBody().getPosition().x, this.getBody().getPosition().y, this.getAngleToTarget());
 			}
 		}
@@ -272,7 +278,7 @@ public abstract class ControlledEntity extends MovableEntity implements Steerabl
 
 	public enum Type {
 
-		ENEMY(60f, 0.1f),
+		ENEMY(60f, 0.01f),
 		PLAYER(400f, 2000f);
 
 		private final float speedMultiplier;

@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
 	float recordedSpeed = 0;
 	int cameraState = 0;
 
-	private Ship enemyShips;
+	private final Ship enemyShips;
 
 
 	public GameScreen() {
@@ -160,7 +160,6 @@ public class GameScreen implements Screen {
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, ballModel, camera, Configuration.CAT_PLAYER, Configuration.CAT_ENEMY, (short) 0);
-
 	}
 
 	public void inputUpdate(float deltaTime) {
@@ -267,7 +266,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		camera.setToOrtho(false, width / 2, height / 2);
+		camera.setToOrtho(false, width / 2f, height / 2f);
 		//viewport.update(width,height, true);
 		//batch.setProjectionMatrix(camera.combined);
 	}
@@ -306,28 +305,5 @@ public class GameScreen implements Screen {
 		if (cameraState == 5) {
 			CameraManager.lerpOn(camera, this.enemyShips.getBody().getPosition(), 0.1f);
 		}
-	}
-
-	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {
-		Body body;
-		BodyDef def = new BodyDef();
-
-		if (isStatic) def.type = BodyDef.BodyType.StaticBody;
-		else def.type = BodyDef.BodyType.DynamicBody;
-
-		def.position.set(position);
-
-		def.fixedRotation = true;
-		body = world.createBody(def);
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef.density = 1f;
-		fixtureDef.filter.categoryBits = Configuration.CAT_ENEMY;
-		body.createFixture(fixtureDef).setUserData(this);
-		shape.dispose();
-
-		return body;
 	}
 }

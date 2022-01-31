@@ -67,6 +67,7 @@ public class GameScreen implements Screen {
 	private final TiledMap map;
 	float recordedSpeed = 0;
 	int cameraState = 0;
+	public Sprite water;
 
 	EntityAi bob, player;
 
@@ -89,6 +90,7 @@ public class GameScreen implements Screen {
 		collegeSprite = new Sprite(new Texture("models/castle.png"));
 
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
@@ -156,7 +158,9 @@ public class GameScreen implements Screen {
 		update(Gdx.graphics.getDeltaTime());
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		batch.begin();
+		water.draw(batch);
+		batch.end();
 
 		tmr.render();
 		ballsManager.updateBalls(batch);
@@ -171,6 +175,8 @@ public class GameScreen implements Screen {
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
+
+
 
 
 		playerShips.draw(batch);

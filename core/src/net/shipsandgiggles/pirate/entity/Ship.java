@@ -1,5 +1,6 @@
 package net.shipsandgiggles.pirate.entity;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
@@ -7,12 +8,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+import org.w3c.dom.css.Rect;
 
+import java.awt.*;
 import java.util.UUID;
 
 public class Ship extends MovableEntity {
@@ -36,8 +40,16 @@ public class Ship extends MovableEntity {
 	public float burstCoolDown = 4f;
 	public float shootingTimer = 0f;
 	public float burstTimer = 0f;
+	public World world;
+	public boolean dead = false;
+	public Camera cam;
+	public Vector2 deathPosition = new Vector2(0,0);
 
-	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width) {
+	public Rectangle hitBox;
+
+	public float health = 200f;
+
+	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
 
 		this.turnDirection = 0;
@@ -45,6 +57,7 @@ public class Ship extends MovableEntity {
 		this.driftFactor = driftFactor;
 		this.turnSpeed = turnSpeed;
 		this.texture = texture;
+		this.cam = cam;
 
 		// Creation of Body
 		BodyDef bodyDef = new BodyDef();
@@ -61,16 +74,31 @@ public class Ship extends MovableEntity {
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
 		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
+		this.hitBox = new Rectangle(location.getX(), location.getY(), texture.getWidth(), texture.getHeight());
+		this.world = GameScreen.world;
 	}
 
 	@Override
 	public void draw(Batch batch) {
-		batch.draw(super.getSkin(), super.getLocation().getX(), super.getLocation().getY(), super.getWidth(), super.getHeight());
+		if(dead) {
+			//GameScreen.zoomOut(0.1f);
+			return;
+		}
+		batch.begin();
+		this.getSprite().draw(batch);
+		batch.end();
+		this.hitBox.setPosition(this.getEntityBody().getPosition());
 	}
 
 	@Override
-	public void death() {
+	public void shootPlayer(Ship player) {}
 
+	@Override
+	public void death() {
+		if(this.dead) return;
+		this.deathPosition.x = this.getEntityBody().getPosition().x;
+		this.deathPosition.y = this.getEntityBody().getPosition().y;
+		this.dead = true;
 	}
 
 	public void shoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
@@ -199,6 +227,13 @@ public class Ship extends MovableEntity {
 
 	public float getDriftFactor() {
 		return this.driftFactor;
+	}
+
+	public void takeDamage(float damage){
+		this.health -= damage;
+		if(this.health <= 0){
+			this.death();
+		}
 	}
 }
 

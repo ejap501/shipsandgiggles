@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.conf;
 
 import com.badlogic.gdx.physics.box2d.*;
+import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.college.College;
 import net.shipsandgiggles.pirate.entity.createNewBall;
 import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
@@ -17,6 +18,12 @@ public class worldContactListener implements ContactListener {
             if(fixtureA.getUserData() instanceof College){
                 College pp = (College) fixtureA.getUserData();
                 pp.damage(ball.getDamageDelt());
+                return;
+            }
+            if(fixtureA.getUserData() instanceof Ship){
+                Ship pp = (Ship) fixtureA.getUserData();
+                pp.takeDamage(ball.getDamageDelt());
+                return;
             }
         }
 

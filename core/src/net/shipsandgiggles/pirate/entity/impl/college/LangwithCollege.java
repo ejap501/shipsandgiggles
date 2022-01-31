@@ -1,19 +1,26 @@
 package net.shipsandgiggles.pirate.entity.impl.college;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.Location;
+import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.ballsManager;
 import net.shipsandgiggles.pirate.entity.college.College;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
+import java.awt.*;
 import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 import static net.shipsandgiggles.pirate.conf.Configuration.world;
 
 public class LangwithCollege extends College {
+	public World world;
 
 
 	public LangwithCollege(Sprite texture, Location location, float maximumHealth, World world) {
@@ -37,6 +44,11 @@ public class LangwithCollege extends College {
 		body.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 		this.body = body;
+		this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+		this.world = world;
+
+		this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX(),(int)location.getY(), 700,400);
+
 
 	}
 
@@ -56,9 +68,18 @@ public class LangwithCollege extends College {
 
 		this.getSkin().draw(batch);
 		batch.end();
+
 	}
 
-
+	@Override
+	public void shootPlayer(Ship player) {
+		if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead) {
+			ballsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
+			this.timer = this.cooldownTimer;
+		}
+		else if(timer <= 0) this.timer = 0;
+		else this.timer -= Gdx.graphics.getDeltaTime();
+	}
 
 
 }

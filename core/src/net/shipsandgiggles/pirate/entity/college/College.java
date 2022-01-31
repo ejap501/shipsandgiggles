@@ -1,11 +1,15 @@
 package net.shipsandgiggles.pirate.entity.college;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
 
+import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -14,7 +18,11 @@ import java.util.UUID;
 public abstract class College extends Entity {
 	public Body body;
 	public boolean dead = false;
+	public Rectangle hitBox;
 	private final College.Type type;
+	public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+	public float cooldownTimer = 1f;
+	public float timer = 0f;
 
 	public College(UUID uuid, College.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
 		super(uuid, texture, location, EntityType.COLLEGE, maximumHealth, height, width);

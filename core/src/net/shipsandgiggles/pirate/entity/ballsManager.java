@@ -1,5 +1,7 @@
 package net.shipsandgiggles.pirate.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -15,8 +17,10 @@ public class ballsManager {
 
     static ArrayList<createNewBall> listOfBalls = new ArrayList<createNewBall>();
     public static void createBall(World world, Vector2 position, Vector2 target, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
+        cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, target, categoryBits, maskBit, groupIndex);
         listOfBalls.add(ball);
+        System.out.println("created");
     }
     public static void createBallAtAngle(World world, Vector2 position, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
         createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);

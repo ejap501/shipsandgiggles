@@ -1,9 +1,11 @@
 package net.shipsandgiggles.pirate.conf;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 public class Configuration {

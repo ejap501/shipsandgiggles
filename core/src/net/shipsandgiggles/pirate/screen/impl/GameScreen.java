@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -104,7 +105,7 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 
-		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth());
+		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
 		playerShips.setTexture(playerModel);
@@ -162,24 +163,30 @@ public class GameScreen implements Screen {
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
-		batch.begin();
 
-		playerShips.getSprite().draw(batch);
+
+
 
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
 
-		batch.end();
 
+		playerShips.draw(batch);
 		langwith.draw(batch);
+		langwith.shootPlayer(playerShips);
 		constantine.draw(batch);
+		constantine.shootPlayer(playerShips);
 		goodrick.draw(batch);
+		goodrick.shootPlayer(playerShips);
 		alcuin.draw(batch);
+		alcuin.shootPlayer(playerShips);
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
+
+
 	}
 
 	public void update(float deltaTime) {
@@ -218,7 +225,7 @@ public class GameScreen implements Screen {
 		}
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			System.out.println(camera.zoom);
+			playerShips.takeDamage(200);
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
@@ -250,6 +257,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void processInput() {
+		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
 		//System.out.println(playerShips.getEntityBody().getAngle());
 
@@ -331,6 +339,11 @@ public class GameScreen implements Screen {
 	}
 
 	public void updateCamera() {
+		if(playerShips.dead) {
+			if(camera.zoom < 2)camera.zoom += 0.005f;
+			CameraManager.lerpOn(camera, playerShips.deathPosition, 0.1f);
+			return;
+		}
 		if (cameraState == 0) {
 			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
 		}
@@ -368,4 +381,5 @@ public class GameScreen implements Screen {
 	public static World getWorld(){
 		return world;
 	}
+
 }

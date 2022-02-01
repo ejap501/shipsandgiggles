@@ -20,12 +20,9 @@ import net.shipsandgiggles.pirate.ExplosionController;
 import net.shipsandgiggles.pirate.HUDmanager;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
-<<<<<<< Updated upstream
+
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
-=======
-import net.shipsandgiggles.pirate.conf.worldContactListener;
-import net.shipsandgiggles.pirate.currency.Currency;
->>>>>>> Stashed changes
+
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
@@ -270,12 +267,11 @@ public class GameScreen implements Screen {
 		}
 
 
-<<<<<<< Updated upstream
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getBody().getPosition());
 		}
-=======
->>>>>>> Stashed changes
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
 			else if (cameraState == 1) cameraState = 0;

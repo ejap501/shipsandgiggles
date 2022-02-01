@@ -9,11 +9,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-<<<<<<< Updated upstream
 import net.shipsandgiggles.pirate.cache.impl.BallHandler;
-=======
 import net.shipsandgiggles.pirate.HUDmanager;
->>>>>>> Stashed changes
+
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.impl.ball.CannonBall;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;

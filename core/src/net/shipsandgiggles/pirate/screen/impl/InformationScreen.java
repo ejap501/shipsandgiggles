@@ -95,6 +95,7 @@ public class InformationScreen implements Screen {
         this.table.row();
         this.table.add(collegeInfo4);
         this.table.row();
+        this.table.row();
         this.table.add(spaceToSkip);
 
         this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);

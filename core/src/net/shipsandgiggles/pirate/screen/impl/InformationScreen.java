@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.screen.impl;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,12 +20,13 @@ public class InformationScreen implements Screen {
 	private Stage stage;
 	private Table table;
 
+	private Timer.Task task;
+
 	@Override
 	public void show() {
 		this.table = new Table();
 
 		this.table.setFillParent(true);
-		//this.table.setDebug(true);
 
 		this.stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(this.stage);
@@ -68,7 +70,7 @@ public class InformationScreen implements Screen {
 		this.table.add(singularShoot);
 		this.table.row();
 
-		Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 5);
+		this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 5);
 	}
 
 	@Override
@@ -78,6 +80,8 @@ public class InformationScreen implements Screen {
 
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
+
+		takeInput();
 	}
 
 	@Override
@@ -104,5 +108,11 @@ public class InformationScreen implements Screen {
 	@Override
 	public void dispose() {
 		this.stage.dispose();
+	}
+
+	public void takeInput() {
+		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+			this.task.run();
+		}
 	}
 }

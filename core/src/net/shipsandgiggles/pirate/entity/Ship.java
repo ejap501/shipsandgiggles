@@ -49,6 +49,8 @@ public class Ship extends MovableEntity {
 
 	public static float health;
 	public static float maxHealth = 200f;
+	public float timeToRegen = 0;
+	private float healSpeed = 30;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
@@ -140,6 +142,22 @@ public class Ship extends MovableEntity {
 	}
 	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
 		if(this.dead) return;
+
+		if(this.timeToRegen > 0){
+			this.timeToRegen -= Gdx.graphics.getDeltaTime();
+		}
+		else{
+			if(this.health > this.maxHealth){
+				this.health = this.maxHealth;
+			}
+			else if(this.timeToRegen <= 0 && this.health < this.maxHealth){
+				this.timeToRegen = 0;
+				this.health += this.healSpeed * Gdx.graphics.getDeltaTime();
+			}
+		}
+
+
+
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
@@ -233,6 +251,7 @@ public class Ship extends MovableEntity {
 	}
 
 	public void takeDamage(float damage){
+		timeToRegen = 5f;
 		this.health -= damage;
 		if(this.health <= 0){
 			this.death();

@@ -103,7 +103,8 @@ public class HUDmanager {
 
     public void updateLabels(Batch batch){
         coolDownTimerTime = Ship.burstTimer;
-        health.setText("" + Ship.health + " / " + Ship.maxHealth);
+        String healthText = " " + Ship.health;
+        health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
 
         if(Ship.health > (Ship.maxHealth * 0.6)){
             batch.setColor(Color.GREEN);

@@ -1,34 +1,30 @@
 package net.shipsandgiggles.pirate.entity;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import net.shipsandgiggles.pirate.cache.impl.BallHandler;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.impl.ball.CannonBall;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
-import org.w3c.dom.css.Rect;
 
-import java.awt.*;
 import java.util.UUID;
 
 public class Ship extends MovableEntity {
 
-	private final Body entityBody;
 	private final float turnSpeed;
 	private final float driftFactor;
 
 	private float turnDirection;
 	private float driveDirection;
 	private Sprite texture;
-	createNewBall ball;
+	private CannonBall ball;
 
 	public boolean rapidShot = false;
 	public float timeBetweenRapidShots = 0.2f;
@@ -65,15 +61,17 @@ public class Ship extends MovableEntity {
 		bodyDef.position.set(location.getX(), location.getY());
 		bodyDef.fixedRotation = false;
 
-		this.entityBody = GameScreen.world.createBody(bodyDef);
+		Body entityBody = GameScreen.world.createBody(bodyDef);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
-		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
-		this.entityBody.createFixture(fixtureDef).setUserData(this);
+		fixtureDef.filter.categoryBits = Configuration.CAT_PLAYER;
+		entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
+		
+		this.setBody(entityBody);
 		this.hitBox = new Rectangle(location.getX(), location.getY(), texture.getWidth(), texture.getHeight());
 		this.world = GameScreen.world;
 	}
@@ -87,17 +85,16 @@ public class Ship extends MovableEntity {
 		batch.begin();
 		this.getSprite().draw(batch);
 		batch.end();
-		this.hitBox.setPosition(this.getEntityBody().getPosition());
+		this.hitBox.setPosition(this.getBody().getPosition());
 	}
 
-	@Override
 	public void shootPlayer(Ship player) {}
 
 	@Override
 	public void death() {
 		if(this.dead) return;
-		this.deathPosition.x = this.getEntityBody().getPosition().x;
-		this.deathPosition.y = this.getEntityBody().getPosition().y;
+		this.deathPosition.x = this.getBody().getPosition().x;
+		this.deathPosition.y = this.getBody().getPosition().y;
 		this.dead = true;
 	}
 
@@ -105,23 +102,23 @@ public class Ship extends MovableEntity {
 		Vector3 mouse_position = new Vector3(0,0,0);
 		mouse_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		cam.unproject(mouse_position);
-		ballsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallHandler.get().createBall(world, new Vector2(this.getBody().getPosition().x, this.getBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex);
 	}
 
 	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
-		float angle = this.getEntityBody().getAngle();
+		float angle = this.getBody().getAngle();
 		System.out.println(Math.toDegrees(angle));
-		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
-		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallHandler.get().createBallAtAngle(world, new Vector2(this.getBody().getPosition().x, this.getBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallHandler.get().createBallAtAngle(world, new Vector2(this.getBody().getPosition().x, this.getBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
 		this.rapidShot = true;
 		this.numberOfShotsLeft = this.shotsInRapidShot;
 	}
 
 	public void rapidShot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
-		float angle = this.getEntityBody().getAngle();
+		float angle = this.getBody().getAngle();
 		if(this.rapidShot && this.timeBetweenRapidShots <= 0){
-			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
-			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) + 90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			BallHandler.get().createBallAtAngle(world, new Vector2(this.getBody().getPosition().x, this.getBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			BallHandler.get().createBallAtAngle(world, new Vector2(this.getBody().getPosition().x, this.getBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) + 90), cannonBallSprite, categoryBits, maskBit, groupIndex);
 			this.timeBetweenRapidShots = this.rapidShotCoolDown;
 			this.numberOfShotsLeft--;
 		}
@@ -141,12 +138,12 @@ public class Ship extends MovableEntity {
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
-			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+			this.shoot(world, cannonBallSprite, cam, Configuration.CAT_PLAYER, (short)(Configuration.CAT_ENEMY | Configuration.CAT_COLLEGE), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
-			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.CAT_PLAYER, (short)(Configuration.CAT_ENEMY | Configuration.CAT_COLLEGE), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 
@@ -180,13 +177,10 @@ public class Ship extends MovableEntity {
 		return this.texture;
 	}
 
-	public Body getEntityBody() {
-		return this.entityBody;
-	}
 
 	public Vector2 getForwardVelocity() {
-		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(0, 1));
-		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		Vector2 currentNormal = this.getBody().getWorldVector(new Vector2(0, 1));
+		float dotProduct = currentNormal.dot(this.getBody().getLinearVelocity());
 
 		return multiply(dotProduct, currentNormal);
 	}
@@ -196,8 +190,8 @@ public class Ship extends MovableEntity {
 	}
 
 	public Vector2 getLateralVelocity() {
-		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(1, 0));
-		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
+		Vector2 currentNormal = this.getBody().getWorldVector(new Vector2(1, 0));
+		float dotProduct = currentNormal.dot(this.getBody().getLinearVelocity());
 
 		return multiply(dotProduct, currentNormal);
 	}

@@ -24,7 +24,7 @@ public class TiledObjectUtil {
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = shape;
 			fixtureDef. density = 1f;
-			fixtureDef.filter.categoryBits = Configuration.Cat_walls;
+			fixtureDef.filter.categoryBits = Configuration.CAT_WALLS;
 			body.createFixture(fixtureDef);
 			shape.dispose();
 		}

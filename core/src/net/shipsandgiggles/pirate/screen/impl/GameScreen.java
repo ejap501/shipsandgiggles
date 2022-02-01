@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,11 +19,11 @@ import net.shipsandgiggles.pirate.CameraManager;
 import net.shipsandgiggles.pirate.ExplosionController;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.conf.worldContactListener;
+import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.ballsManager;
+import net.shipsandgiggles.pirate.cache.impl.BallHandler;
 import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.GoodrickCollege;
@@ -101,7 +100,7 @@ public class GameScreen implements Screen {
 		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
 
-		world.setContactListener(new worldContactListener());
+		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
 
@@ -126,15 +125,15 @@ public class GameScreen implements Screen {
 
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
-		playerShips.getEntityBody().setLinearDamping(0.5f);
+		playerShips.getBody().setLinearDamping(0.5f);
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
 		Body body = createEnemy((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
 		bob = new EntityAi(body, 300f, bobsSprite);
-		bob.setTarget(playerShips.getEntityBody());
+		bob.setTarget(playerShips.getBody());
 
-		player = new EntityAi(playerShips.getEntityBody(), 3);
+		player = new EntityAi(playerShips.getBody(), 3);
 		Steerable<Vector2> pp = player;
 
 
@@ -177,16 +176,16 @@ public class GameScreen implements Screen {
 		batch.end();
 
 		tmr.render();
-		ballsManager.updateBalls(batch);
+		BallHandler.get().updateBalls(batch);
 
-		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
-		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
+		playerShips.getSprite().setPosition(playerShips.getBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
+		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getBody().getAngle()));
 
 
 
 
 		//player
-		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
+		//batch.draw(playerShips.getSkin(), playerShips.getBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
 
@@ -228,13 +227,13 @@ public class GameScreen implements Screen {
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
-		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+		playerShips.updateShots(world, cannonBall, camera, Configuration.CAT_PLAYER, (short)(Configuration.CAT_ENEMY | Configuration.CAT_COLLEGE), (short) 0);
 
 	}
 
 	public void inputUpdate() {
 		if (playerShips.dead) return;
-		if (playerShips.getEntityBody().getLinearVelocity().len() > 20f) {
+		if (playerShips.getBody().getLinearVelocity().len() > 20f) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)) {
 				playerShips.setTurnDirection(2);
 			} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) | Gdx.input.isKeyPressed(Input.Keys.D)) {
@@ -255,7 +254,7 @@ public class GameScreen implements Screen {
 
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			System.out.println(playerShips.getEntityBody().getPosition());
+			System.out.println(playerShips.getBody().getPosition());
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
@@ -291,8 +290,8 @@ public class GameScreen implements Screen {
 		Vector2 baseVector = new Vector2(0, 0);
 
 		float turnPercentage = 0;
-		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
-			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (playerShips.getMaximumSpeed());
+		if (playerShips.getBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
+			turnPercentage = playerShips.getBody().getLinearVelocity().len() / (playerShips.getMaximumSpeed());
 		} else {
 			turnPercentage = 1;
 		}
@@ -301,11 +300,11 @@ public class GameScreen implements Screen {
 
 
 		if (playerShips.getTurnDirection() == 1) {
-			playerShips.getEntityBody().setAngularVelocity(-currentTurnSpeed);
+			playerShips.getBody().setAngularVelocity(-currentTurnSpeed);
 		} else if (playerShips.getTurnDirection() == 2) {
-			playerShips.getEntityBody().setAngularVelocity(currentTurnSpeed);
-		} else if (playerShips.getTurnDirection() == 0 && playerShips.getEntityBody().getAngularVelocity() != 0) {
-			playerShips.getEntityBody().setAngularVelocity(0);
+			playerShips.getBody().setAngularVelocity(currentTurnSpeed);
+		} else if (playerShips.getTurnDirection() == 0 && playerShips.getBody().getAngularVelocity() != 0) {
+			playerShips.getBody().setAngularVelocity(0);
 		}
 
 		if (playerShips.getDriveDirection() == 1) {
@@ -313,19 +312,19 @@ public class GameScreen implements Screen {
 		} else if (playerShips.getDriveDirection() == 2) {
 			baseVector.set(0, -playerShips.getSpeed() * 4 / 5);
 		}
-		if (playerShips.getEntityBody().getLinearVelocity().len() > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-			playerShips.getEntityBody().setLinearDamping(1.75f);
+		if (playerShips.getBody().getLinearVelocity().len() > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+			playerShips.getBody().setLinearDamping(1.75f);
 		} else {
-			playerShips.getEntityBody().setLinearDamping(0.5f);
+			playerShips.getBody().setLinearDamping(0.5f);
 		}
-		//recordedSpeed = playerShips.getEntityBody().getLinearVelocity().len();
-		if (playerShips.getEntityBody().getLinearVelocity().len() > playerShips.getMaximumSpeed() / 3f) {
+		//recordedSpeed = playerShips.getBody().getLinearVelocity().len();
+		if (playerShips.getBody().getLinearVelocity().len() > playerShips.getMaximumSpeed() / 3f) {
 			playerShips.setSpeed(playerShips.getOriginalSpeed() * 2);
 		} else {
 			playerShips.setSpeed(playerShips.getOriginalSpeed());
 		}
-		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < playerShips.getMaximumSpeed())) {
-			playerShips.getEntityBody().applyForceToCenter(playerShips.getEntityBody().getWorldVector(baseVector), true);
+		if (!baseVector.isZero() && (playerShips.getBody().getLinearVelocity().len() < playerShips.getMaximumSpeed())) {
+			playerShips.getBody().applyForceToCenter(playerShips.getBody().getWorldVector(baseVector), true);
 		}
 	}
 
@@ -333,7 +332,7 @@ public class GameScreen implements Screen {
 		Vector2 forwardSpeed = playerShips.getForwardVelocity();
 		Vector2 lateralSpeed = playerShips.getLateralVelocity();
 
-		playerShips.getEntityBody().setLinearVelocity(forwardSpeed.x + lateralSpeed.x * playerShips.getDriftFactor(), forwardSpeed.y + lateralSpeed.y * playerShips.getDriftFactor());
+		playerShips.getBody().setLinearVelocity(forwardSpeed.x + lateralSpeed.x * playerShips.getDriftFactor(), forwardSpeed.y + lateralSpeed.y * playerShips.getDriftFactor());
 	}
 
 	@Override
@@ -374,10 +373,10 @@ public class GameScreen implements Screen {
 			return;
 		}
 		if (cameraState == 0) {
-			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
+			CameraManager.lerpOn(camera, playerShips.getBody().getPosition(), 0.1f);
 		}
 		if (cameraState == -1) {
-			CameraManager.lockOn(camera, playerShips.getEntityBody().getPosition());
+			CameraManager.lockOn(camera, playerShips.getBody().getPosition());
 		}
 		if (cameraState == 5) {
 			CameraManager.lerpOn(camera, bob.getBody().getPosition(), 0.1f);
@@ -400,7 +399,7 @@ public class GameScreen implements Screen {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
-		fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+		fixtureDef.filter.categoryBits = Configuration.CAT_ENEMY;
 
 		body.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();

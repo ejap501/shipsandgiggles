@@ -3,7 +3,6 @@ package net.shipsandgiggles.pirate.entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
-
 public abstract class MovableEntity extends Entity {
 
 	private final float maximumSpeed;

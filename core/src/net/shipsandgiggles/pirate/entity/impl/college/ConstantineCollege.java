@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.ballsManager;
+import net.shipsandgiggles.pirate.cache.impl.BallHandler;
 import net.shipsandgiggles.pirate.entity.college.College;
 
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class ConstantineCollege extends College {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
-        fixtureDef.filter.categoryBits = Configuration.Cat_College;
+        fixtureDef.filter.categoryBits = Configuration.CAT_COLLEGE;
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
@@ -72,7 +72,7 @@ public class ConstantineCollege extends College {
     @Override
     public void shootPlayer(Ship player) {
         if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead) {
-            ballsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
+            BallHandler.get().createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getBody().getPosition().x, player.getBody().getPosition().y), cannonBallSprite, (short)(Configuration.CAT_ENEMY | Configuration.CAT_COLLEGE), Configuration.CAT_PLAYER, (short) 0);
             this.timer = this.cooldownTimer;
         }
         else if(timer <= 0) this.timer = 0;

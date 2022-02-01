@@ -16,9 +16,6 @@ public class worldContactListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        boolean exploded = false;
-        float x = 0;
-        float y = 0;
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
         if(fixtureA == null || fixtureB == null || fixtureB.getUserData() == null || fixtureA.getUserData() == null) return;
@@ -33,26 +30,16 @@ public class worldContactListener implements ContactListener {
                 Ship pp = (Ship) fixtureA.getUserData();
                 pp.takeDamage(ball.getDamageDelt());
             }
-            if(exploded)return;
-            x = ball.body.getPosition().x;
-            y = ball.body.getPosition().y;
-            GameScreen.add(new Vector2(x,y));
         }
 
     }
 
     @Override
-    public void endContact(Contact contact) {
-
-    }
+    public void endContact(Contact contact) {}
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
+    public void preSolve(Contact contact, Manifold oldManifold) {}
 
     @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-
-    }
+    public void postSolve(Contact contact, ContactImpulse impulse) {}
 }

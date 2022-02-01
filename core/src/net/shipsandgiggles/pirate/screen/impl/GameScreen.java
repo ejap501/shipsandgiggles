@@ -35,9 +35,7 @@ import java.util.ArrayList;
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 
-// To Do:
-// 2- upgrade Ai?
-// 3- create proper map and ship models
+
 
 
 public class GameScreen implements Screen {
@@ -160,7 +158,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float deltaTime) { //yay c# less goooooo (i changed it to deltaTime cuz im used to it being that from c#)
-		update(Gdx.graphics.getDeltaTime());
+		update();
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
@@ -206,28 +204,25 @@ public class GameScreen implements Screen {
 			explosion.update();
 
 			explosion.draw(batch);
-			System.out.println("pp");
 			if(explosion.remove)removeExplosion.add(explosion);
 		}
 		Explosions.removeAll(removeExplosion);
 	}
 
-	public void update(float deltaTime) {
+	public void update() {
 		world.step(1 / 60f, 6, 2);
 		updateCamera();
-		inputUpdate(deltaTime);
+		inputUpdate();
 		processInput();
 		handleDirft();
 		tmr.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
-		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, Configuration.Cat_Enemy, (short) 0);
+		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 
 	}
 
-	public void inputUpdate(float deltaTime) {
-		//int xForce = 0;
-		//int yForce = 0;
-
+	public void inputUpdate() {
+		if (playerShips.dead) return;
 		if (playerShips.getEntityBody().getLinearVelocity().len() > 20f) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)) {
 				playerShips.setTurnDirection(2);
@@ -283,7 +278,6 @@ public class GameScreen implements Screen {
 	private void processInput() {
 		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
-		//System.out.println(playerShips.getEntityBody().getAngle());
 
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {

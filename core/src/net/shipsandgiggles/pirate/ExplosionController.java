@@ -17,7 +17,6 @@ public class ExplosionController {
     public boolean remove = false;
 
     public ExplosionController(Vector2 position){
-        System.out.println("dd");
         this.position = new Vector2(position.x - OFFSIZE, position.y - OFFSIZE);
         stateTime = 0;
 

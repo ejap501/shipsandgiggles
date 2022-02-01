@@ -27,6 +27,8 @@ public class createNewBall {
     public float speed = 1.2f;
     public float damageDelt = 50f;
     public boolean teleported = false;
+    public float finalX = 0;
+    public float finalY = 0;
 
     createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
         this.world = world;
@@ -90,6 +92,9 @@ public class createNewBall {
     public void update(Batch batch) {
             timer -= Gdx.graphics.getDeltaTime();
             if(timer <= 0 && !this.isDestroyed){
+                finalX = this.body.getPosition().x;
+                finalY = this.body.getPosition().y;
+                GameScreen.add(new Vector2(finalX, finalY));
                 this.world.destroyBody(this.body);
                 this.isDestroyed = true;
                 ballsManager.removeNext();
@@ -125,6 +130,9 @@ public class createNewBall {
 
     public void teleportBall(){
         if(teleported) return;
+        finalX = this.body.getPosition().x;
+        finalY = this.body.getPosition().y;
+        GameScreen.add(new Vector2(finalX, finalY));
         this.body.setTransform(10000,10000,0);
         this.teleported = true;
     }

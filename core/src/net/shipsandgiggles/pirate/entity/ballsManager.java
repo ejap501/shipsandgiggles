@@ -20,7 +20,6 @@ public class ballsManager {
         cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, target, categoryBits, maskBit, groupIndex);
         listOfBalls.add(ball);
-        System.out.println("created");
     }
     public static void createBallAtAngle(World world, Vector2 position, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
         createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);

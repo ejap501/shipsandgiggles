@@ -47,11 +47,13 @@ public class Ship extends MovableEntity {
 
 	public Rectangle hitBox;
 
-	public float health = 200f;
+	public static float health;
+	public static float maxHealth = 200f;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
 
+		this.health = this.maxHealth;
 		this.turnDirection = 0;
 		this.driveDirection = 0;
 		this.driftFactor = driftFactor;

@@ -219,7 +219,7 @@ public class GameScreen implements Screen {
 		}
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.draw();
-		hud.updateLabels();
+		hud.updateLabels(batch);
 	}
 
 	private void updateExplosions() {

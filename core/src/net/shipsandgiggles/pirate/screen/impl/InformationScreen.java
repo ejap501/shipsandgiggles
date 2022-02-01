@@ -56,7 +56,7 @@ public class InformationScreen implements Screen {
         singularShoot.setAlignment(Align.center);
 
         Label collegeInfo1 = new Label("There are two ways to win the game!", Configuration.SKIN, "big");
-        Label collegeInfo2 = new Label("taking down a college will give you 5 gold a turn and if you capture all of them you win!", Configuration.SKIN, "big");
+        Label collegeInfo2 = new Label("taking down a college will give you 5 gold and 3 score a second and if you capture all of them you win!", Configuration.SKIN, "big");
         Label collegeInfo3 = new Label("the other way is to destroy all of them which will give you an instant 500 gold and 250 score!", Configuration.SKIN, "big");
         Label collegeInfo4 = new Label("destroying all of them will result in a victory!", Configuration.SKIN, "big");
 

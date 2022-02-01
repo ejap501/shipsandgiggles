@@ -21,7 +21,7 @@ public abstract class Entity {
 	private final float height;
 	private final float width;
 
-	private float health;
+	public float health;
 
 
 	public Entity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
@@ -101,6 +101,10 @@ public abstract class Entity {
 	 * @return Current health after damage (i.e. {@link #getHealth() - damage}
 	 */
 	public float damage(float damage) {
+		if(this.health == 1){
+			this.death();
+			return 0f;
+		}
 		if ((this.health = (this.health - damage)) <= 0f) {
 			this.death();
 			return 0f;

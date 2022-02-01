@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.ballsManager;
@@ -84,7 +85,15 @@ public class GoodrickCollege extends College {
 
     @Override
     public void shootPlayer(Ship player) {
-        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead) {
+        if(this.health == 1 && !this.dead){
+            this.counter += Gdx.graphics.getDeltaTime();
+            if(this.counter >= 1){
+                Currency.get().give(Currency.Type.POINTS, 3);
+                Currency.get().give(Currency.Type.GOLD, 5);
+                this.counter = 0;
+            }
+        }
+        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead  && this.health != 1) {
             ballsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
             this.timer = this.cooldownTimer;
         }

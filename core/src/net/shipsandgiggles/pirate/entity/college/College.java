@@ -19,6 +19,7 @@ import java.util.UUID;
  */
 public abstract class College extends Entity {
 	public Body body;
+	public float counter = 0;
 	public boolean dead = false;
 	public Rectangle hitBox;
 	private final College.Type type;
@@ -43,6 +44,10 @@ public abstract class College extends Entity {
 		return this.body;
 	}
 	public void death() {
+		if(this.getHealth() != 1){
+			this.health = 1;
+			return;
+		}
 		if(this.dead) return;
 		GameScreen.collegeKilled();
 		Currency.get().give(Currency.Type.POINTS, 250);
@@ -50,7 +55,6 @@ public abstract class College extends Entity {
 		this.dead = true;
 		//this.body.setTransform(10000,10000, 2);
 	}
-
 
 	/**
 	 * Types of college - allows us to keep track.

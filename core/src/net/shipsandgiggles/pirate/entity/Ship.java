@@ -39,7 +39,7 @@ public class Ship extends MovableEntity {
 	public float shootingCoolDown = 0.3f;
 	public float burstCoolDown = 4f;
 	public float shootingTimer = 0f;
-	public float burstTimer = 0f;
+	public static float burstTimer = 0f;
 	public World world;
 	public boolean dead = false;
 	public Camera cam;

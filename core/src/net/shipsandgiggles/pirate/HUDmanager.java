@@ -88,7 +88,7 @@ public class HUDmanager {
         bottomRightTable.add(shootLogo);
         bottomRightTable.add(cooldown);
 
-        bottomRightTable.setPosition(Gdx.graphics.getWidth()-300, -70);
+        bottomRightTable.setPosition(0, -70);
 
         stage.addActor(bottomRightTable);
 
@@ -96,7 +96,7 @@ public class HUDmanager {
         health = new Label("" + Ship.health + " / " + Ship.maxHealth, Configuration.SKIN, "big");
         bottomLeftTable.add(healthLabel);
         bottomLeftTable.add(health);
-        bottomLeftTable.setPosition(150, 80);
+        bottomLeftTable.setPosition(150, 200);
         bottomLeftTable.row();
         stage.addActor(bottomLeftTable);
     }
@@ -120,7 +120,7 @@ public class HUDmanager {
         }
 
         batch.begin();
-        batch.draw(healthBar, 0,20,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
+        batch.draw(healthBar, 0,140,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
         batch.end();
 
         batch.setColor(Color.WHITE);

@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,6 +24,8 @@ public class InformationScreen implements Screen {
 	private Table table;
 
 	private Timer.Task task;
+	public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));;
+	private final SpriteBatch batch = new SpriteBatch();;
 
 	@Override
 	public void show() {
@@ -50,6 +55,9 @@ public class InformationScreen implements Screen {
 		Label singularShoot = new Label("Left-Click to singular shoot!", Configuration.SKIN, "big");
 		singularShoot.setAlignment(Align.center);
 
+		Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
+		spaceToSkip.setAlignment(Align.center);
+
 		// Creates a uniform X/Y table.
 		this.table.add(informationLabel);
 		this.table.row();
@@ -69,14 +77,22 @@ public class InformationScreen implements Screen {
 		this.table.row();
 		this.table.add(singularShoot);
 		this.table.row();
+		this.table.add(Configuration.SPACER_LABEL);
+		this.table.row();
+		this.table.add(Configuration.SPACER_LABEL);
+		this.table.row();
+		this.table.add(spaceToSkip);
 
 		this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 5);
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
+		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
 
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();

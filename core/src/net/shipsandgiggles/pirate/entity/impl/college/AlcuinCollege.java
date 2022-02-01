@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.entity.impl.college;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -65,6 +66,19 @@ public class AlcuinCollege extends College {
         batch.begin();
 
         this.getSkin().draw(batch);
+
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            batch.setColor(Color.GREEN);
+        }
+        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            batch.setColor(Color.ORANGE);
+        }
+        else{
+            batch.setColor(Color.RED);
+        }
+
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, (float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())), 10);
+        batch.setColor(Color.WHITE);
         batch.end();
 
     }

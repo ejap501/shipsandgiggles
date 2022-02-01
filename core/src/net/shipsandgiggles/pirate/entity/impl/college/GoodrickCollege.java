@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.entity.impl.college;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -61,8 +62,21 @@ public class GoodrickCollege extends College {
         }
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f));
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
+
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            batch.setColor(Color.GREEN);
+        }
+        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            batch.setColor(Color.ORANGE);
+        }
+        else{
+            batch.setColor(Color.RED);
+        }
+
         batch.begin();
 
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, (float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())), 10);
+        batch.setColor(Color.WHITE);
         this.getSkin().draw(batch);
         batch.end();
 

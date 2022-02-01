@@ -252,7 +252,7 @@ public class Ship extends MovableEntity {
 
 	public void takeDamage(float damage){
 		timeToRegen = 5f;
-		this.health -= damage;
+		this.health -= damage * 0.8;
 		if(this.health <= 0){
 			this.death();
 		}

@@ -24,6 +24,7 @@ public abstract class College extends Entity {
 	public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 	public float cooldownTimer = 1f;
 	public float timer = 0f;
+	public Texture healthBar = new Texture("models/bar.png");
 
 	public College(UUID uuid, College.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
 		super(uuid, texture, location, EntityType.COLLEGE, maximumHealth, height, width);

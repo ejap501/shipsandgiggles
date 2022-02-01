@@ -25,8 +25,8 @@ public class HUDmanager {
     public Stage stage;
     private Viewport viewport;
 
-    private int score;
-    private int gold;
+    public static int score;
+    public static int gold;
 
     public float fontScale = 1.5f;
     public float timeCounter = 0;

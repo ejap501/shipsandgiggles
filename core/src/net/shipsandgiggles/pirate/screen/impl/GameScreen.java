@@ -16,10 +16,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import net.shipsandgiggles.pirate.CameraManager;
-import net.shipsandgiggles.pirate.ExplosionController;
-import net.shipsandgiggles.pirate.HUDmanager;
-import net.shipsandgiggles.pirate.TiledObjectUtil;
+import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.conf.worldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
@@ -48,7 +45,7 @@ public class GameScreen implements Screen {
 	public Sprite collegeSprite;
 
 	public static HUDmanager hud;
-	public HUDmanager deathScreen;
+	public net.shipsandgiggles.pirate.deathScreen deathScreen;
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
 
@@ -155,6 +152,7 @@ public class GameScreen implements Screen {
 		constantine = new ConstantineCollege(collegeSprite, new Location(1750f,975f), 200f, world);
 
 		hud = new HUDmanager(batch);
+		deathScreen = new deathScreen(batch);
 	}
 
 
@@ -214,9 +212,11 @@ public class GameScreen implements Screen {
 
 
 		if(playerShips.dead){
-
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
 			return;
 		}
+		deathScreen.update(hud);
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.draw();
 		hud.updateLabels(batch);

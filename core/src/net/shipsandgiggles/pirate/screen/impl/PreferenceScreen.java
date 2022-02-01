@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.shipsandgiggles.pirate.PirateGame;
+import net.shipsandgiggles.pirate.SoundController;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.pref.GamePreferences;
 import net.shipsandgiggles.pirate.screen.ScreenType;
@@ -85,6 +86,7 @@ public class PreferenceScreen implements Screen {
 				new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				LoadingScreen.soundController.pauseAll();
 				PirateGame.get().changeScreen(ScreenType.LOADING);
 			}
 		});

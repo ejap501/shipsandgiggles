@@ -26,15 +26,13 @@ public class SoundController{
                 buttonPress = Gdx.audio.newSound(Gdx.files.internal("models/buttonPress.mp3"));
                 Explosion = Gdx.audio.newSound(Gdx.files.internal("models/explosion.mp3"));
 
-                if(GamePreferences.get().isMusicEnabled()){
+                if(GamePreferences.get().isMusicEnabled() && !music.isPlaying()){
                         music.setVolume(GamePreferences.get().getVolumeLevel());
                         music.setLooping(true);
-                        music.play();
                 }
-                if(GamePreferences.get().isVolumeEnabled()){
+                if(GamePreferences.get().isVolumeEnabled() && !seaNoises.isPlaying()){
                         seaNoises.setVolume(GamePreferences.get().getVolumeLevel());
                         seaNoises.setLooping(true);
-                        seaNoises.play();
                 }
 
         }
@@ -42,16 +40,22 @@ public class SoundController{
 
                 if(!GamePreferences.get().isMusicEnabled()) music.stop();
                 if(!GamePreferences.get().isVolumeEnabled()) seaNoises.stop();
+                if(GamePreferences.get().isVolumeEnabled() && !music.isPlaying()){
+                        music.play();
+                }
+                if(GamePreferences.get().isVolumeEnabled() && !seaNoises.isPlaying()){
+                        seaNoises.play();
+                }
                 if(musicVolume != music.getVolume()) {
                         music.setVolume(GamePreferences.get().getVolumeLevel());
                         return;
                 }
+
                 if(volume != seaNoises.getVolume()) {
                         seaNoises.setVolume(GamePreferences.get().getVolumeLevel());
                         return;
                 }
-                if(GamePreferences.get().isMusicEnabled() && !music.isPlaying() && music!= null) music.play();
-                if(GamePreferences.get().isVolumeEnabled()&& !seaNoises.isPlaying() && seaNoises!= null) seaNoises.play();
+
         }
 
         public void playExplosion(){
@@ -73,4 +77,10 @@ public class SoundController{
                 cannonShot.setLooping(id,false);
         }
 
+        public void pauseAll() {
+                music.pause();
+                seaNoises.pause();
+                music.dispose();
+                seaNoises.dispose();
         }
+}

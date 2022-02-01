@@ -37,10 +37,19 @@ public class PreferenceScreen implements Screen {
 
 		// Music Volume Settings
 
+		Slider VolumeSlider = new Slider(0f, 1f, 0.1f, false, Configuration.SKIN);
+		VolumeSlider.setValue(gamePreferences.getVolumeLevel());
+		VolumeSlider.addListener(event -> {
+			gamePreferences.setVolumeLevel(VolumeSlider.getValue());
+			return true;
+		});
+
+		Label VolumeLabel = new Label("Volume", Configuration.SKIN);
+
 		Slider musicVolumeSlider = new Slider(0f, 1f, 0.1f, false, Configuration.SKIN);
 		musicVolumeSlider.setValue(gamePreferences.getVolumeLevel());
 		musicVolumeSlider.addListener(event -> {
-			gamePreferences.setVolumeLevel(musicVolumeSlider.getValue());
+			gamePreferences.setMusicVolumeLevel(musicVolumeSlider.getValue());
 			return true;
 		});
 
@@ -51,6 +60,7 @@ public class PreferenceScreen implements Screen {
 		CheckBox musicEnabled = new CheckBox(null, Configuration.SKIN);
 		musicEnabled.setChecked(gamePreferences.isMusicEnabled());
 		musicEnabled.addListener(event -> {
+
 			boolean enabled = musicEnabled.isChecked();
 			gamePreferences.setMusicEnabled(enabled);
 			return true;
@@ -71,7 +81,8 @@ public class PreferenceScreen implements Screen {
 		Label volumeLabel = new Label("Volume Enabled", Configuration.SKIN);
 
 		TextButton backButton = new TextButton("Back", Configuration.SKIN); // the extra argument here "small" is used to set the button to the smaller version instead of the big default version
-		backButton.addListener(new ChangeListener() {
+		backButton.addListener(
+				new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				PirateGame.get().changeScreen(ScreenType.LOADING);
@@ -82,6 +93,9 @@ public class PreferenceScreen implements Screen {
 		this.table.add(preferencesLabel);
 		this.table.row();
 		this.table.add(Configuration.SPACER_LABEL);
+		this.table.row();
+		this.table.add(VolumeLabel);
+		this.table.add(VolumeSlider);
 		this.table.row();
 		this.table.add(musicVolumeLabel);
 		this.table.add(musicVolumeSlider);
@@ -103,7 +117,7 @@ public class PreferenceScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		LoadingScreen.soundController.update();
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}

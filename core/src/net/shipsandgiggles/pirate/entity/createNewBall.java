@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.ExplosionController;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ public class createNewBall {
     public float finalY = 0;
 
     createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
+        LoadingScreen.soundController.playCannonShot();
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();
@@ -58,6 +60,7 @@ public class createNewBall {
 
     }
     createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){
+        LoadingScreen.soundController.playCannonShot();
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();
@@ -92,6 +95,7 @@ public class createNewBall {
     public void update(Batch batch) {
             timer -= Gdx.graphics.getDeltaTime();
             if(timer <= 0 && !this.isDestroyed){
+                LoadingScreen.soundController.playExplosion();
                 finalX = this.body.getPosition().x;
                 finalY = this.body.getPosition().y;
                 GameScreen.add(new Vector2(finalX, finalY));
@@ -130,6 +134,7 @@ public class createNewBall {
 
     public void teleportBall(){
         if(teleported) return;
+        LoadingScreen.soundController.playExplosion();
         finalX = this.body.getPosition().x;
         finalY = this.body.getPosition().y;
         GameScreen.add(new Vector2(finalX, finalY));

@@ -13,11 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.shipsandgiggles.pirate.PirateGame;
+import net.shipsandgiggles.pirate.SoundController;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class LoadingScreen implements Screen {
 
+	public static SoundController soundController;
 	private Stage stage;
 	private Table table;
 
@@ -26,6 +28,7 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void show() {
+		this.soundController = new SoundController();
 		this.table = new Table();
 
 		this.table.setFillParent(true);
@@ -43,6 +46,7 @@ public class LoadingScreen implements Screen {
 		newGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				LoadingScreen.soundController.playButtonPress();
 				PirateGame.get().changeScreen(ScreenType.INFORMATION);
 			}
 		});
@@ -52,6 +56,7 @@ public class LoadingScreen implements Screen {
 		preferences.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				LoadingScreen.soundController.playButtonPress();
 				PirateGame.get().changeScreen(ScreenType.PREFERENCE);
 			}
 		});
@@ -61,6 +66,8 @@ public class LoadingScreen implements Screen {
 		exit.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+
+				LoadingScreen.soundController.playButtonPress();
 				Gdx.app.exit();
 			}
 		});
@@ -83,7 +90,7 @@ public class LoadingScreen implements Screen {
 		batch.begin();
 		background.draw(batch);
 		batch.end();
-
+		this.soundController.update();
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}

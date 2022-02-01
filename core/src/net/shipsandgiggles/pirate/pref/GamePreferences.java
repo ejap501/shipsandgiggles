@@ -9,6 +9,7 @@ public class GamePreferences {
 	private static final String PREF_MUSIC_ENABLED = "music.enabled";
 	private static final String PREF_VOLUME_ENABLED = "volume.enabled";
 	private static final String PREF_VOLUME_LEVEL = "volume.level";
+	private static final String PREF_MUSIC_LEVEL = "music.level";
 	private static GamePreferences INSTANCE;
 
 	private GamePreferences() {
@@ -86,6 +87,11 @@ public class GamePreferences {
 	 */
 	public void setVolumeLevel(float level) {
 		this.prefs().putFloat(PREF_VOLUME_LEVEL, level);
+		this.prefs().flush();
+	}
+
+	public void setMusicVolumeLevel(float value) {
+		this.prefs().putFloat(PREF_MUSIC_LEVEL, value);
 		this.prefs().flush();
 	}
 }

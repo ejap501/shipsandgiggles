@@ -30,7 +30,6 @@ public class CannonBall extends MovableEntity {
 
     private float x = 0;
     private float y = 0;
-    private float damageDealt = 50f;
     private boolean teleported = false;
 
     public CannonBall(Sprite texture, Vector2 position, Vector2 target, World world, short categoryBits, short maskBit, short groupIndex) {
@@ -81,7 +80,7 @@ public class CannonBall extends MovableEntity {
                 GameScreen.add(new Vector2(x, y));
                 this.world.destroyBody(this.getBody());
                 this.isDead = true;
-                BallHandler.get().get().remove(this.getUniqueId());
+                BallHandler.get().remove(this.getUniqueId());
             }
 
             if(!setAngle){
@@ -117,7 +116,7 @@ public class CannonBall extends MovableEntity {
     public void death() {
         this.world.destroyBody(this.getBody());
         this.isDead = true;
-        BallHandler.get().get().remove(this.getUniqueId());
+        BallHandler.get().remove(this.getUniqueId());
     }
 
     @Override
@@ -150,7 +149,8 @@ public class CannonBall extends MovableEntity {
     }
 
     public float getDamageDealt() {
-        return this.damageDealt;
+        float damageDealt = 50f;
+        return damageDealt;
     }
 
     public boolean isTeleported() {

@@ -9,7 +9,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+<<<<<<< Updated upstream
 import net.shipsandgiggles.pirate.cache.impl.BallHandler;
+=======
+import net.shipsandgiggles.pirate.HUDmanager;
+>>>>>>> Stashed changes
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.impl.ball.CannonBall;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
@@ -35,7 +39,7 @@ public class Ship extends MovableEntity {
 	public float shootingCoolDown = 0.3f;
 	public float burstCoolDown = 4f;
 	public float shootingTimer = 0f;
-	public float burstTimer = 0f;
+	public static float burstTimer = 0f;
 	public World world;
 	public boolean dead = false;
 	public Camera cam;
@@ -135,6 +139,7 @@ public class Ship extends MovableEntity {
 	}
 	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
 		if(this.dead) return;
+		GameScreen.hud.updateBurstTimer(burstTimer);
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){

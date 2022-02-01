@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -40,6 +41,9 @@ public abstract class College extends Entity {
 		return this.body;
 	}
 	public void death() {
+		if(this.dead) return;
+		Currency.get().give(Currency.Type.POINTS, 250);
+		Currency.get().give(Currency.Type.GOLD, 500);
 		this.dead = true;
 		//this.body.setTransform(10000,10000, 2);
 	}

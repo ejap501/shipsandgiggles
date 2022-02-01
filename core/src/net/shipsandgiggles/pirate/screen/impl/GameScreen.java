@@ -17,9 +17,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.CameraManager;
 import net.shipsandgiggles.pirate.ExplosionController;
+import net.shipsandgiggles.pirate.HUDmanager;
 import net.shipsandgiggles.pirate.TiledObjectUtil;
 import net.shipsandgiggles.pirate.conf.Configuration;
+<<<<<<< Updated upstream
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
+=======
+import net.shipsandgiggles.pirate.conf.worldContactListener;
+import net.shipsandgiggles.pirate.currency.Currency;
+>>>>>>> Stashed changes
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
@@ -44,6 +50,8 @@ public class GameScreen implements Screen {
 	public AlcuinCollege alcuin;
 	public GoodrickCollege goodrick;
 	public Sprite collegeSprite;
+	public static HUDmanager hud;
+	public HUDmanager deathScreen;
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
 
@@ -149,6 +157,8 @@ public class GameScreen implements Screen {
 		alcuin = new AlcuinCollege(collegeSprite, new Location(1750f,151f), 200f, world);
 		constantine = new ConstantineCollege(collegeSprite, new Location(1750f,975f), 200f, world);
 
+		hud = new HUDmanager(batch);
+
 	}
 
 
@@ -206,6 +216,13 @@ public class GameScreen implements Screen {
 		bob.update(deltaTime, batch);
 		updateExplosions();
 
+		if(playerShips.dead){
+
+			return;
+		}
+		batch.setProjectionMatrix(hud.stage.getCamera().combined);
+		hud.stage.draw();
+		hud.updateLabels();
 	}
 
 	private void updateExplosions() {
@@ -253,9 +270,12 @@ public class GameScreen implements Screen {
 		}
 
 
+<<<<<<< Updated upstream
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getBody().getPosition());
 		}
+=======
+>>>>>>> Stashed changes
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
 			else if (cameraState == 1) cameraState = 0;

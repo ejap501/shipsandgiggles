@@ -40,7 +40,7 @@ public class InformationScreen implements Screen {
         Label informationLabel = new Label("INFORMATION!", Configuration.SKIN, "title");
         informationLabel.setAlignment(Align.center);
 
-        Label keysInformation = new Label("Use your arrow keys to move around.", Configuration.SKIN, "big");
+        Label keysInformation = new Label("Use your arrow keys or WASD to move around.", Configuration.SKIN, "big");
         keysInformation.setAlignment(Align.center);
 
         Label shootingInformation = new Label("There are two methods of shooting, burst and singular.", Configuration.SKIN, "big");

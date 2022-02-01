@@ -104,16 +104,19 @@ public class HUDmanager {
     public void updateLabels(Batch batch){
         coolDownTimerTime = Ship.burstTimer;
         String healthText = " " + Ship.health;
-        health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
 
-        if(Ship.health > (Ship.maxHealth * 0.6)){
+
+        if(Ship.health > (Ship.maxHealth * 0.49)){
             batch.setColor(Color.GREEN);
+            health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
         }
         else if(Ship.health > (Ship.maxHealth * 0.25)){
             batch.setColor(Color.ORANGE);
+            health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
         }
         else{
             batch.setColor(Color.RED);
+            health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
         }
 
         batch.begin();

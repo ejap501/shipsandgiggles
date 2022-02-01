@@ -18,6 +18,7 @@ public class deathScreen {
 
     public Label scoreLabel;
     public Label gold;
+    public Label gameOver;
 
     public deathScreen(SpriteBatch batch){
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
@@ -25,7 +26,7 @@ public class deathScreen {
 
         Table endGameTable = new Table();
 
-        Label gameOver = new Label( "Game Over!", Configuration.SKIN, "title");
+        gameOver = new Label( "Game Over!", Configuration.SKIN, "title");
         scoreLabel = new Label( "Score : " + score, Configuration.SKIN, "big");
         gold = new Label( "Final Gold Count : " + Gold, Configuration.SKIN, "big");
 
@@ -43,7 +44,13 @@ public class deathScreen {
         stage.addActor(endGameTable);
     }
 
-    public void update(HUDmanager hud){
+    public void update(HUDmanager hud, int victorykind){
+        if(victorykind == 1){
+            gameOver.setText("Pacifist Victory!");
+        }
+        if(victorykind == 2){
+            gameOver.setText("Domination Victory!");
+        }
         score = hud.score;
         Gold = hud.gold;
         scoreLabel.setText("Score: " + score);

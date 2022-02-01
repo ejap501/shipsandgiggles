@@ -36,7 +36,7 @@ public class Ship extends MovableEntity {
 	public int numberOfShotsLeft = 3;
 	public int shotsInRapidShot = 3;
 
-	public float shootingCoolDown = 0.3f;
+	public float shootingCoolDown = 0.6f;
 	public float burstCoolDown = 4f;
 	public float shootingTimer = 0f;
 	public static float burstTimer = 0f;
@@ -160,12 +160,12 @@ public class Ship extends MovableEntity {
 
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
-		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
 			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 
-		if(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
+		if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
 			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}

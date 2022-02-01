@@ -55,6 +55,11 @@ public class InformationScreen implements Screen {
         Label singularShoot = new Label("Left-Click to singular shoot!", Configuration.SKIN, "big");
         singularShoot.setAlignment(Align.center);
 
+        Label collegeInfo1 = new Label("There are two ways to win the game!", Configuration.SKIN, "big");
+        Label collegeInfo2 = new Label("taking down a college will give you 5 gold a turn and if you capture all of them you win!", Configuration.SKIN, "big");
+        Label collegeInfo3 = new Label("the other way is to destroy all of them which will give you an instant 500 gold and 250 score!", Configuration.SKIN, "big");
+        Label collegeInfo4 = new Label("destroying all of them will result in a victory!", Configuration.SKIN, "big");
+
         Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
         spaceToSkip.setAlignment(Align.center);
 
@@ -81,9 +86,18 @@ public class InformationScreen implements Screen {
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
         this.table.row();
+        this.table.row();
+        this.table.add(collegeInfo1);
+        this.table.row();
+        this.table.add(collegeInfo2);
+        this.table.row();
+        this.table.add(collegeInfo3);
+        this.table.row();
+        this.table.add(collegeInfo4);
+        this.table.row();
         this.table.add(spaceToSkip);
 
-        this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 5);
+        this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);
     }
 
     @Override

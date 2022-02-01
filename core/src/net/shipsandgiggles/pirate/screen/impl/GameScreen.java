@@ -76,6 +76,7 @@ public class GameScreen implements Screen {
 	public boolean intro = false;
 	public float zoomedAmount = 0;
 	EntityAi bob, player;
+	public static int collegesCaptured = 0;
 
 	Sprite cannonBall;
 	//private Ship enemyShips;
@@ -212,12 +213,24 @@ public class GameScreen implements Screen {
 		updateExplosions();
 
 
-		if(playerShips.dead | collegesKilled >= 4){
+		if(playerShips.dead){
+			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			return;
 		}
-		deathScreen.update(hud);
+		if(collegesCaptured == 4){
+			deathScreen.update(hud, 1);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			return;
+		}
+		if(collegesKilled == 4){
+			deathScreen.update(hud, 2);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			return;
+		}
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.draw();
 		hud.updateLabels(batch);
@@ -431,5 +444,7 @@ public class GameScreen implements Screen {
 
 	public static void collegeKilled(){
 		collegesKilled ++;
+		collegesCaptured--;
 	}
+	public static void collegeCaptured(){collegesCaptured ++;}
 }

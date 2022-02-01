@@ -46,6 +46,7 @@ public abstract class College extends Entity {
 	public void death() {
 		if(this.getHealth() != 1){
 			this.health = 1;
+			GameScreen.collegeCaptured();
 			return;
 		}
 		if(this.dead) return;

@@ -3,6 +3,9 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,6 +20,9 @@ public class LoadingScreen implements Screen {
 
 	private Stage stage;
 	private Table table;
+
+	public Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));;
+	private final SpriteBatch batch = new SpriteBatch();;
 
 	@Override
 	public void show() {
@@ -72,8 +78,11 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
 
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();

@@ -71,7 +71,8 @@ public class GameScreen implements Screen {
 	float recordedSpeed = 0;
 	int cameraState = 0;
 	public Sprite water;
-
+	public boolean intro = false;
+	public float zoomedAmount = 0;
 	EntityAi bob, player;
 
 	Sprite cannonBall;
@@ -101,6 +102,7 @@ public class GameScreen implements Screen {
 		batch = new SpriteBatch();
 
 		world.setContactListener(new worldContactListener());
+		camera.zoom = 2;
 
 
 
@@ -110,7 +112,7 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 
-		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 4f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
 		playerShips.setTexture(playerModel);
@@ -158,6 +160,15 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float deltaTime) { //yay c# less goooooo (i changed it to deltaTime cuz im used to it being that from c#)
+		if(!intro){
+			camera.zoom -= 0.02f;
+			zoomedAmount += 0.02;
+			if(zoomedAmount >= 1){
+				intro = true;
+			}
+		}
+
+
 		update();
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

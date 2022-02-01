@@ -16,7 +16,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 public class createNewBall {
 
-    public float timer = 1.1f;
+    public float timer = 0.8f;
     public World world;
     public Body body;
     public boolean isDestroyed = false;
@@ -24,7 +24,7 @@ public class createNewBall {
     public boolean setAngle = false;
     public float angle;
     public Sprite cannonBall;
-    public float speed = 1.2f;
+    public float speed = 1.1f;
     public float damageDelt = 50f;
     public boolean teleported = false;
     public float finalX = 0;

@@ -9,6 +9,7 @@ import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import java.awt.*;
 import java.util.UUID;
@@ -42,6 +43,8 @@ public abstract class College extends Entity {
 		return this.body;
 	}
 	public void death() {
+		if(this.dead) return;
+		GameScreen.collegeKilled();
 		Currency.get().give(Currency.Type.POINTS, 250);
 		Currency.get().give(Currency.Type.GOLD, 500);
 		this.dead = true;

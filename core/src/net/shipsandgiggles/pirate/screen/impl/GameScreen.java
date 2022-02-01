@@ -43,6 +43,7 @@ public class GameScreen implements Screen {
 	public AlcuinCollege alcuin;
 	public GoodrickCollege goodrick;
 	public Sprite collegeSprite;
+	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
 	public net.shipsandgiggles.pirate.deathScreen deathScreen;
@@ -211,7 +212,7 @@ public class GameScreen implements Screen {
 		updateExplosions();
 
 
-		if(playerShips.dead){
+		if(playerShips.dead | collegesKilled >= 4){
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			return;
@@ -426,5 +427,9 @@ public class GameScreen implements Screen {
 	}
 	public static void add(Vector2 pp){
 		Explosions.add(new ExplosionController(pp));
+	}
+
+	public static void collegeKilled(){
+		collegesKilled ++;
 	}
 }

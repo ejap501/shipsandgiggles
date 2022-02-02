@@ -9,20 +9,20 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 
-public class ballsManager {
+public class BallsManager {
 
     public static int i = 0;
 
     public static void removeNext(){i++;}
 
-    static ArrayList<createNewBall> listOfBalls = new ArrayList<createNewBall>();
+    static ArrayList<CannonBall> listOfBalls = new ArrayList<CannonBall>();
     public static void createBall(World world, Vector2 position, Vector2 target, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
         cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
-        createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, target, categoryBits, maskBit, groupIndex);
+        CannonBall ball = new CannonBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, target, categoryBits, maskBit, groupIndex);
         listOfBalls.add(ball);
     }
     public static void createBallAtAngle(World world, Vector2 position, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
-        createNewBall ball = new createNewBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);
+        CannonBall ball = new CannonBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);
         listOfBalls.add(ball);
     }
 

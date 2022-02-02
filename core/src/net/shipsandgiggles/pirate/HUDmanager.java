@@ -40,7 +40,7 @@ public class HUDmanager {
     Label cooldownTimer;
     Label health;
     Label healthLabel;
-    Image goldCoin = new Image(new Texture("models/gold_coin.PNG"));
+    Image goldCoin = new Image(new Texture("models/gold_coin.png"));
     Image burstLogo = new Image(new Texture("models/burst_icon.png"));
     Image shootLogo = new Image(new Texture("models/attack_icon.png"));
     Image burstCooldownLogo = new Image(new Texture("models/burst_onCoolDown.png"));

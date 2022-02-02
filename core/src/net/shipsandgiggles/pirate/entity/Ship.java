@@ -1,11 +1,8 @@
 package net.shipsandgiggles.pirate.entity;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,9 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
-import org.w3c.dom.css.Rect;
 
-import java.awt.*;
 import java.util.UUID;
 
 public class Ship extends MovableEntity {
@@ -28,7 +23,7 @@ public class Ship extends MovableEntity {
 	private float turnDirection;
 	private float driveDirection;
 	private Sprite texture;
-	createNewBall ball;
+	CannonBall ball;
 
 	public boolean rapidShot = false;
 	public float timeBetweenRapidShots = 0.2f;
@@ -109,14 +104,14 @@ public class Ship extends MovableEntity {
 		Vector3 mouse_position = new Vector3(0,0,0);
 		mouse_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		cam.unproject(mouse_position);
-		ballsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex);
 	}
 
 	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
 		float angle = this.getEntityBody().getAngle();
 		System.out.println(Math.toDegrees(angle));
-		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
-		ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
+		BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
 		this.rapidShot = true;
 		this.numberOfShotsLeft = this.shotsInRapidShot;
 	}
@@ -124,8 +119,8 @@ public class Ship extends MovableEntity {
 	public void rapidShot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
 		float angle = this.getEntityBody().getAngle();
 		if(this.rapidShot && this.timeBetweenRapidShots <= 0){
-			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
-			ballsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) + 90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
+			BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) + 90), cannonBallSprite, categoryBits, maskBit, groupIndex);
 			this.timeBetweenRapidShots = this.rapidShotCoolDown;
 			this.numberOfShotsLeft--;
 		}

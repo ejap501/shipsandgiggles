@@ -11,15 +11,12 @@ import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.ballsManager;
+import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.college.College;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
-import java.awt.*;
 import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
-import static net.shipsandgiggles.pirate.conf.Configuration.world;
 
 public class LangwithCollege extends College {
 	public World world;
@@ -96,7 +93,7 @@ public class LangwithCollege extends College {
 			}
 		}
 		if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {
-			ballsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
+			BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
 			this.timer = this.cooldownTimer;
 		}
 		else if(timer <= 0) this.timer = 0;

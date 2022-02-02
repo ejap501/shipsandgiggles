@@ -5,17 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import net.shipsandgiggles.pirate.ExplosionController;
-import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
-
-import java.util.ArrayList;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 
-public class createNewBall {
+public class CannonBall {
 
     public float timer = 0.8f;
     public World world;
@@ -31,7 +27,7 @@ public class createNewBall {
     public float finalX = 0;
     public float finalY = 0;
 
-    createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
+    CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){
         LoadingScreen.soundController.playCannonShot();
         this.world = world;
         Body body;
@@ -59,7 +55,7 @@ public class createNewBall {
         this.body = body;
 
     }
-    createNewBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){
+    CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){
         LoadingScreen.soundController.playCannonShot();
         this.world = world;
         Body body;
@@ -101,7 +97,7 @@ public class createNewBall {
                 GameScreen.add(new Vector2(finalX, finalY));
                 this.world.destroyBody(this.body);
                 this.isDestroyed = true;
-                ballsManager.removeNext();
+                BallsManager.removeNext();
             }
             if(!setAngle){
                 this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2( this.body.getPosition().x-this.target.x,this.target.y- this.body.getPosition().y  ));

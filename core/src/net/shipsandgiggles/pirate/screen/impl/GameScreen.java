@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,11 +17,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.conf.worldContactListener;
+import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.ballsManager;
+import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.GoodrickCollege;
@@ -104,7 +103,7 @@ public class GameScreen implements Screen {
 		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
 
-		world.setContactListener(new worldContactListener());
+		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
 
@@ -182,7 +181,7 @@ public class GameScreen implements Screen {
 		batch.end();
 
 		tmr.render();
-		ballsManager.updateBalls(batch);
+		BallsManager.updateBalls(batch);
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));

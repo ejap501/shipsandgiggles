@@ -22,6 +22,11 @@ public class AlcuinCollege extends College {
 
     public World world;
 
+    /** this is the class to control the Alcuin college it is practically the same for each other college*/
+
+
+
+    /** construction of college*/
 
     public AlcuinCollege(Sprite texture, Location location, float maximumHealth, World world) {
         super(UUID.randomUUID(), Type.LANGWITH, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
@@ -33,6 +38,8 @@ public class AlcuinCollege extends College {
 
         def.position.set(location.getX(), location.getY());
 
+        /** creation of the body*/
+
         def.fixedRotation = true;
         body = world.createBody(def);
         PolygonShape shape = new PolygonShape();
@@ -40,7 +47,7 @@ public class AlcuinCollege extends College {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
-        fixtureDef.filter.categoryBits = Configuration.Cat_College;
+        fixtureDef.filter.categoryBits = Configuration.Cat_College; /**telling it what category it is */
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
@@ -62,12 +69,13 @@ public class AlcuinCollege extends College {
         if(dead){
             return;
         }
-        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f));
+        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
         batch.begin();
 
-        this.getSkin().draw(batch);
+        this.getSkin().draw(batch);//draws college
 
+        /**changes the college health colour based on the amount it has */
         if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
             batch.setColor(Color.GREEN);
         }
@@ -84,9 +92,9 @@ public class AlcuinCollege extends College {
 
     }
 
-    @Override
+    @Override /** shooting the player method if the player is close enough*/
     public void shootPlayer(Ship player) {
-        if(this.health == 1 && !this.dead){
+        if(this.health == 1 && !this.dead){ /** checks if the college is dead or not*/
             this.counter += Gdx.graphics.getDeltaTime();
             if(this.counter >= 1){
                 Currency.get().give(Currency.Type.POINTS, 3);
@@ -94,11 +102,11 @@ public class AlcuinCollege extends College {
                 this.counter = 0;
             }
         }
-        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {
+        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
             BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
             this.timer = this.cooldownTimer;
         }
-        else if(timer <= 0) this.timer = 0;
+        else if(timer <= 0) this.timer = 0; /** ensures that there is a cool down between every shot*/
         else this.timer -= Gdx.graphics.getDeltaTime();
     }
 

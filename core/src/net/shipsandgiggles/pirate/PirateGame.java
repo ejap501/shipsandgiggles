@@ -6,6 +6,8 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class PirateGame extends Game {
 
+	/** creation of an instance of the game*/
+
 	private static PirateGame INSTANCE;
 
 	public static PirateGame get() {

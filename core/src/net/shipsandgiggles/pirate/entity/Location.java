@@ -2,6 +2,8 @@ package net.shipsandgiggles.pirate.entity;
 
 public class Location {
 
+	/** creates class for locaiton instead of always using position*/
+
 	private float xCoordinate;
 	private float yCoordinate;
 

@@ -4,6 +4,8 @@ import java.util.function.Predicate;
 
 public class Preconditions {
 
+	/** preconditions for the game to check if its null or not*/
+
 	public static <T> void checkNotNull(T value, String error) {
 		if (value == null) {
 			throw new NullPointerException(error);

@@ -17,6 +17,8 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class PreferenceScreen implements Screen {
 
+	/** preference screen in the main menu*/
+
 	private Stage stage;
 	private Table table;
 
@@ -36,7 +38,7 @@ public class PreferenceScreen implements Screen {
 		Label preferencesLabel = new Label("Game Preferences", Configuration.SKIN, "big");
 		preferencesLabel.setAlignment(Align.center);
 
-		// Music Volume Settings
+		/** Music Volume Settings*/
 
 		Slider VolumeSlider = new Slider(0f, 1f, 0.1f, false, Configuration.SKIN);
 		VolumeSlider.setValue(gamePreferences.getVolumeLevel());
@@ -56,7 +58,7 @@ public class PreferenceScreen implements Screen {
 
 		Label musicVolumeLabel = new Label("Music Volume", Configuration.SKIN);
 
-		// Music Enabled Settings
+		/** Music Enabled Settings*/
 
 		CheckBox musicEnabled = new CheckBox(null, Configuration.SKIN);
 		musicEnabled.setChecked(gamePreferences.isMusicEnabled());
@@ -69,7 +71,7 @@ public class PreferenceScreen implements Screen {
 
 		Label musicEnabledLabel = new Label("Music Enabled", Configuration.SKIN);
 
-		// Volume Enabled Settings
+		/** Volume Enabled Settings*/
 
 		CheckBox volumeEnabled = new CheckBox(null, Configuration.SKIN);
 		volumeEnabled.setChecked(gamePreferences.isVolumeEnabled());
@@ -81,8 +83,8 @@ public class PreferenceScreen implements Screen {
 
 		Label volumeLabel = new Label("Volume Enabled", Configuration.SKIN);
 
-		TextButton backButton = new TextButton("Back", Configuration.SKIN); // the extra argument here "small" is used to set the button to the smaller version instead of the big default version
-		backButton.addListener(
+		TextButton backButton = new TextButton("Back", Configuration.SKIN); /** the extra argument here "small" is used to set the button to the smaller version instead of the big default version*/
+		 backButton.addListener(
 				new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -91,7 +93,7 @@ public class PreferenceScreen implements Screen {
 			}
 		});
 
-		// Creates a uniform X/Y table.
+		/** Creates a uniform X/Y table.*/
 		this.table.add(preferencesLabel);
 		this.table.row();
 		this.table.add(Configuration.SPACER_LABEL);

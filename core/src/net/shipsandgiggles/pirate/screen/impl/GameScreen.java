@@ -37,6 +37,8 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 public class GameScreen implements Screen {
 
+	/** main game screen*/
+
 	public LangwithCollege langwith;
 	public ConstantineCollege constantine;
 	public AlcuinCollege alcuin;
@@ -49,22 +51,18 @@ public class GameScreen implements Screen {
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
 
-	//implement world
+	/** implement world*/
 	public static World world;
 	private final int _height = Gdx.graphics.getHeight();
 	private final int _width = Gdx.graphics.getWidth();
-	//private Viewport viewport;
-	//objects
 	private final Ship playerShips;
-	//camera work
+	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
-	//graphics
-	private final SpriteBatch batch; //batch of images "objects"
+	/**graphics */
+	private final SpriteBatch batch; /**batch of images "objects" */
 	public Sprite playerModel;
-	//private Texture background; changed to colour of "deep water"
-	//private Body[] islands;
-	//private Texture[] islandsTextures;
+
 	private final Texture[] boats;
 	private final Box2DDebugRenderer renderer;
 	private final OrthoCachedTiledMapRenderer tmr;
@@ -78,14 +76,11 @@ public class GameScreen implements Screen {
 	public static int collegesCaptured = 0;
 
 	Sprite cannonBall;
-	//private Ship enemyShips;
 
 
 	public GameScreen() {
-		//for (int x = 0; x < islands.length; x++) islands[x] = createBox(22, 34, true, new Vector2(29,39));
-		//islands = new Body[1];
-		//islandsTextures = new Texture[1];
-		//islandsTextures[0] = new Texture(Gdx.files.internal("models/island1.png"));
+
+		/** initialization of everything*/
 
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), false);
@@ -100,7 +95,6 @@ public class GameScreen implements Screen {
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
-		//viewport = new StretchViewport(_width, _height, camera);
 		batch = new SpriteBatch();
 
 		world.setContactListener(new WorldContactListener());
@@ -108,9 +102,9 @@ public class GameScreen implements Screen {
 
 
 
-		//objects setup
+		/** objects setup*/
 
-		//int random = (int) Math.floor((Math.random() * 2.99f)); //generate random boat
+
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 
@@ -119,8 +113,8 @@ public class GameScreen implements Screen {
 
 		playerShips.setTexture(playerModel);
 
-		//islands[0] = createBox(islandsTextures[0].getWidth(), islandsTextures[0].getHeight(), true , new Vector2(300,300));
-		//enemyShips = new Ship(boats[random], 10, _width / 2, _height* 3/ 4, 20, 40);
+
+		/** map initialization */
 		map = new TmxMapLoader().load("models/map.tmx");
 		tmr = new OrthoCachedTiledMapRenderer(map);
 
@@ -128,10 +122,12 @@ public class GameScreen implements Screen {
 
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
+		/** creates damping to player */
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
+		/** enemy creation "bob" and Entity ai controller*/
 		Body body = createEnemy((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
 		bob = new EntityAi(body, 300f, bobsSprite);
 		bob.setTarget(playerShips.getEntityBody());
@@ -140,13 +136,14 @@ public class GameScreen implements Screen {
 		Steerable<Vector2> pp = player;
 
 
+		/** status of entity ai */
 		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
 				.setTimeToTarget(0.01f)
 				.setArrivalTolerance(175f)
 				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
 
-		//set up college
+		/** set up college*/
 		langwith = new LangwithCollege(collegeSprite, new Location(150f,151f), 200f, world);
 		goodrick = new GoodrickCollege(collegeSprite, new Location(150f,975f), 200f, world);
 		alcuin = new AlcuinCollege(collegeSprite, new Location(1750f,151f), 200f, world);
@@ -163,7 +160,8 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
-	public void render(float deltaTime) { //yay c# less goooooo (i changed it to deltaTime cuz im used to it being that from c#)
+	public void render(float deltaTime) {
+		/** zoom controller for the intro*/
 		if(!intro){
 			camera.zoom -= 0.02f;
 			zoomedAmount += 0.02;
@@ -173,16 +171,20 @@ public class GameScreen implements Screen {
 		}
 
 
+		/** does the update methid*/
 		update();
+		/** colour creation for background*/
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		/** draws the water manually to use less resources*/
 		water.draw(batch);
 		batch.end();
 
 		tmr.render();
 		BallsManager.updateBalls(batch);
 
+		/** setting ship position for the sprite of the player ship*/
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
@@ -196,7 +198,7 @@ public class GameScreen implements Screen {
 
 
 
-
+		/** update all the colleges and entities*/
 		playerShips.draw(batch);
 		langwith.draw(batch);
 		langwith.shootPlayer(playerShips);
@@ -209,9 +211,12 @@ public class GameScreen implements Screen {
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);
+
+		/** update for the explosion*/
 		updateExplosions();
 
 
+		/** change of ui incase of victory or death or normal hud*/
 		if(playerShips.dead){
 			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
@@ -235,6 +240,7 @@ public class GameScreen implements Screen {
 		hud.updateLabels(batch);
 	}
 
+	/** updating the explosions*/
 	private void updateExplosions() {
 		ArrayList<ExplosionController> removeExplosion = new ArrayList<ExplosionController>();
 		for(ExplosionController explosion : Explosions){
@@ -259,6 +265,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void inputUpdate() {
+		/** checking for inputs*/
 		if (playerShips.dead) return;
 		if (playerShips.getEntityBody().getLinearVelocity().len() > 20f) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -303,6 +310,7 @@ public class GameScreen implements Screen {
 			}
 
 		}
+		/** creating zooming */
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
 		}
@@ -313,9 +321,11 @@ public class GameScreen implements Screen {
 	}
 
 	private void processInput() {
+		/** processing the input created*/
 		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
 
+		/** apllying liner velocity to the player based on input*/
 		float turnPercentage = 0;
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
 			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (playerShips.getMaximumSpeed());
@@ -326,6 +336,7 @@ public class GameScreen implements Screen {
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
 
 
+		/** applying angular velocity to the player based on input*/
 		if (playerShips.getTurnDirection() == 1) {
 			playerShips.getEntityBody().setAngularVelocity(-currentTurnSpeed);
 		} else if (playerShips.getTurnDirection() == 2) {
@@ -334,6 +345,7 @@ public class GameScreen implements Screen {
 			playerShips.getEntityBody().setAngularVelocity(0);
 		}
 
+		/** applies speed to the player based on input*/
 		if (playerShips.getDriveDirection() == 1) {
 			baseVector.set(0, playerShips.getSpeed());
 		} else if (playerShips.getDriveDirection() == 2) {
@@ -356,6 +368,7 @@ public class GameScreen implements Screen {
 	}
 
 	private void handleDirft() {
+		/** handles drifts of the boat */
 		Vector2 forwardSpeed = playerShips.getForwardVelocity();
 		Vector2 lateralSpeed = playerShips.getLateralVelocity();
 
@@ -364,6 +377,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		/** resize function*/
 		camera.setToOrtho(false, width / 2, height / 2);
 		//viewport.update(width,height, true);
 		//batch.setProjectionMatrix(camera.combined);
@@ -386,6 +400,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		/** disposing of everything*/
 		renderer.dispose();
 		world.dispose();
 		tmr.dispose();
@@ -394,6 +409,7 @@ public class GameScreen implements Screen {
 	}
 
 	public void updateCamera() {
+		/** updating camera based on states*/
 		if(playerShips.dead) {
 			if(camera.zoom < 2)camera.zoom += 0.005f;
 			CameraManager.lerpOn(camera, playerShips.deathPosition, 0.1f);
@@ -410,7 +426,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {
+	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {/** creation of the body for the enemy*/
 		Body body;
 		BodyDef def = new BodyDef();
 
@@ -442,8 +458,10 @@ public class GameScreen implements Screen {
 	}
 
 	public static void collegeKilled(){
+		/** adds for each college killed to count for victory*/
 		collegesKilled ++;
 		collegesCaptured--;
 	}
+	/** adds college captured to check for victory*/
 	public static void collegeCaptured(){collegesCaptured ++;}
 }

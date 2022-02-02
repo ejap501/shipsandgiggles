@@ -11,6 +11,8 @@ public enum ScreenType {
 	PREFERENCE(PreferenceScreen.class),
 	INFORMATION(InformationScreen.class);
 
+	/** creation of different screen types*/
+
 	private static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
 
 	private final Class<? extends Screen> screen;

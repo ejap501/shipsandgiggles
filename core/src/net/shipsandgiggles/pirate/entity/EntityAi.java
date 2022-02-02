@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.MassData;
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 public class EntityAi implements Steerable<Vector2> {
-
+    /** the creation and AI of the enemy boat*/
     Body body;
     boolean tagged;
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
@@ -24,7 +24,7 @@ public class EntityAi implements Steerable<Vector2> {
     boolean isPlayer;
     Body target;
     float amountOfRotations = 0;
-    private boolean independentFacing = false; // defines if the entity can move in a direction other than the way it faces)
+    private boolean independentFacing = false; /**defines if the entity can move in a direction other than the way it faces) */
     float angleToTarget = 0;
 
     SteeringBehavior<Vector2> behavior;
@@ -32,8 +32,7 @@ public class EntityAi implements Steerable<Vector2> {
 
 
     public EntityAi(Body body, float boundingRadius, Sprite texture){
-
-        //System.out.println("oo");
+        /** creation of the Ai of the enemy */
         this.body = body;
         this.boundingRadius = boundingRadius;
         this.texture = texture;
@@ -60,7 +59,7 @@ public class EntityAi implements Steerable<Vector2> {
     }
 
     public EntityAi(Body body, float boundingRadius){
-        //System.out.println("pp");
+        /**creation of the target for the player */
 
         this.body = body;
         this.boundingRadius = boundingRadius;
@@ -89,7 +88,7 @@ public class EntityAi implements Steerable<Vector2> {
             return;
         }
         if(behavior != null){
-            this.steeringOutput = behavior.calculateSteering(steeringOutput);
+            this.steeringOutput = behavior.calculateSteering(steeringOutput); /** calculates if needs steering */
             applySteering(this.steeringOutput, delta);
 
         }
@@ -98,7 +97,7 @@ public class EntityAi implements Steerable<Vector2> {
 
     public void drawEntity(Batch batch){
         if(!this.isPlayer){
-            this.getSprite().setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.getSprite().getWidth() / 2f), this.body.getPosition().y* PIXEL_PER_METER - (this.getSprite().getHeight() / 2f));
+            this.getSprite().setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.getSprite().getWidth() / 2f), this.body.getPosition().y* PIXEL_PER_METER - (this.getSprite().getHeight() / 2f)); /**sets position and rotation of the boat */
             this.getSprite().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
 
            // System.out.println(this.getSprite().getOriginY() + "" + this.body.getPosition());
@@ -119,56 +118,45 @@ public class EntityAi implements Steerable<Vector2> {
         }
         boolean anyAccelerations = false;
 
-        // Update position and linear velocity.
+        /** Update position and linear velocity.*/
         if (!steeringOutput.linear.isZero()) {
             // this method internally scales the force by deltaTime
             body.applyForceToCenter(new Vector2(steeringOutput.linear.x * speedMultiplier , (steeringOutput.linear.y * speedMultiplier)), true);
             anyAccelerations = true;
         }
 
-        // Update orientation and angular velocity
+        /**  Update orientation and angular velocity*/
         if (isIndependentFacing()) {
             if (steeringOutput.angular != 0) {
-                // this method internally scales the torque by deltaTime
+                /** this method internally scales the torque by deltaTime*/
                 body.applyTorque(steeringOutput.angular * turnMultiplier, true);
                 anyAccelerations = true;
             }
         } else {
-            // If we haven't got any velocity, then we can do nothing.
+            /**  If we haven't got any velocity, then we can do nothing.*/
             Vector2 linVel = this.getLinearVelocity();
             if (steeringOutput.linear.len() > 25f) {
-             //   if(Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) > 175 || Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)) < -175){
-             //       System.out.println("yeye  " + Math.toDegrees((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x)));
-             //       this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x));
-             //   }
-             //   else{
 
 
                 float newOrientation = vectorToAngle(linVel);
-                //System.out.println();
-                //body.setAngularVelocity((newOrientation - getAngularVelocity()) * turnMultiplier * deltaTime); // this is superfluous if independentFacing is always true
-                //body.setTransform(body.getPosition(), newOrientation)
-                //System.out.println(Math.toDegrees(((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) )));
-
+                /** sets new angle towards player*/
                this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
-                //this.setAngleToTarget((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f);
-               // this.getBody().setAngularVelocity(this.getAngleToTarget());
+
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
 
-                //System.out.println(newOrientation +""+ getAngularVelocity());
             }
 
         }
 
         if (anyAccelerations) {
-            // Cap the linear speed
+            /**Cap the linear speed */
             Vector2 velocity = body.getLinearVelocity();
             float currentSpeedSquare = velocity.len2();
             float maxLinearSpeed = getMaxLinearSpeed();
             if (currentSpeedSquare > (maxLinearSpeed * maxLinearSpeed)) {
                 body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float)Math.sqrt(currentSpeedSquare)));
             }
-            // Cap the angular speed
+            /** Cap the angular speed*/
             float maxAngVelocity = getMaxAngularSpeed();
             if (body.getAngularVelocity() > maxAngVelocity) {
                 body.setAngularVelocity(maxAngVelocity);

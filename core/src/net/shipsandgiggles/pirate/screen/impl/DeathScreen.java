@@ -12,6 +12,8 @@ import net.shipsandgiggles.pirate.HUDmanager;
 import net.shipsandgiggles.pirate.conf.Configuration;
 
 public class DeathScreen {
+
+    /** adds the ui for the death screen*/
     public Stage stage;
     private Viewport viewport;
     public float score = 0;
@@ -22,6 +24,7 @@ public class DeathScreen {
     public Label gameOver;
 
     public DeathScreen(SpriteBatch batch){
+        /** construction and setting of the labels*/
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, batch);
 
@@ -46,6 +49,7 @@ public class DeathScreen {
     }
 
     public void update(HUDmanager hud, int victorykind){
+        /** update the variables and check for which victory achived*/
         if(victorykind == 1){
             gameOver.setText("Pacifist Victory!");
         }

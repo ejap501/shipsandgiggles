@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
+/** assigns the variables to any entity in the game that moves*/
+
 public abstract class MovableEntity extends Entity {
 
 	private final float maximumSpeed;

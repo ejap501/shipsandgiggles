@@ -6,6 +6,8 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class ChangeScreenTask extends Timer.Task {
 
+    /** changing the screen*/
+
     private final ScreenType screenType;
 
     public ChangeScreenTask(ScreenType screenType) {

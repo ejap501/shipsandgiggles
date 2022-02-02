@@ -22,6 +22,9 @@ import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import java.awt.*;
 
 public class HUDmanager {
+
+    /** a manager for the HUD */
+
     public Stage stage;
     private Viewport viewport;
 
@@ -32,8 +35,9 @@ public class HUDmanager {
     public float timeCounter = 0;
     public float coolDownTimerTime;
 
-    public Texture healthBar = new Texture("models/bar.png");
+    public Texture healthBar = new Texture("models/bar.png"); /** gets helthbar textures*/
 
+    /** setting labels and getting other textures*/
     Label scoreLabelCounter;
     Label goldLabel;
     Label scoreLabel;
@@ -45,17 +49,20 @@ public class HUDmanager {
     Image shootLogo = new Image(new Texture("models/attack_icon.png"));
     Image burstCooldownLogo = new Image(new Texture("models/burst_onCoolDown.png"));
     Stack cooldown = new Stack();
-    Table bottomRightTable = new Table();
+    Table abalities = new Table();
     Table bottomLeftTable = new Table();
 
 
     public HUDmanager(SpriteBatch batch){
+        /** setting the score*/
         score = Currency.get().balance(Currency.Type.POINTS);
         gold = Currency.get().balance(Currency.Type.GOLD);
 
+        /** setting a view port and stage for the camera to paste it on the screen and not map*/
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, batch);
 
+        /**creation of the top left bit of the screen */
         Table topLeftTable = new Table();
 
         topLeftTable.setSize(200,Gdx.graphics.getHeight());
@@ -66,7 +73,7 @@ public class HUDmanager {
         cooldownTimer = new Label("" + coolDownTimerTime, Configuration.SKIN, "big");
         scoreLabel = new Label("Score: ", Configuration.SKIN, "big");
 
-
+        /** order of adding the UI*/
 
         topLeftTable.add(goldCoin);
         topLeftTable.add(goldLabel);
@@ -78,34 +85,35 @@ public class HUDmanager {
         stage.addActor(topLeftTable);
 
 
-
-        bottomRightTable.setSize(Gdx.graphics.getWidth(),200);
-        bottomRightTable.top().left();
+        /** creation of bottom left of the screen*/
+        abalities.setSize(Gdx.graphics.getWidth(),200);
+        abalities.top().left();
 
         cooldown.add(burstLogo);
 
 
-        bottomRightTable.add(shootLogo);
-        bottomRightTable.add(cooldown);
+        abalities.add(shootLogo);
+        abalities.add(cooldown);
 
-        bottomRightTable.setPosition(0, -70);
+        abalities.setPosition(0, -70);
 
-        stage.addActor(bottomRightTable);
+        stage.addActor(abalities);
 
         healthLabel = new Label("Health: ", Configuration.SKIN, "big");
         health = new Label("" + Ship.health + " / " + Ship.maxHealth, Configuration.SKIN, "big");
+        /** adds order */
         bottomLeftTable.add(healthLabel);
         bottomLeftTable.add(health);
         bottomLeftTable.setPosition(150, 200);
         bottomLeftTable.row();
         stage.addActor(bottomLeftTable);
     }
-
+    /** updates all the variables on screen*/
     public void updateLabels(Batch batch){
         coolDownTimerTime = Ship.burstTimer;
         String healthText = " " + Ship.health;
 
-
+        /** change colour of healthbar based on health percentage*/
         if(Ship.health > (Ship.maxHealth * 0.49)){
             batch.setColor(Color.GREEN);
             health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
@@ -119,12 +127,13 @@ public class HUDmanager {
             health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
         }
 
+        /** draw health bar*/
         batch.begin();
         batch.draw(healthBar, 0,140,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
         batch.end();
 
         batch.setColor(Color.WHITE);
-
+        /** update variables and give points to player every 2 seconds*/
         timeCounter += Gdx.graphics.getDeltaTime();
         if(timeCounter >= 2){
             Currency.get().give(Currency.Type.POINTS, 1);

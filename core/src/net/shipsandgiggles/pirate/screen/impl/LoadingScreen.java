@@ -19,6 +19,8 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class LoadingScreen implements Screen {
 
+	/** the main screen */
+
 	public static SoundController soundController;
 	private Stage stage;
 	private Table table;
@@ -39,9 +41,9 @@ public class LoadingScreen implements Screen {
 
 		this.stage.addActor(this.table);
 
-		// Initialise Buttons
+		/** Initialise Buttons*/
 
-		// New Game Button
+		/** New Game Button*/
 		TextButton newGame = new TextButton("New Game", Configuration.SKIN);
 		newGame.addListener(new ChangeListener() {
 			@Override
@@ -51,7 +53,7 @@ public class LoadingScreen implements Screen {
 			}
 		});
 
-		// Preferences Button
+		/**Preferences Button */
 		TextButton preferences = new TextButton("Preferences", Configuration.SKIN);
 		preferences.addListener(new ChangeListener() {
 			@Override
@@ -61,7 +63,7 @@ public class LoadingScreen implements Screen {
 			}
 		});
 
-		// Exit Button
+		/** Exit Button*/
 		TextButton exit = new TextButton("Exit", Configuration.SKIN);
 		exit.addListener(new ChangeListener() {
 			@Override
@@ -72,11 +74,11 @@ public class LoadingScreen implements Screen {
 			}
 		});
 
-		// Loading Screen Data
+		/**  Loading Screen Data*/
 
-		// Creates a uniform X/Y table.
+		/**Creates a uniform X/Y table. */
 		table.add(newGame).fillX().uniformX();
-		// Sets default gap between.
+		/** Sets default gap between.*/
 		table.row().pad(10, 0, 10, 0);
 		table.add(preferences).fillX().uniformX();
 		table.row();

@@ -20,6 +20,9 @@ import net.shipsandgiggles.pirate.task.ChangeScreenTask;
 
 public class InformationScreen implements Screen {
 
+    /** the information screen before the game begins*/
+    /** all using simple ui */
+
     private Stage stage;
     private Table table;
 
@@ -37,6 +40,7 @@ public class InformationScreen implements Screen {
         Gdx.input.setInputProcessor(this.stage);
         this.stage.addActor(this.table);
 
+        /** creating all the labels*/
         Label informationLabel = new Label("INFORMATION!", Configuration.SKIN, "title");
         informationLabel.setAlignment(Align.center);
 
@@ -63,7 +67,7 @@ public class InformationScreen implements Screen {
         Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
         spaceToSkip.setAlignment(Align.center);
 
-        // Creates a uniform X/Y table.
+        /**Creates a uniform X/Y table. */
         this.table.add(informationLabel);
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);

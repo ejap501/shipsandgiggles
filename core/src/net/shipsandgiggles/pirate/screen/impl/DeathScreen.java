@@ -1,4 +1,4 @@
-package net.shipsandgiggles.pirate;
+package net.shipsandgiggles.pirate.screen.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,9 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import net.shipsandgiggles.pirate.HUDmanager;
 import net.shipsandgiggles.pirate.conf.Configuration;
 
-public class deathScreen {
+public class DeathScreen {
     public Stage stage;
     private Viewport viewport;
     public float score = 0;
@@ -20,7 +21,7 @@ public class deathScreen {
     public Label gold;
     public Label gameOver;
 
-    public deathScreen(SpriteBatch batch){
+    public DeathScreen(SpriteBatch batch){
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, batch);
 

@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
-	public net.shipsandgiggles.pirate.deathScreen deathScreen;
+	public DeathScreen deathScreen;
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
 
@@ -153,7 +153,7 @@ public class GameScreen implements Screen {
 		constantine = new ConstantineCollege(collegeSprite, new Location(1750f,975f), 200f, world);
 
 		hud = new HUDmanager(batch);
-		deathScreen = new deathScreen(batch);
+		deathScreen = new DeathScreen(batch);
 	}
 
 

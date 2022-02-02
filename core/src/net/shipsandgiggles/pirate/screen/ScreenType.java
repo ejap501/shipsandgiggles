@@ -2,10 +2,7 @@ package net.shipsandgiggles.pirate.screen;
 
 import com.badlogic.gdx.Screen;
 import net.shipsandgiggles.pirate.cache.Cache;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
-import net.shipsandgiggles.pirate.screen.impl.InformationScreen;
-import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
-import net.shipsandgiggles.pirate.screen.impl.PreferenceScreen;
+import net.shipsandgiggles.pirate.screen.impl.*;
 
 public enum ScreenType {
 

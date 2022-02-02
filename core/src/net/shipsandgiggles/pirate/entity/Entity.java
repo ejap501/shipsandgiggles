@@ -1,8 +1,8 @@
 package net.shipsandgiggles.pirate.entity;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import java.util.UUID;
 
@@ -21,8 +21,8 @@ public abstract class Entity {
 	private final float height;
 	private final float width;
 
-	private float health;
-	private Body body;
+	public float health;
+
 
 	public Entity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
 		this.uuid = uuid;
@@ -52,14 +52,6 @@ public abstract class Entity {
 	 */
 	public Sprite getSkin() {
 		return this.texture;
-	}
-
-	public Body getBody() {
-		return this.body;
-	}
-
-	protected Body setBody(Body body) {
-		return this.body = body;
 	}
 
 	/**
@@ -109,6 +101,10 @@ public abstract class Entity {
 	 * @return Current health after damage (i.e. {@link #getHealth() - damage}
 	 */
 	public float damage(float damage) {
+		if(this.health == 1){
+			this.death();
+			return 0f;
+		}
 		if ((this.health = (this.health - damage)) <= 0f) {
 			this.death();
 			return 0f;
@@ -121,6 +117,7 @@ public abstract class Entity {
 	 * Draw the entity onto the batch.
 	 */
 	public abstract void draw(Batch batch);
+	public abstract void shootPlayer(Ship player);
 
 	public abstract void death();
 

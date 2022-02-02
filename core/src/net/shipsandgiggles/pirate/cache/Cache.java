@@ -2,7 +2,6 @@ package net.shipsandgiggles.pirate.cache;
 
 import net.shipsandgiggles.pirate.util.Preconditions;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,9 +45,5 @@ public class Cache<K, V> {
 		Preconditions.checkNotNull(toFind, "Identifier for a cache cannot be null!");
 
 		return Optional.ofNullable(this.cache.get(toFind));
-	}
-
-	public Collection<V> all() {
-		return this.cache.values();
 	}
 }

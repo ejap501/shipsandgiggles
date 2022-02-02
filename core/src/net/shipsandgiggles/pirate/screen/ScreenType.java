@@ -2,19 +2,18 @@ package net.shipsandgiggles.pirate.screen;
 
 import com.badlogic.gdx.Screen;
 import net.shipsandgiggles.pirate.cache.Cache;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
-import net.shipsandgiggles.pirate.screen.impl.InformationScreen;
-import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
-import net.shipsandgiggles.pirate.screen.impl.PreferenceScreen;
+import net.shipsandgiggles.pirate.screen.impl.*;
 
 public enum ScreenType {
 
-	INFORMATION(InformationScreen.class),
 	LOADING(LoadingScreen.class),
 	GAME(GameScreen.class),
-	PREFERENCE(PreferenceScreen.class);
+	PREFERENCE(PreferenceScreen.class),
+	INFORMATION(InformationScreen.class);
 
-	public static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
+	/** creation of different screen types*/
+
+	private static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);
 
 	private final Class<? extends Screen> screen;
 

@@ -6,14 +6,16 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 
 public class ChangeScreenTask extends Timer.Task {
 
-	private final ScreenType screenType;
+    /** changing the screen*/
 
-	public ChangeScreenTask(ScreenType screenType) {
-		this.screenType = screenType;
-	}
+    private final ScreenType screenType;
 
-	@Override
-	public void run() {
-		PirateGame.get().changeScreen(this.screenType);
-	}
+    public ChangeScreenTask(ScreenType screenType) {
+        this.screenType = screenType;
+    }
+
+    @Override
+    public void run() {
+        PirateGame.get().changeScreen(this.screenType);
+    }
 }

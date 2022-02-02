@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ships and Giggles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <!-- Back to Top Button JS -->
+    <script
+      type="text/javascript"
+      src="http://code.jquery.com/jquery-latest.js"
+    ></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+  </head>
+  <!-- Back to top button -->
+  <button onclick="topFunction()" id="topBtn" title="Go to top">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      class="text-white fill-current w-6 h-6 -rotate-90"
+    >
+      <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
+    </svg>
+  </button>
+  <body class="bg-neutral-50">
+    <!-- Header Section -->
+    <section
+      class="flex justify-center items-center flex-col bg-gradient-to-r from-cyan-400 to to-blue-500 w-full h-80"
+    >
+      <div class="flex justify-center items-center flex-col space-y-3">
+        <h1 class="text-white opacity-100">Ships & Giggles</h1>
+        <p class="text-white text-center">
+          Group 23<br />
+          Assessment 1 Website
+        </p>
+        <a class="pt-4 cursor-pointer" href="#info">
+          <svg
+            width="24"
+            height="24"
+            xmlns="http://www.w3.org/2000/svg"
+            class="animate-bounce text-white fill-current"
+          >
+            <path
+              d="M11 21.883l-6.485-7.527-.765.644 7.521 9 7.479-9-.755-.645-6.236 7.529v-21.884h-1v21.883z"
+            />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Content Section -->
+    <section
+      id="info"
+      class="relative max-w-xl lg:max-w-2xl px-2 mb-12 mx-auto"
+    >
+      <!-- CONTENTS -->
+      <div>
+        <h2>Contents</h2>
+        <ul>
+          <li>
+            <a class="link" href="#downloads">Downloads</a>
+          </li>
+          <li>
+            <a class="link" href="#plan">Project Plan</a>
+          </li>
+          <li>
+            <a class="link" href="#weeklysnapshots">Weekly Snapshots</a>
+          </li>
+        </ul>
+        <p>Welcome to Team <i>Ships and Giggles</i>' Assessment one project</p>
+      </div>
+
+      <!-- DOWNLOADS -->
+      <div>
+        <h3 id="downloads">Downloads</h3>
+        <ul>
+          <li>
+            <a class="link" href="./pdfs/Req1.pdf">Req1.pdf </a>
+          </li>
+          <li>
+            <a class="link" href="./pdfs/Arch1.pdf">Arch1.pdf </a>
+          </li>
+          <li>
+            <a class="link" href="./pdfs/Plan1.pdf">Plan1.pdf </a>
+          </li>
+          <li>
+            <a class="link" href="./pdfs/Risk1.pdf">Risk1.pdf </a>
+          </li>
+          <li>
+            <a class="link" href="/pdfs/Impl1.pdf">Impl1.pdf </a>
+          </li>
+        </ul>
+        <div class="space-y-3 mt-3 flex flex-col">
+          <a class="button-secondary" href="#">JAR file </a>
+        </div>
+      </div>
+
+      <br />
+
+      <!-- PLAN -->
+      <div>
+        <h3 id="plan">Project Plan</h3>
+        <p>
+          To begin, as a team, we put together an initial plan. This was
+          demonstrated with a Gantt chart:
+        </p>
+        <img src="images/initial-plan.png" />
+        <p class="caption">
+          Gantt chart showing the initial plan to approach the project (not to
+          exact dates).
+        </p>
+        <p>
+          We discovered this approach was too detailed and as we began
+          completing tasks it became progressively harder to achieve the initial
+          goals we set out. Hence, we decided to change our approach to the
+          planning and distribution of tasks.
+        </p>
+        <p>
+          This in turn was done by conducting 4 sprints of 2 weeks each
+          adjusting the end goals as required within weekly group meetings on
+          Wednesdays:
+        </p>
+        <img class="" src="images/sprints-overview.png" />
+        <p class="caption">
+          New updated Project plan with general goals for each sprint
+        </p>
+        <p>
+          We redesigned our project overview to more general goals allowing for
+          flexibility among the team. If issues arose or requirements where to
+          change, these can be addressed when the team met and weekly plans
+          adjusted as needed.
+        </p>
+      </div>
+
+      <br />
+
+      <!-- WEEKLY SNAPSHOTS -->
+      <div>
+        <h3 id="weeklysnapshots">Weekly Snapshots</h3>
+        <p>
+          Please find below each weeks plan, as a Gantt chart. These are shown
+          within the sprints that they fall into. Hence, each chart covers 2
+          weeks and we reviewed progress at weekly meetings on Wednesdays.
+        </p>
+
+        <div class="flex flex-row justify-around mb-4">
+          <a href="#19-11" class="mt-2 button-primary">Sprint 1</a>
+          <a href="#1-12" class="mt-2 button-primary">Sprint 2</a>
+          <!-- <a href="#sprint2" class="mt-2 button-secondary">Break</a> -->
+          <a href="#05-01" class="mt-2 button-primary">Sprint 3</a>
+          <a href="#19-01" class="mt-2 button-primary">Sprint 4</a>
+        </div>
+
+        <!-- FIRST WEEK : 19/11/2021 - 23/11/2021-->
+        <div>
+          <h5 id="19-11">19/11/2021 - 24/11/2021</h5>
+          <img class="" src="images/sprint1.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            This week, we planned our approach to working as a team and the
+            software we would use to achieve this. In addition, the week
+            consisted of individually reviewing the assessment brief to get a
+            better understanding of the project.
+          </p>
+        </div>
+        <!-- SECOND WEEK : 24/11/2021 - 30/11/2021-->
+        <div>
+          <h5 id="24-12">24/11/2021 - 30/11/2021</h5>
+          <img class="" src="images/sprint1.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            This week, in addition to continuing research for a game engine and
+            project risks, the primary aim was for each member and questions to
+            be well prepared for the customer interview planned for the end of
+            the sprint.
+          </p>
+        </div>
+        <!-- THIRD WEEK : 1/12/2021 - 7/12/2021-->
+        <div>
+          <h5 id="1-12">1/12/2021 - 7/12/2021</h5>
+          <img class="" src="images/sprint2.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            At the start of the second sprint, the overall aim was to begin
+            basic implementation of the game's classes working from the abstract
+            software representation completed in the previous sprint.
+          </p>
+        </div>
+        <!-- FOURTH WEEK : 8/12/2021 - 15/12/2021 -->
+        <div>
+          <h5 id="8-12">8/12/2021 - 15/12/2021</h5>
+          <img class="" src="images/sprint2.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            This week, the focus of the implementation was to begin basic game
+            logic and UI to have a simple application which displays to the
+            user. Furthermore, the overall website design finished at the end of
+            this week, allowing for any further documents to be added once
+            ready.
+          </p>
+        </div>
+        <!-- FIFTH WEEK : 5/01/2022 - 12/01/2022 -->
+        <div>
+          <h5 id="05-01">5/01/2022 - 12/01/2022</h5>
+          <img class="" src="images/sprint3.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            Sprint 3 had a reduced number of objectives regarding documentation
+            to reduce the workload for each member as we were approaching the
+            common assessment period. Development continued, focusing on the
+            requirements set out in the assessment brief.
+          </p>
+        </div>
+        <!-- SIXTH WEEK : 12/01/2022 - 19/01/2022 -->
+        <div>
+          <h5 id="12-01">12/01/2022 - 19/01/2022</h5>
+          <img class="" src="images/sprint3.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            This week, the group had a short meeting to evaluate the current
+            prototype and ensure the project was on track to be completed on
+            time. Development continued at a slower pace due to ongoing exams.
+          </p>
+        </div>
+        <!-- SEVENTH WEEK : 19/01/2022 - 26/01/2022 -->
+        <div>
+          <h5 id="19-01">19/01/2022 - 26/01/2022</h5>
+          <img class="" src="images/sprint4.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            As we reached sprint 4, the overall aims were more focused on
+            documentation, with more members working on these goals. As such the
+            development of the game focused on refining areas, including the
+            user experience with a reduced number of people working on these
+            tasks.
+          </p>
+        </div>
+        <!-- EIGHT WEEK : 26/01/2022 - 02/02/2022 -->
+        <div>
+          <h5 id="26-01">26/01/2022 - 02/02/2022</h5>
+          <img class="" src="images/sprint4.png" />
+          <p class="caption">The most up to date sprint plan for this week</p>
+          <p>
+            This week, the focus on documentation continued, with tidying up and
+            publishing finished documentation to the website. The game
+            development reached it's finial stages and was checked by each
+            individual to ensure all requirements set in the brief have been
+            implemented effectively.
+          </p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

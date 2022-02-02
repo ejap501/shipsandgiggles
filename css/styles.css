@@ -1,0 +1,81 @@
+/* Tailwind Import */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1 {
+  @apply text-5xl text-zinc-800 font-semibold;
+}
+
+h2 {
+  @apply text-4xl text-zinc-800 font-semibold pt-6 pb-3;
+}
+
+h3 {
+  @apply text-3xl text-zinc-800 font-normal pt-3 pb-3;
+}
+
+h4 {
+  @apply text-2xl text-zinc-800 font-normal pt-3 pb-3;
+}
+
+h5 {
+  @apply text-2xl text-zinc-800 font-semibold pt-4 pb-2;
+}
+
+p {
+  @apply text-lg text-zinc-700 pt-2 pb-4;
+}
+
+ul {
+  @apply list-inside list-disc text-lg -space-y-1;
+}
+
+img {
+  @apply outline outline-1 p-1 bg-white outline-zinc-300 hover:outline-zinc-400 transition-all ease-in-out rounded-md outline-offset-1;
+}
+
+.link {
+  @apply text-cyan-500 hover:text-cyan-700 hover:decoration-cyan-600 transition-all ease-in-out cursor-pointer underline underline-offset-2 decoration-cyan-400 text-lg inline-flex py-2;
+}
+
+.button-primary {
+  @apply cursor-pointer bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-600 border-2 border-transparent px-8 py-2 rounded-md text-white text-lg shadow-sm max-w-min transition ease-linear min-w-max;
+}
+
+.button-secondary {
+  @apply cursor-pointer bg-transparent hover:bg-cyan-500 hover:text-white hover:border-cyan-500 active:bg-cyan-600 active:text-white border-2 border-cyan-400 px-8 py-2 rounded-md text-cyan-500 text-lg shadow-sm max-w-min transition ease-linear min-w-max;
+}
+
+.box {
+  @apply flex flex-col px-5 py-5 my-5 border border-zinc-200 shadow-blue-400/10 bg-white mx-auto w-full rounded-md shadow-xl transition ease-in-out duration-300;
+}
+
+.caption {
+  @apply text-base text-zinc-500 -mt-2;
+}
+
+/* -- BACK TO TOP BUTTON -- */
+#topBtn {
+  display: block;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  @apply bg-blue-500;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+#topBtn:hover {
+  @apply bg-blue-600 transition-all ease-in-out;
+}

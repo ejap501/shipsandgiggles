@@ -18,6 +18,7 @@ public class Configuration {
 	public static final short Cat_walls = 2;
 	public static final short Cat_Enemy = 4;
 	public static final short Cat_College = 8;
+	public static final short Cat_Collect = 16;
 	public static final World world = GameScreen.world; /** the world*/
 	public static final Label SPACER_LABEL = new Label(" ", Configuration.SKIN);
 

@@ -110,5 +110,4 @@ public class AlcuinCollege extends College {
         else this.timer -= Gdx.graphics.getDeltaTime();
     }
 
-
 }

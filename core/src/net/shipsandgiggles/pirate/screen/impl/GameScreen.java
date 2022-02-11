@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.collectible.Plunder;
+import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -43,7 +45,6 @@ public class GameScreen implements Screen {
 	public ConstantineCollege constantine;
 	public AlcuinCollege alcuin;
 	public GoodrickeCollege goodricke;
-	public Sprite collegeSprite;
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
@@ -53,9 +54,8 @@ public class GameScreen implements Screen {
 
 	/** implement world*/
 	public static World world;
-	private final int _height = Gdx.graphics.getHeight();
-	private final int _width = Gdx.graphics.getWidth();
 	private final Ship playerShips;
+	private ArrayList<Plunder> coins = new ArrayList<>();
 	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -63,7 +63,6 @@ public class GameScreen implements Screen {
 	private final SpriteBatch batch; /**batch of images "objects" */
 	public Sprite playerModel;
 
-	private final Texture[] boats;
 	private final Box2DDebugRenderer renderer;
 	private final OrthoCachedTiledMapRenderer tmr;
 	private final TiledMap map;
@@ -84,19 +83,19 @@ public class GameScreen implements Screen {
 
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), false);
-		boats = new Texture[3];
-		boats[0] = new Texture(Gdx.files.internal("models/player_ship.png"));
-		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
-		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
+
 		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
 		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
 		Sprite goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
 		Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+		Sprite coinSprite = new Sprite(new Texture("models/gold_coin.png"));
 
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 
 		camera = new OrthographicCamera();
+		int _height = Gdx.graphics.getHeight();
+		int _width = Gdx.graphics.getWidth();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 
@@ -110,7 +109,7 @@ public class GameScreen implements Screen {
 
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
-
+		coins.add(new Coin(coinSprite, new Location(40050f, 100f), world));
 		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
@@ -211,6 +210,9 @@ public class GameScreen implements Screen {
 		goodricke.shootPlayer(playerShips);
 		alcuin.draw(batch);
 		alcuin.shootPlayer(playerShips);
+		//for (int i = 0; i <= coins.size(); i++){
+		//	coins.get(i).draw(batch);
+		//}
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);

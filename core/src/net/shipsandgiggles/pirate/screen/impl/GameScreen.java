@@ -24,7 +24,7 @@ import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
-import net.shipsandgiggles.pirate.entity.impl.college.GoodrickCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
 	public LangwithCollege langwith;
 	public ConstantineCollege constantine;
 	public AlcuinCollege alcuin;
-	public GoodrickCollege goodrick;
+	public GoodrickeCollege goodricke;
 	public Sprite collegeSprite;
 	public static float collegesKilled = 0;
 
@@ -85,10 +85,13 @@ public class GameScreen implements Screen {
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), false);
 		boats = new Texture[3];
-		boats[0] = new Texture(Gdx.files.internal("models/ship1.png"));
+		boats[0] = new Texture(Gdx.files.internal("models/player_ship.png"));
 		boats[1] = new Texture(Gdx.files.internal("models/ship2.png"));
 		boats[2] = new Texture(Gdx.files.internal("models/ship3.png"));
-		collegeSprite = new Sprite(new Texture("models/castle.png"));
+		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
+		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
+		Sprite goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
+		Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
 
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
@@ -106,9 +109,9 @@ public class GameScreen implements Screen {
 
 
 
-		playerModel = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
+		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 
-		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 2f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
 		playerShips.setTexture(playerModel);
@@ -144,10 +147,10 @@ public class GameScreen implements Screen {
 		bob.setBehavior(arrives);
 
 		/** set up college*/
-		langwith = new LangwithCollege(collegeSprite, new Location(150f,151f), 200f, world);
-		goodrick = new GoodrickCollege(collegeSprite, new Location(150f,975f), 200f, world);
-		alcuin = new AlcuinCollege(collegeSprite, new Location(1750f,151f), 200f, world);
-		constantine = new ConstantineCollege(collegeSprite, new Location(1750f,975f), 200f, world);
+		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,975f), 200f, world);
+		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
+		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,975f), 200f, world);
+		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
@@ -204,8 +207,8 @@ public class GameScreen implements Screen {
 		langwith.shootPlayer(playerShips);
 		constantine.draw(batch);
 		constantine.shootPlayer(playerShips);
-		goodrick.draw(batch);
-		goodrick.shootPlayer(playerShips);
+		goodricke.draw(batch);
+		goodricke.shootPlayer(playerShips);
 		alcuin.draw(batch);
 		alcuin.shootPlayer(playerShips);
 

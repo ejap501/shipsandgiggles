@@ -18,11 +18,11 @@ import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-public class GoodrickCollege extends College {
+public class GoodrickeCollege extends College {
     public World world;
 
 
-    public GoodrickCollege(Sprite texture, Location location, float maximumHealth, World world) {
+    public GoodrickeCollege(Sprite texture, Location location, float maximumHealth, World world) {
         super(UUID.randomUUID(), Type.LANGWITH, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
 
         Body body;
@@ -100,6 +100,4 @@ public class GoodrickCollege extends College {
         else if(timer <= 0) this.timer = 0;
         else this.timer -= Gdx.graphics.getDeltaTime();
     }
-
-
 }

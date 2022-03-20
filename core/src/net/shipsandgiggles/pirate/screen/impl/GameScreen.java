@@ -18,7 +18,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.collectible.Plunder;
-import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -62,6 +61,7 @@ public class GameScreen implements Screen {
 	/**graphics */
 	private final SpriteBatch batch; /**batch of images "objects" */
 	public Sprite playerModel;
+	public Sprite coinModel;
 
 	private final Box2DDebugRenderer renderer;
 	private final OrthoCachedTiledMapRenderer tmr;
@@ -88,7 +88,6 @@ public class GameScreen implements Screen {
 		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
 		Sprite goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
 		Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
-		Sprite coinSprite = new Sprite(new Texture("models/gold_coin.png"));
 
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
@@ -109,17 +108,14 @@ public class GameScreen implements Screen {
 
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
-		coins.add(new Coin(coinSprite, new Location(40050f, 100f), world));
+		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		coins.add(new Plunder(coinModel, new Location(40050f, 100f), coinModel.getHeight(), coinModel.getWidth()));
 		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
-
-
-		playerShips.setTexture(playerModel);
 
 
 		/** map initialization */
 		map = new TmxMapLoader().load("models/map.tmx");
 		tmr = new OrthoCachedTiledMapRenderer(map);
-
 
 
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
@@ -210,9 +206,7 @@ public class GameScreen implements Screen {
 		goodricke.shootPlayer(playerShips);
 		alcuin.draw(batch);
 		alcuin.shootPlayer(playerShips);
-		//for (int i = 0; i <= coins.size(); i++){
-		//	coins.get(i).draw(batch);
-		//}
+		//for (int i = 0; i <= coins.size(); i++){coins.get(i).draw(batch);}
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);

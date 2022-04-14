@@ -11,7 +11,6 @@ import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
-import java.awt.*;
 import java.util.UUID;
 
 /**

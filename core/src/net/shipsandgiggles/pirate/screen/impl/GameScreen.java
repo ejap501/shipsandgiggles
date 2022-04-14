@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.entity.collectible.Plunder;
+import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -49,12 +49,14 @@ public class GameScreen implements Screen {
 	public static HUDmanager hud;
 	public DeathScreen deathScreen;
 
-	public static ArrayList<ExplosionController> Explosions = new ArrayList<ExplosionController>();
+	public static ArrayList<ExplosionController> Explosions = new ArrayList<>();
 
 	/** implement world*/
 	public static World world;
 	private final Ship playerShips;
-	private ArrayList<Plunder> coins = new ArrayList<>();
+	private Coin coins;
+	private Coin another;
+	private ArrayList<Coin> coinData = new ArrayList<>();
 	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -109,7 +111,6 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
-		coins.add(new Plunder(coinModel, new Location(40050f, 100f), coinModel.getHeight(), coinModel.getWidth()));
 		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
@@ -146,6 +147,10 @@ public class GameScreen implements Screen {
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,975f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
+		coins = new Coin(coinModel, new Location(600f,600f), 1f, world);
+		another = new Coin(coinModel, new Location(670f,600f), 1f, world);
+		coinData.add(coins);
+		coinData.add(another);
 
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
@@ -206,7 +211,11 @@ public class GameScreen implements Screen {
 		goodricke.shootPlayer(playerShips);
 		alcuin.draw(batch);
 		alcuin.shootPlayer(playerShips);
-		//for (int i = 0; i <= coins.size(); i++){coins.get(i).draw(batch);}
+		for (int i = 0; i < coinData.size(); i++){
+			coinData.get(i).draw(batch);
+			coinData.get(i).shootPlayer(playerShips);
+		}
+
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		bob.update(deltaTime, batch);

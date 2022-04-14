@@ -116,7 +116,9 @@ public abstract class Entity {
 	/**
 	 * Draw the entity onto the batch.
 	 */
-	public abstract void draw(Batch batch);
+	public void draw(Batch batch) {
+	}
+
 	public abstract void shootPlayer(Ship player);
 
 	public abstract void death();

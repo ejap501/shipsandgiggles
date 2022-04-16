@@ -47,7 +47,7 @@ public class Coin extends Plunder {
         this.body = body;
         this.world = world;
 
-        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() / PIXEL_PER_METER,(int)location.getY() / PIXEL_PER_METER, (texture.getWidth()) / PIXEL_PER_METER, (texture.getHeight()) / PIXEL_PER_METER);
+        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() / PIXEL_PER_METER,(int)location.getY() / PIXEL_PER_METER, ((texture.getWidth()) / PIXEL_PER_METER) + 4, ((texture.getHeight()) / PIXEL_PER_METER) + 4);
     }
 
     @Override
@@ -78,5 +78,10 @@ public class Coin extends Plunder {
         if(this.dead) return;
         Currency.get().give(Currency.Type.GOLD, 10); /** gives instant money if collected*/
         this.dead = true;
+    }
+
+    public boolean rangeCheck(Ship player){
+        return player.hitBox.overlaps(this.hitBox);
+
     }
 }

@@ -221,7 +221,9 @@ public class GameScreen implements Screen {
 		shop.rangeCheck(playerShips);
 		for (int i = 0; i < coinData.size(); i++){
 			coinData.get(i).draw(batch);
-			coinData.get(i).shootPlayer(playerShips);
+			if (coinData.get(i).rangeCheck(playerShips)){
+				coinData.get(i).death();
+			}
 		}
 
 

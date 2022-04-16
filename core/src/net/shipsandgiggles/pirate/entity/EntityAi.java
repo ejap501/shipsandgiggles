@@ -8,12 +8,9 @@ import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.MassData;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.currency.Currency;
 
@@ -32,7 +29,7 @@ public class EntityAi implements Steerable<Vector2> {
     float angleToTarget = 0;
     int health;
     int maxHealth;
-    boolean dead;
+    public boolean dead;
     public float counter = 0;
     public float timer = 0f;
     private Rectangle hitBox;
@@ -43,7 +40,7 @@ public class EntityAi implements Steerable<Vector2> {
 
 
 
-    public EntityAi(Body body, float boundingRadius, Sprite texture){
+    public EntityAi(Body body, float boundingRadius, Sprite texture, int width, int height){
         /** creation of the Ai of the enemy */
         this.body = body;
         this.boundingRadius = boundingRadius;
@@ -74,6 +71,18 @@ public class EntityAi implements Steerable<Vector2> {
         this.dead = false;
 
         this.hitBox =  new Rectangle(this.body.getPosition().x, this.body.getPosition().y, texture.getWidth() + 350, texture.getHeight() + 350);
+
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
+
+
+        body.createFixture(fixtureDef).setUserData(this);
+        shape.dispose();
 
 
     }
@@ -107,13 +116,19 @@ public class EntityAi implements Steerable<Vector2> {
         if(isPlayer){
             return;
         }
-        if(behavior != null){
+
+        if (health == 0 && !dead){
+            death(world);
+        }
+
+        else if(behavior != null){
             this.steeringOutput = behavior.calculateSteering(steeringOutput); /** calculates if needs steering */
             applySteering(this.steeringOutput, delta);
             shootPlayer(player, world);
 
         }
         drawEntity(batch);
+
     }
 
     public void drawEntity(Batch batch){
@@ -354,4 +369,18 @@ public class EntityAi implements Steerable<Vector2> {
     public SteeringBehavior<Vector2> getBehavior(){
         return this.behavior;
     }
+
+    public void death(World world){
+        if(this.dead) return;
+        Currency.get().give(Currency.Type.GOLD, 10); /** gives instant money if collected*/
+        world.destroyBody(body);
+        this.dead = true;
+        }
+
+    public void damage(float damageValue){
+        System.out.println("d");
+        health -= damageValue;
+
+    }
 }
+

@@ -131,8 +131,8 @@ public class GameScreen implements Screen {
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
 		/** enemy creation "bob" and Entity ai controller*/
-		Body body = createEnemy((int)bobsSprite.getWidth(), (int)bobsSprite.getHeight(), false, new Vector2(_width / 3f, _height / 6f));
-		bob = new EntityAi(body, 300f, bobsSprite);
+		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f));
+		bob = new EntityAi(body, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
 		bob.setTarget(playerShips.getEntityBody());
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
@@ -229,8 +229,9 @@ public class GameScreen implements Screen {
 
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
-		bob.update(deltaTime, batch, playerShips, world);
-
+		if(bob.dead == false) {
+			bob.update(deltaTime, batch, playerShips, world);
+		}
 		/** update for the explosion*/
 		updateExplosions();
 
@@ -452,7 +453,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public Body createEnemy(int width, int height, boolean isStatic, Vector2 position) {/** creation of the body for the enemy*/
+	public Body createEnemy( boolean isStatic, Vector2 position) {/** creation of the body for the enemy*/
 		Body body;
 		BodyDef def = new BodyDef();
 
@@ -463,15 +464,7 @@ public class GameScreen implements Screen {
 
 		def.fixedRotation = true;
 		body = world.createBody(def);
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef. density = 1f;
-		fixtureDef.filter.categoryBits = Configuration.Cat_Enemy;
 
-		body.createFixture(fixtureDef).setUserData(this);
-		shape.dispose();
 
 		return body;
 	}

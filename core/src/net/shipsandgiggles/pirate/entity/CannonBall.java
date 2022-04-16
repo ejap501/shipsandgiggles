@@ -30,7 +30,7 @@ public class CannonBall {
     public float finalY = 0;
 
     CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
-        LoadingScreen.soundController.playCannonShot(); /**plays shound of shooting */
+        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();

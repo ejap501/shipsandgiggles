@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.listener;
 
 import com.badlogic.gdx.physics.box2d.*;
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.college.College;
 import net.shipsandgiggles.pirate.entity.CannonBall;
@@ -23,6 +24,11 @@ public class WorldContactListener implements ContactListener {
             if(fixtureA.getUserData() instanceof Ship){
                 Ship ship = (Ship) fixtureA.getUserData(); /** checks if its a player */
                 ship.takeDamage(ball.getDamageDelt()); /** applies damage to ship */
+            }
+
+            if(fixtureA.getUserData() instanceof EntityAi){
+                EntityAi entity = (EntityAi) fixtureA.getUserData();
+                entity.damage(ball.getDamageDelt());
             }
         }
 

@@ -1,5 +1,7 @@
 package net.shipsandgiggles.pirate.currency;
 
+import net.shipsandgiggles.pirate.entity.Ship;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,6 +50,12 @@ public class Currency {
 			if (val == null) {
 				return amount;
 			}
+			if (type == Type.GOLD){
+
+				return val + (amount * Ship.coinMulti);
+
+			}
+
 
 			return val + amount;
 		});
@@ -56,20 +64,16 @@ public class Currency {
 	/**
 	 * @param type      Type of currency you wish to take.
 	 * @param amount    Amount you wish to take.
-	 * @param onSuccess Action to perform if they can afford it.
-	 * @return Whether they can afford the action.
 	 */
-	public boolean take(Type type, int amount, Runnable onSuccess) {
+	public void take(Type type, int amount) {
 		int balance = this.balance(type);
 
 		if (this.balance(type) >= amount) {
-			onSuccess.run();
+
 			this.currencyValues.put(type, balance - amount);
 
-			return true;
 		}
 
-		return false;
 	}
 
 	/**

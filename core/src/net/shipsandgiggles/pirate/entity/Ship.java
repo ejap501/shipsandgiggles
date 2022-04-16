@@ -33,8 +33,10 @@ public class Ship extends MovableEntity {
 	public int numberOfShotsLeft = 3;
 	public int shotsInRapidShot = 3;
 
+	public static boolean buyMenuRange = false;
+
 	public float shootingCoolDown = 0.6f;
-	public float burstCoolDown = 4f;
+	public static float burstCoolDown = 4f;
 	public float shootingTimer = 0f;
 	public static float burstTimer = 0f;
 	public World world;
@@ -48,6 +50,7 @@ public class Ship extends MovableEntity {
 	public static float maxHealth = 200f;
 	public float timeToRegen = 0;
 	private float healSpeed = 30;
+	public static int coinMulti = 1;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
@@ -249,6 +252,8 @@ public class Ship extends MovableEntity {
 	public float getDriftFactor() {
 		return this.driftFactor;
 	}
+
+	public Rectangle getHitBox() {return this.hitBox;}
 
 	public void takeDamage(float damage){
 		timeToRegen = 5f;

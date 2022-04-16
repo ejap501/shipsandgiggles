@@ -5,6 +5,7 @@ public enum EntityType {
 
 	SHIP,
 	COLLEGE,
-	PLUNDER
+	PLUNDER,
+	SHOP
 
 }

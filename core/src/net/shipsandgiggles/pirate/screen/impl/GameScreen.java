@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
+import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -27,6 +28,7 @@ import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
+import net.shipsandgiggles.pirate.screen.ScreenType;
 
 import java.util.ArrayList;
 
@@ -44,6 +46,7 @@ public class GameScreen implements Screen {
 	public ConstantineCollege constantine;
 	public AlcuinCollege alcuin;
 	public GoodrickeCollege goodricke;
+	public shop1 shop;
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
@@ -151,9 +154,12 @@ public class GameScreen implements Screen {
 		another = new Coin(coinModel, new Location(670f,600f), 1f, world);
 		coinData.add(coins);
 		coinData.add(another);
+		shop = new shop1(langwithCollegeSprite, new Location(500f,500f),-1,world);
 
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
+
+
 	}
 
 
@@ -211,6 +217,8 @@ public class GameScreen implements Screen {
 		goodricke.shootPlayer(playerShips);
 		alcuin.draw(batch);
 		alcuin.shootPlayer(playerShips);
+		shop.draw(batch);
+		shop.rangeCheck(playerShips);
 		for (int i = 0; i < coinData.size(); i++){
 			coinData.get(i).draw(batch);
 			coinData.get(i).shootPlayer(playerShips);
@@ -294,6 +302,13 @@ public class GameScreen implements Screen {
 			playerShips.setDriveDirection(0);
 		}
 
+		if (Gdx.input.isKeyJustPressed(Input.Keys.E )) {
+			if (Ship.buyMenuRange){
+				PirateGame.get().changeScreen(ScreenType.SHOP);
+			}
+		}
+
+
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getEntityBody().getPosition());
@@ -342,6 +357,8 @@ public class GameScreen implements Screen {
 		}
 
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
+
+
 
 
 		/** applying angular velocity to the player based on input*/

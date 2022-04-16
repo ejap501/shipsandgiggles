@@ -48,7 +48,10 @@ public class HUDmanager {
     Image burstLogo = new Image(new Texture("models/burst_icon.png"));
     Image shootLogo = new Image(new Texture("models/attack_icon.png"));
     Image burstCooldownLogo = new Image(new Texture("models/burst_onCoolDown.png"));
+    Image shopRange = new Image(new Texture("models/shop_icon.png"));
+    Image shopRangeCooldown = new Image(new Texture("models/shop_icon_cooldown.png"));
     Stack cooldown = new Stack();
+    Stack shop = new Stack();
     Table abalities = new Table();
     Table bottomLeftTable = new Table();
 
@@ -90,10 +93,12 @@ public class HUDmanager {
         abalities.top().left();
 
         cooldown.add(burstLogo);
+        shop.add(shopRangeCooldown);
 
 
         abalities.add(shootLogo);
         abalities.add(cooldown);
+        abalities.add(shop);
 
         abalities.setPosition(0, -70);
 
@@ -151,6 +156,14 @@ public class HUDmanager {
             cooldown.removeActor(burstCooldownLogo);
             cooldown.removeActor(cooldownTimer);
             cooldown.add(burstLogo);
+        }
+
+        if(Ship.buyMenuRange){
+            shop.removeActor(shopRangeCooldown);
+            shop.add(shopRange);
+        }else{
+            shop.removeActor(shopRange);
+            shop.add(shopRangeCooldown);
         }
 
 

@@ -310,8 +310,6 @@ public class GameScreen implements Screen {
 			}
 		}
 
-
-
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getEntityBody().getPosition());
 		}

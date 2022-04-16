@@ -40,7 +40,8 @@ public class Coin extends Plunder {
         shape.setAsBox((texture.getWidth() / 2f) / PIXEL_PER_METER, (texture.getHeight() / 2f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef. density = 1f;
+        fixtureDef.density = 1f;
+        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Configuration.Cat_Collect; /**telling it what category it is */
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();

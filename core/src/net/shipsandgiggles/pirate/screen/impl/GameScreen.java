@@ -19,6 +19,7 @@ import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
+import net.shipsandgiggles.pirate.entity.shop.Shop;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -228,7 +229,7 @@ public class GameScreen implements Screen {
 
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
-		bob.update(deltaTime, batch);
+		bob.update(deltaTime, batch, playerShips, world);
 
 		/** update for the explosion*/
 		updateExplosions();

@@ -40,7 +40,7 @@ public class shop1 extends Shop {
         this.body = body;
         this.world = world;
 
-        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX()-500,(int)location.getY(), 700,400);
+        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() -100 ,(int)location.getY(), 600,400);
 
     }
 

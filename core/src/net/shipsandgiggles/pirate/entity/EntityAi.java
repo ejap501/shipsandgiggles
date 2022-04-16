@@ -9,9 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.MassData;
+import com.badlogic.gdx.physics.box2d.World;
+import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.currency.Currency;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -26,9 +30,17 @@ public class EntityAi implements Steerable<Vector2> {
     float amountOfRotations = 0;
     private boolean independentFacing = false; /**defines if the entity can move in a direction other than the way it faces) */
     float angleToTarget = 0;
+    int health;
+    int maxHealth;
+    boolean dead;
+    public float counter = 0;
+    public float timer = 0f;
+    private Rectangle hitBox;
+    public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
     SteeringBehavior<Vector2> behavior;
     SteeringAcceleration<Vector2> steeringOutput;
+
 
 
     public EntityAi(Body body, float boundingRadius, Sprite texture){
@@ -56,6 +68,14 @@ public class EntityAi implements Steerable<Vector2> {
         this.steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
         this.body.setUserData(this);
         this.body.setLinearDamping(1f);
+
+        this.health = 100;
+        this.maxHealth = 100;
+        this.dead = false;
+
+        this.hitBox =  new Rectangle(this.body.getPosition().x, this.body.getPosition().y, texture.getWidth() + 350, texture.getHeight() + 350);
+
+
     }
 
     public EntityAi(Body body, float boundingRadius){
@@ -83,13 +103,14 @@ public class EntityAi implements Steerable<Vector2> {
         this.body.setLinearDamping(1f);
     }
 
-    public void update(float delta, Batch batch){
+    public void update(float delta, Batch batch,Ship player, World world){
         if(isPlayer){
             return;
         }
         if(behavior != null){
             this.steeringOutput = behavior.calculateSteering(steeringOutput); /** calculates if needs steering */
             applySteering(this.steeringOutput, delta);
+            shootPlayer(player, world);
 
         }
         drawEntity(batch);
@@ -163,6 +184,23 @@ public class EntityAi implements Steerable<Vector2> {
             }
         }
     }
+    public void shootPlayer(Ship player, World world) {
+        if(this.health == 1 && !this.dead){
+            this.counter += Gdx.graphics.getDeltaTime();
+            if(this.counter >= 1){
+                Currency.get().give(Currency.Type.POINTS, 3);
+                Currency.get().give(Currency.Type.GOLD, 5);
+                this.counter = 0;
+            }
+        }
+        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
+            BallsManager.createBall(world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
+            this.timer = 4;
+        }
+        else if(timer <= 0) this.timer = 0; /** ensures that there is a cool down between every shot*/
+        else this.timer -= Gdx.graphics.getDeltaTime();
+    }
+
 
     public boolean isIndependentFacing () {
         return independentFacing;

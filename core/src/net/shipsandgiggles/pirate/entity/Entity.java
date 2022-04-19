@@ -114,7 +114,9 @@ public abstract class Entity {
 			return 0f;
 		}
 
-		return this.health - damage;
+		this.health -= damage;
+
+		return this.health;
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class WorldContactListener implements ContactListener {
             }
             if(fixtureA.getUserData() instanceof Ship){
                 Ship ship = (Ship) fixtureA.getUserData(); /** checks if its a player */
-                ship.takeDamage(ball.getDamageDelt(), ship.getInvincible()); /** applies damage to ship */
+                ship.takeDamage(ball.getDamageDelt()); /** applies damage to ship */
             }
 
             if(fixtureA.getUserData() instanceof EntityAi){

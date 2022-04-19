@@ -23,7 +23,7 @@ public class CollegeTests {
 
         AlcuinCollege college = new AlcuinCollege(texture,location,maximumHealth,new World(new Vector2(0, 0), false));
         college.damage(10);
-        //assertEquals(maximumHealth - 10,college.health);
+        assertEquals(maximumHealth - 10,college.health);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class CollegeTests {
         AlcuinCollege college = new AlcuinCollege(texture,location,maximumHealth,world);
         college.damage(2);
         college.removeFromWorld();
-        //assertEquals(0, world.getBodyCount());
+        assertEquals(0, world.getBodyCount());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class CollegeTests {
         college.damage(2);
         college.removeFromWorld();
         college.damage(2);
-        //assertEquals(maximumHealth - 2,college.health);
+        assertEquals(maximumHealth - 2,college.health);
 
     }
 

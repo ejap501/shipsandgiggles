@@ -21,7 +21,7 @@ public class BallsManager {
     public static void createBall(World world, Vector2 position, Vector2 target, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){ /** this one is to create a cannonball at an angle towards the target*/
         cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png"))); /** gets the texture of the cannon ball*/
         CannonBall ball = new CannonBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, target, categoryBits, maskBit, groupIndex); /**creates a new cannonball class */
-        listOfBalls.add(ball); /** adds the cannonball to the array of cannonballs to mamange them*/
+        listOfBalls.add(ball); /** adds the cannonball to the array of cannonballs to manage them*/
     }
     public static void createBallAtAngle(World world, Vector2 position, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){ /** this one creates cannon ball at a given angle*/
         CannonBall ball = new CannonBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
@@ -70,8 +71,9 @@ public class GameScreen implements Screen {
 	public Sprite coinModel;
 
 	private final Box2DDebugRenderer renderer;
-	private final OrthoCachedTiledMapRenderer tmr;
+	//private final OrthoCachedTiledMapRenderer tmr;
 	private final TiledMap map;
+	private OrthogonalTiledMapRenderer maprender;
 	float recordedSpeed = 0;
 	int cameraState = 0;
 	public Sprite water;
@@ -88,7 +90,7 @@ public class GameScreen implements Screen {
 		/** initialization of everything*/
 
 		renderer = new Box2DDebugRenderer();
-		world = new World(new Vector2(0, 0), false);
+		world = new World(new Vector2(0, 0), true);
 
 		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
 		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
@@ -120,7 +122,7 @@ public class GameScreen implements Screen {
 
 		/** map initialization */
 		map = new TmxMapLoader().load("models/map.tmx");
-		tmr = new OrthoCachedTiledMapRenderer(map);
+		maprender = new OrthogonalTiledMapRenderer(map, 1);
 
 
 		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
@@ -188,10 +190,10 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		/** draws the water manually to use less resources*/
-		water.draw(batch);
+		//water.draw(batch);
 		batch.end();
-
-		tmr.render();
+		maprender.render();
+		//tmr.render();
 		BallsManager.updateBalls(batch);
 
 		/** setting ship position for the sprite of the player ship*/
@@ -278,7 +280,8 @@ public class GameScreen implements Screen {
 		inputUpdate();
 		processInput();
 		handleDirft();
-		tmr.setView(camera);
+		//tmr.setView(camera);
+		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 
@@ -430,7 +433,8 @@ public class GameScreen implements Screen {
 		/** disposing of everything*/
 		renderer.dispose();
 		world.dispose();
-		tmr.dispose();
+		//tmr.dispose();
+		maprender.dispose();
 		batch.dispose();
 		map.dispose();
 	}

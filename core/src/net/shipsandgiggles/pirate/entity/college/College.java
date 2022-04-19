@@ -20,6 +20,7 @@ public abstract class College extends Entity {
 	public Body body;
 	public float counter = 0;
 	public boolean dead = false;
+	public boolean removed = false;
 	public Rectangle hitBox;
 	private final College.Type type;
 	public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
@@ -43,11 +44,11 @@ public abstract class College extends Entity {
 		return this.body;
 	}
 	public void death() {/** to give chance to player to keep the college alive*/
-		if(this.getHealth() != 1){
-			this.health = 1;
-			GameScreen.collegeCaptured();
-			return;
-		}
+		//if(this.getHealth() != 1){
+		//	this.health = 1;
+		//	GameScreen.collegeCaptured();
+		//	return;
+		//}
 		if(this.dead) return;
 		GameScreen.collegeKilled(); /** gives instant money and score if the player decides to kill them*/
 		Currency.get().give(Currency.Type.POINTS, 250);

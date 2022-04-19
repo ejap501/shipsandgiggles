@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="36">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="44">
  <tileset firstgid="1" source="finalset.tsx"/>
  <layer id="9" name="Tile Layer 2" width="128" height="128">
   <data encoding="csv">
@@ -265,12 +265,14 @@
 10,10,10,10,10,10,10,10,72,4,3,3,4,3,4,4,4,3,4,4,4,4,3,4,4,4,3,4,4,4,4,3,4,3,4,4,3,3,3,4,4,4,4,4,4,4,3,3,3,4,4,4,4,4,4,3,3,4,3,4,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,4,4,4,4,4,4,4,3,4,4,4,4,4,4,4,4,4,3,3,3,3,4,4,4,4,3,4,4,4,4,3,3,4,4,4,73,105,105,298,298,298,298,298,298
 </data>
  </layer>
- <objectgroup id="4" name="collider" offsetx="3776" offsety="256">
-  <object id="34" x="-3488" y="-224">
-   <polyline points="0,0 0,224 -32,256 -256,256 -256,3776 -32,3776 0,3808 0,4032 3520,4032 3520,3808 3552,3776 3776,3776 3776,256 3552,256 3520,224 3520,0"/>
-  </object>
-  <object id="35" x="-3488" y="-224">
-   <polyline points="0,0 3520,0"/>
-  </object>
+ <objectgroup id="11" name="collider">
+  <object id="36" x="0" y="0" width="288" height="288"/>
+  <object id="37" x="0" y="288" width="32" height="3520"/>
+  <object id="38" x="0" y="3808" width="288" height="288"/>
+  <object id="39" x="3808" y="3808" width="288" height="288"/>
+  <object id="40" x="3808" y="0" width="288" height="288"/>
+  <object id="41" x="288" y="0" width="3520" height="32"/>
+  <object id="42" x="288" y="4064" width="3520" height="32"/>
+  <object id="43" x="4064" y="288" width="32" height="3520"/>
  </objectgroup>
 </map>

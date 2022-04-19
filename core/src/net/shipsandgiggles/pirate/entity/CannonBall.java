@@ -119,8 +119,6 @@ public class CannonBall {
             this.cannonBall.setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y * PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
             this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
 
-
-
             batch.begin();
             this.cannonBall.draw(batch);
             batch.end();

@@ -155,10 +155,10 @@ public class GameScreen implements Screen {
 
 		/** map initialization */
 		map = new TmxMapLoader().load("models/map.tmx");
-		maprender = new OrthogonalTiledMapRenderer(map, 1);
+		maprender = new OrthogonalTiledMapRenderer(map, 1f);
+		new WorldCreator(this);
 
-
-		TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
+		//TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
 		/** creates damping to player */
 		playerShips.getEntityBody().setLinearDamping(0.5f);
@@ -543,8 +543,11 @@ public class GameScreen implements Screen {
 
 		return body;
 	}
+	public TiledMap getMap() {
+		return map;
+	}
 
-	public static World getWorld(){
+	public World getWorld(){
 		return world;
 	}
 	public static void add(Vector2 pp){

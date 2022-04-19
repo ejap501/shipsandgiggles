@@ -48,6 +48,7 @@ public class Ship extends MovableEntity {
 
 	public static float health;
 	public static float maxHealth = 200f;
+	public static boolean invincible;
 	public float timeToRegen = 0;
 	private float healSpeed = 30;
 	public static int coinMulti = 1;
@@ -62,6 +63,7 @@ public class Ship extends MovableEntity {
 		this.turnSpeed = turnSpeed;
 		this.texture = texture;
 		this.cam = cam;
+		invincible = false;
 
 		/**Creation of Body */
 		BodyDef bodyDef = new BodyDef();
@@ -255,12 +257,17 @@ public class Ship extends MovableEntity {
 
 	public Rectangle getHitBox() {return this.hitBox;}
 
-	public void takeDamage(float damage){
+	public void takeDamage(float damage, boolean invincible){
 		timeToRegen = 5f;
-		this.health -= damage * 0.8;
+		if (!invincible) {
+			this.health -= damage * 0.8;
+		}
 		if(this.health <= 0){
 			this.death();
 		}
 	}
+
+	public void setInvincible(boolean isInvincible){invincible = isInvincible;}
+	public boolean getInvincible(){return invincible;}
 }
 

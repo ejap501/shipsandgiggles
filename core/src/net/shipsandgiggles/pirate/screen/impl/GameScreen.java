@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
+import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
+import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
 import net.shipsandgiggles.pirate.entity.shop.Shop;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
@@ -62,6 +64,8 @@ public class GameScreen implements Screen {
 	private Coin coins;
 	private Coin another;
 	private ArrayList<Coin> coinData = new ArrayList<>();
+	private ArrayList<powerUp> powerUpData = new ArrayList<>();
+	private ArrayList<Stone> stoneData = new ArrayList<>();
 	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -69,6 +73,15 @@ public class GameScreen implements Screen {
 	private final SpriteBatch batch; /**batch of images "objects" */
 	public Sprite playerModel;
 	public Sprite coinModel;
+	public Sprite speedUpModel;
+	public Sprite invincibilityModel;
+	public Sprite incDamageModel;
+	public Sprite coinMulModel;
+	public Sprite pointMulModel;
+	public Sprite stoneModelA;
+	public Sprite stoneModelB;
+	public Sprite stoneModelC;
+	//public Sprite speedDownModel;
 
 	private final Box2DDebugRenderer renderer;
 	//private final OrthoCachedTiledMapRenderer tmr;
@@ -84,6 +97,17 @@ public class GameScreen implements Screen {
 
 	Sprite cannonBall;
 
+	/** Abilities*/
+	float maxSpeed = 100f;
+	float speedMul = 2f;
+	float damageMul = 1.2f;
+	float coinMul = 1.2f;
+	float pointMul = 1.2f;
+	int speedTimer = 0;
+	int damageTimer = 0;
+	int invincibilityTimer = 0;
+	int coinTimer = 0;
+	int pointTimer = 0;
 
 	public GameScreen() {
 
@@ -117,7 +141,16 @@ public class GameScreen implements Screen {
 
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
-		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
+		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
+		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));
+		stoneModelB = new Sprite(new Texture(Gdx.files.internal("models/stone_2.png")));
+		stoneModelC = new Sprite(new Texture(Gdx.files.internal("models/stone_3.png")));
+		//speedDownModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		playerShips = new Ship(playerModel, 40000f, 0f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 
 
 		/** map initialization */
@@ -129,6 +162,7 @@ public class GameScreen implements Screen {
 
 		/** creates damping to player */
 		playerShips.getEntityBody().setLinearDamping(0.5f);
+		playerShips.setMaxSpeed(maxSpeed, speedMul);
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
@@ -157,6 +191,13 @@ public class GameScreen implements Screen {
 		another = new Coin(coinModel, new Location(670f,600f), 1f, world);
 		coinData.add(coins);
 		coinData.add(another);
+		powerUpData.add(new powerUp(speedUpModel, new Location(740f,600f), "Speed Up",1f, world));
+		stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
+		stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
+		stoneData.add(new Stone(stoneModelC, new Location(930f,650f),1f, world));
+
+		//powerUpData.add(new powerUp(speedDownModel, new Location(790f,600f), "Speed Down",1f, world));
+		powerUpData.add(new powerUp(invincibilityModel, new Location(810f,600f), "Invincible",1f, world));
 		shop = new shop1(langwithCollegeSprite, new Location(500f,500f),-1,world);
 
 		hud = new HUDmanager(batch);
@@ -183,7 +224,7 @@ public class GameScreen implements Screen {
 		}
 
 
-		/** does the update methid*/
+		/** does the update method*/
 		update();
 		/** colour creation for background*/
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
@@ -224,11 +265,31 @@ public class GameScreen implements Screen {
 		shop.rangeCheck(playerShips);
 		for (int i = 0; i < coinData.size(); i++){
 			coinData.get(i).draw(batch);
-			if (coinData.get(i).rangeCheck(playerShips)){
+			if (coinData.get(i).rangeCheck(playerShips) && !coinData.get(i).dead){
 				coinData.get(i).death();
 			}
 		}
 
+		for (int i = 0; i < powerUpData.size(); i++){
+			powerUpData.get(i).draw(batch);
+			if (powerUpData.get(i).getPowerUpType() == "Speed Up"){
+				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+					speedTimer = 600;
+				}
+			}else if(powerUpData.get(i).getPowerUpType() == "Invincible"){
+				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+					invincibilityTimer = 300;
+					playerShips.setInvincible(true);
+				}
+			}
+			if (powerUpData.get(i).rangeCheck(playerShips) && !powerUpData.get(i).dead) {
+				powerUpData.get(i).death();
+			}
+		}
+
+		for (int i = 0; i < stoneData.size(); i++){
+			stoneData.get(i).draw(batch);
+		}
 
 		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		if(bob.dead == false) {
@@ -276,6 +337,11 @@ public class GameScreen implements Screen {
 
 	public void update() {
 		world.step(1 / 60f, 6, 2);
+		speedTimer -= 1f;
+		invincibilityTimer -= 1f;
+		if (invincibilityTimer == 0){
+			playerShips.setInvincible(false);
+		}
 		updateCamera();
 		inputUpdate();
 		processInput();
@@ -284,7 +350,6 @@ public class GameScreen implements Screen {
 		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
-
 	}
 
 	public void inputUpdate() {
@@ -355,11 +420,17 @@ public class GameScreen implements Screen {
 
 		/** apllying liner velocity to the player based on input*/
 		float turnPercentage = 0;
-		if (playerShips.getEntityBody().getLinearVelocity().len() < (playerShips.getMaximumSpeed() / 2)) {
-			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (playerShips.getMaximumSpeed());
+		float speed = playerShips.getMaximumSpeed();
+		if (speedTimer != 0) {
+			speed = playerShips.getMaximumBoostedSpeed();
+		}
+
+		if (playerShips.getEntityBody().getLinearVelocity().len() < (speed / (2))) {
+			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (speed);
 		} else {
 			turnPercentage = 1;
 		}
+
 
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
 
@@ -387,12 +458,12 @@ public class GameScreen implements Screen {
 			playerShips.getEntityBody().setLinearDamping(0.5f);
 		}
 		//recordedSpeed = playerShips.getEntityBody().getLinearVelocity().len();
-		if (playerShips.getEntityBody().getLinearVelocity().len() > playerShips.getMaximumSpeed() / 3f) {
+		if (playerShips.getEntityBody().getLinearVelocity().len() > speed/ 3f) {
 			playerShips.setSpeed(playerShips.getOriginalSpeed() * 2);
 		} else {
 			playerShips.setSpeed(playerShips.getOriginalSpeed());
 		}
-		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < playerShips.getMaximumSpeed())) {
+		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < speed)) {
 			playerShips.getEntityBody().applyForceToCenter(playerShips.getEntityBody().getWorldVector(baseVector), true);
 		}
 	}

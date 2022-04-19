@@ -9,6 +9,8 @@ import java.util.UUID;
 public abstract class MovableEntity extends Entity {
 
 	public static float maximumSpeed;
+	public static float maximumBoostedSpeed;
+	public static float minimumBoostedSpeed;
 	private final float originalSpeed;
 	private float speed;
 
@@ -28,8 +30,10 @@ public abstract class MovableEntity extends Entity {
 		this.speed = speed;
 	}
 
-	public void setMaxSpeed(float increase) {
+	public void setMaxSpeed(float increase, float boost) {
 		this.maximumSpeed += increase;
+		this.maximumBoostedSpeed = this.maximumSpeed * boost;
+		this.minimumBoostedSpeed = this.maximumSpeed / boost;
 	}
 
 	public float getOriginalSpeed() {
@@ -38,5 +42,12 @@ public abstract class MovableEntity extends Entity {
 
 	public float getMaximumSpeed() {
 		return this.maximumSpeed;
+	}
+
+	public float getMaximumBoostedSpeed() {
+		return this.maximumBoostedSpeed;
+	}
+	public float getMinimumBoostedSpeed() {
+		return this.minimumBoostedSpeed;
 	}
 }

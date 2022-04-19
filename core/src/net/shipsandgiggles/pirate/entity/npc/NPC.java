@@ -51,7 +51,7 @@ import java.util.UUID;
          */
         public enum Type {
 
-            HOSTILE;
+            NPC;
 
             private final UUID randomId;
 

@@ -18,16 +18,16 @@ import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-public class EnemyShip extends NPC{
+public class Duck extends NPC{
     public World world;
 
-    /** this is the class to control the npcs*/
+    /** this is the class to control the ducks*/
 
 
 
-    /** construction of npcs*/
+    /** construction of college*/
 
-    public EnemyShip(Sprite texture, Location location, float maximumHealth, World world) {
+    public Duck(Sprite texture, Location location, float maximumHealth, World world) {
         super(UUID.randomUUID(), Type.NPC, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
 
         Body body;
@@ -102,21 +102,9 @@ public class EnemyShip extends NPC{
 
     }
 
-    @Override /** shooting the player method if the player is close enough*/
+    @Override
     public void shootPlayer(Ship player) {
-        if(this.health == 1 && !this.dead){ /** checks if the college is dead or not*/
-            this.counter += Gdx.graphics.getDeltaTime();
-            if(this.counter >= 1){
-                Currency.get().give(Currency.Type.POINTS, 3);
-                Currency.get().give(Currency.Type.GOLD, 5);
-                this.counter = 0;
-            }
-        }
-        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
-            BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
-            this.timer = this.cooldownTimer;
-        }
-        else if(timer <= 0) this.timer = 0; /** ensures that there is a cool down between every shot*/
-        else this.timer -= Gdx.graphics.getDeltaTime();
+
     }
+
 }

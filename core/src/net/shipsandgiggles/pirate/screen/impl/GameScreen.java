@@ -21,6 +21,7 @@ import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
 import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
+import net.shipsandgiggles.pirate.entity.npc.Duck;
 import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
@@ -66,6 +67,7 @@ public class GameScreen implements Screen {
 	private ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private ArrayList<Stone> stoneData = new ArrayList<>();
 	private ArrayList<EnemyShip> hostileShips = new ArrayList<>();
+	private ArrayList<Duck> ducks = new ArrayList<>();
 	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -84,6 +86,7 @@ public class GameScreen implements Screen {
 	public Sprite enemyModelA;
 	public Sprite enemyModelB;
 	public Sprite enemyModelC;
+	public Sprite duckModel;
 	//public Sprite speedDownModel;
 
 	private final Box2DDebugRenderer renderer;
@@ -156,6 +159,7 @@ public class GameScreen implements Screen {
 		enemyModelA = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
+		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
 		playerShips = new Ship(playerModel, 40000f, 0f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 		playerShips.createBody();
 
@@ -203,6 +207,7 @@ public class GameScreen implements Screen {
 		hostileShips.add(new EnemyShip(enemyModelA, new Location(900f,750f), 100f, world));
 		hostileShips.add(new EnemyShip(enemyModelB, new Location(850f,750f), 100f, world));
 		hostileShips.add(new EnemyShip(enemyModelC, new Location(950f,750f), 250f, world));
+		ducks.add(new Duck(duckModel, new Location(800f,750f), 5, world));
 
 		//stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
 		//stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
@@ -290,6 +295,10 @@ public class GameScreen implements Screen {
 		for (int i = 0; i < hostileShips.size(); i++){
 			hostileShips.get(i).draw(batch);
 			hostileShips.get(i).shootPlayer(playerShips);
+		}
+
+		for (int i = 0; i < ducks.size(); i++){
+			ducks.get(i).draw(batch);
 		}
 
 		for (int i = 0; i < powerUpData.size(); i++){

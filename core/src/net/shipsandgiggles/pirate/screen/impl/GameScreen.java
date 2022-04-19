@@ -21,6 +21,7 @@ import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
 import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
+import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -64,6 +65,7 @@ public class GameScreen implements Screen {
 	private ArrayList<Coin> coinData = new ArrayList<>();
 	private ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private ArrayList<Stone> stoneData = new ArrayList<>();
+	private ArrayList<EnemyShip> hostileShips = new ArrayList<>();
 	/** camera work*/
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
@@ -79,6 +81,9 @@ public class GameScreen implements Screen {
 	public Sprite stoneModelA;
 	public Sprite stoneModelB;
 	public Sprite stoneModelC;
+	public Sprite enemyModelA;
+	public Sprite enemyModelB;
+	public Sprite enemyModelC;
 	//public Sprite speedDownModel;
 
 	private final Box2DDebugRenderer renderer;
@@ -148,6 +153,9 @@ public class GameScreen implements Screen {
 		stoneModelB = new Sprite(new Texture(Gdx.files.internal("models/stone_2.png")));
 		stoneModelC = new Sprite(new Texture(Gdx.files.internal("models/stone_3.png")));
 		//speedDownModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		enemyModelA = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
+		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
+		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		playerShips = new Ship(playerModel, 40000f, 0f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
 		playerShips.createBody();
 
@@ -185,10 +193,16 @@ public class GameScreen implements Screen {
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,975f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
-		coins = new Coin(coinModel, new Location(600f,600f), 1f, world);
-		another = new Coin(coinModel, new Location(670f,600f), 1f, world);
-		coinData.add(coins);
-		coinData.add(another);
+
+
+		/** coins*/
+		coinData.add(new Coin(coinModel, new Location(600f,600f), 1f, world));
+		coinData.add(new Coin(coinModel, new Location(670f,600f), 1f, world));
+
+		/** NPCs*/
+		hostileShips.add(new EnemyShip(enemyModelA, new Location(900f,750f), 100f, world));
+		hostileShips.add(new EnemyShip(enemyModelB, new Location(850f,750f), 100f, world));
+		hostileShips.add(new EnemyShip(enemyModelC, new Location(950f,750f), 250f, world));
 
 		//stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
 		//stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
@@ -271,6 +285,11 @@ public class GameScreen implements Screen {
 			if (coinData.get(i).rangeCheck(playerShips) && !coinData.get(i).dead){
 				coinData.get(i).death();
 			}
+		}
+
+		for (int i = 0; i < hostileShips.size(); i++){
+			hostileShips.get(i).draw(batch);
+			hostileShips.get(i).shootPlayer(playerShips);
 		}
 
 		for (int i = 0; i < powerUpData.size(); i++){

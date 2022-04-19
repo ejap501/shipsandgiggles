@@ -49,7 +49,7 @@ public class CannonBall {
         shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef. density = 1f;
+        fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = categoryBits;/** telling it what it is*/
         fixtureDef.filter.maskBits = (short) (maskBit); /**telling it what it can hit */
         fixtureDef.filter.groupIndex = groupIndex;

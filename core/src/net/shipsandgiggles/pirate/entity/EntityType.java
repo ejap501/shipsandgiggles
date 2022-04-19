@@ -7,6 +7,7 @@ public enum EntityType {
 	COLLEGE,
 	PLUNDER,
 	SHOP,
-	OBSTACLE
+	OBSTACLE,
+	NPC
 
 }

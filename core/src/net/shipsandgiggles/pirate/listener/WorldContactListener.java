@@ -6,6 +6,8 @@ import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.college.College;
 import net.shipsandgiggles.pirate.entity.CannonBall;
+import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
+import net.shipsandgiggles.pirate.entity.npc.NPC;
 
 public class WorldContactListener implements ContactListener {
     /** checks for any collides in the game*/
@@ -24,6 +26,10 @@ public class WorldContactListener implements ContactListener {
             if(fixtureA.getUserData() instanceof Ship){
                 Ship ship = (Ship) fixtureA.getUserData(); /** checks if its a player */
                 ship.takeDamage(ball.getDamageDelt()); /** applies damage to ship */
+            }
+            if(fixtureA.getUserData() instanceof NPC){
+                NPC npc = (NPC)  fixtureA.getUserData(); /** checks if its a NPC */
+                npc.damage(ball.getDamageDelt()); /** applies damage to NPC */
             }
 
             if(fixtureA.getUserData() instanceof EntityAi){

@@ -20,7 +20,6 @@ public class TiledObjectUtil {
 				continue;
 			}
 
-			/** creation of the body */
 			Shape shape = createPolyLine((PolylineMapObject) object);
 			BodyDef def = new BodyDef();
 			def.type = BodyDef.BodyType.StaticBody;

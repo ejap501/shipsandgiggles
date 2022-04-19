@@ -54,6 +54,9 @@ public class Currency {
 
 				return val + (amount * Ship.coinMulti);
 
+			}else if (type == Type.POINTS) {
+
+				return val + (amount * Ship.pointMulti);
 			}
 
 

@@ -28,8 +28,9 @@ public class CannonBall {
     public boolean teleported = false;
     public float finalX = 0;
     public float finalY = 0;
+    public int multiplier = 1;
 
-    CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
+    CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
         LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */
         this.world = world;
         Body body;
@@ -125,7 +126,7 @@ public class CannonBall {
         }
 
     public float getDamageDelt() {
-        return this.damageDelt;
+        return this.damageDelt * this.multiplier;
     }
 
     public void teleportBall(){

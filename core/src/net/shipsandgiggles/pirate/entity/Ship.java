@@ -25,7 +25,6 @@ public class Ship extends MovableEntity {
 	private float turnDirection;
 	private float driveDirection;
 	private Sprite texture;
-	CannonBall ball;
 
 	public boolean rapidShot = false;
 	public float timeBetweenRapidShots = 0.2f;
@@ -41,6 +40,7 @@ public class Ship extends MovableEntity {
 	public static float burstTimer = 0f;
 	public World world;
 	public boolean dead = false;
+	public  boolean invincible = false;
 	public Camera cam;
 	public Vector2 deathPosition = new Vector2(0,0);
 
@@ -55,6 +55,8 @@ public class Ship extends MovableEntity {
 	public float timeToRegen = 0;
 	private float healSpeed = 30;
 	public static int coinMulti = 1;
+	public static int pointMulti = 1;
+	public static int damageMulti = 1;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
@@ -119,7 +121,7 @@ public class Ship extends MovableEntity {
 		Vector3 mouse_position = new Vector3(0,0,0);
 		mouse_position.set(Gdx.input.getX(), Gdx.input.getY(), 0); /** gets mouse position*/
 		cam.unproject(mouse_position);
-		BallsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), cannonBallSprite, categoryBits, maskBit, groupIndex); /** creates shot*/
+		BallsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), damageMulti, cannonBallSprite, categoryBits, maskBit, groupIndex); /** creates shot*/
 	}
 
 	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) { /** creates the burst shot*/
@@ -267,10 +269,28 @@ public class Ship extends MovableEntity {
 
 	public void takeDamage(float damage){
 		timeToRegen = 5f;
-		this.health -= damage * 0.8;
-		if(this.health <= 0){
-			this.death();
+		if (!invincible) {
+			this.health -= damage * 0.8;
+			if (this.health <= 0) {
+				this.death();
+			}
 		}
+	}
+
+	public void setInvincible(boolean invincible) {
+		this.invincible = invincible;
+	}
+
+	public void setCoinMulti(int multiplier){
+		this.coinMulti = multiplier;
+	}
+
+	public void setPointMulti(int multiplier){
+		this.pointMulti = multiplier;
+	}
+
+	public static void setDamageMulti(int damageMulti) {
+		Ship.damageMulti = damageMulti;
 	}
 }
 

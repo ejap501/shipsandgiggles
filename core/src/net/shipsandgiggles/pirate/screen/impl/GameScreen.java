@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -22,7 +21,6 @@ import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
 import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
-import net.shipsandgiggles.pirate.entity.shop.Shop;
 import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -100,9 +98,9 @@ public class GameScreen implements Screen {
 	/** Abilities*/
 	float maxSpeed = 100f;
 	float speedMul = 2f;
-	float damageMul = 1.2f;
-	float coinMul = 1.2f;
-	float pointMul = 1.2f;
+	int damageMul = 2;
+	int coinMul = 2;
+	int pointMul = 2;
 	int speedTimer = 0;
 	int damageTimer = 0;
 	int invincibilityTimer = 0;
@@ -142,10 +140,10 @@ public class GameScreen implements Screen {
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
-		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
 		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
-		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
-		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/coin_multipler.png")));
+		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/point_multiplier.png")));
 		stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));
 		stoneModelB = new Sprite(new Texture(Gdx.files.internal("models/stone_2.png")));
 		stoneModelC = new Sprite(new Texture(Gdx.files.internal("models/stone_3.png")));
@@ -191,13 +189,18 @@ public class GameScreen implements Screen {
 		another = new Coin(coinModel, new Location(670f,600f), 1f, world);
 		coinData.add(coins);
 		coinData.add(another);
-		powerUpData.add(new powerUp(speedUpModel, new Location(740f,600f), "Speed Up",1f, world));
-		stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
-		stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
-		stoneData.add(new Stone(stoneModelC, new Location(930f,650f),1f, world));
 
+		//stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
+		//stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
+		//stoneData.add(new Stone(stoneModelC, new Location(930f,650f),1f, world));
+
+		/** Powerups*/
+		powerUpData.add(new powerUp(speedUpModel, new Location(740f,600f), "Speed Up",1f, world));
 		//powerUpData.add(new powerUp(speedDownModel, new Location(790f,600f), "Speed Down",1f, world));
 		powerUpData.add(new powerUp(invincibilityModel, new Location(810f,600f), "Invincible",1f, world));
+		powerUpData.add(new powerUp(incDamageModel, new Location(880f,600f), "Damage Increase",1f, world));
+		powerUpData.add(new powerUp(coinMulModel, new Location(950f,600f), "Coin Multiplier",1f, world));
+		powerUpData.add(new powerUp(pointMulModel, new Location(1020f,600f), "Point Multiplier",1f, world));
 		shop = new shop1(langwithCollegeSprite, new Location(500f,500f),-1,world);
 
 		hud = new HUDmanager(batch);
@@ -279,7 +282,18 @@ public class GameScreen implements Screen {
 			}else if(powerUpData.get(i).getPowerUpType() == "Invincible"){
 				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
 					invincibilityTimer = 300;
-					//playerShips.setInvincible(true);
+				}
+			}else if(powerUpData.get(i).getPowerUpType() == "Damage Increase"){
+				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+					damageTimer = 600;
+				}
+			}else if(powerUpData.get(i).getPowerUpType() == "Coin Multiplier"){
+				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+					coinTimer = 900;
+				}
+			}else if(powerUpData.get(i).getPowerUpType() == "Point Multiplier"){
+				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+					pointTimer = 900;
 				}
 			}
 			if (powerUpData.get(i).rangeCheck(playerShips) && !powerUpData.get(i).dead) {
@@ -337,11 +351,34 @@ public class GameScreen implements Screen {
 
 	public void update() {
 		world.step(1 / 60f, 6, 2);
-		speedTimer -= 1f;
-		invincibilityTimer -= 1f;
-		if (invincibilityTimer == 0){
-			//playerShips.setInvincible(false);
+		if (speedTimer != 0) {
+			speedTimer -= 1f;
 		}
+		if (invincibilityTimer != 0) {
+			invincibilityTimer -= 1f;
+			playerShips.setInvincible(true);
+		}else{
+			playerShips.setInvincible(false);
+		}
+		if (damageTimer != 0){
+			damageTimer -= 1f;
+			playerShips.setDamageMulti(damageMul);
+		}else{
+			playerShips.setDamageMulti(1);
+		}
+		if (coinTimer != 0){
+			playerShips.setCoinMulti(coinMul);
+			coinTimer -= 1f;
+		}else{
+			playerShips.setCoinMulti(1);
+		}
+		if (pointTimer != 0){
+			pointTimer -= 1f;
+			playerShips.setPointMulti(pointMul);
+		}else{
+			playerShips.setPointMulti(1);
+		}
+
 		updateCamera();
 		inputUpdate();
 		processInput();

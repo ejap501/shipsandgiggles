@@ -6,7 +6,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
-import net.shipsandgiggles.pirate.entity.collectible.Plunder;
 
 import java.util.UUID;
 

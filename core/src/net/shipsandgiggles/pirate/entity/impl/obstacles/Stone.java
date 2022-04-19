@@ -2,14 +2,10 @@ package net.shipsandgiggles.pirate.entity.impl.obstacles;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.currency.Currency;
-import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.collectible.Plunder;
 
 import java.util.UUID;
 
@@ -18,7 +14,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class Stone extends Solid{
     public World world;
 
-    /** this is the class to control the coin*/
+    /** this is the class to control the stone obstacles*/
 
 
 

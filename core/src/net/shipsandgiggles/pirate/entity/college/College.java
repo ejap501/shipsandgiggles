@@ -79,4 +79,5 @@ public abstract class College extends Entity {
 			return randomId;
 		}
 	}
+
 }

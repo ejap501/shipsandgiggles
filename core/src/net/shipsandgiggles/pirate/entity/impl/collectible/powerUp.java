@@ -13,18 +13,18 @@ import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-public class Coin extends Plunder {
+public class powerUp extends Plunder {
     public World world;
-
+    public static String powerUpType;
     /** this is the class to control the coin*/
 
 
 
     /** construction of coins*/
 
-    public Coin(Sprite texture, Location location, float maximumHealth, World world) {
-        super(UUID.randomUUID(),Type.COINS, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
-
+    public powerUp(Sprite texture, Location location, String type,float maximumHealth, World world) {
+        super(UUID.randomUUID(), Plunder.Type.COINS, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
+        powerUpType = type;
         Body body;
         BodyDef def = new BodyDef();
 
@@ -36,19 +36,10 @@ public class Coin extends Plunder {
 
         def.fixedRotation = true;
         body = world.createBody(def);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox((texture.getWidth() / 2f) / PIXEL_PER_METER, (texture.getHeight() / 2f) / PIXEL_PER_METER);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
-        fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Configuration.Cat_Collect; /**telling it what category it is */
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
         this.body = body;
         this.world = world;
 
-        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() / PIXEL_PER_METER - 4,(int)location.getY() / PIXEL_PER_METER - 4 , ((texture.getWidth()) / PIXEL_PER_METER) + 8, ((texture.getHeight()) / PIXEL_PER_METER) + 8);
+        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() / PIXEL_PER_METER,(int)location.getY() / PIXEL_PER_METER, ((texture.getWidth()) / PIXEL_PER_METER) + 4, ((texture.getHeight()) / PIXEL_PER_METER) + 4);
     }
 
     @Override
@@ -62,7 +53,7 @@ public class Coin extends Plunder {
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
         batch.begin();
-        this.getSkin().draw(batch);//draws coin
+        this.getSkin().draw(batch);
         batch.end();
 
     }
@@ -75,11 +66,9 @@ public class Coin extends Plunder {
     @Override
     public void death(){
         if(this.dead) return;
-        Currency.get().give(Currency.Type.GOLD, 10); /** gives instant money if collected*/
-        world.destroyBody(body);
         this.dead = true;
     }
-
+    public String getPowerUpType(){return powerUpType;}
     public boolean rangeCheck(Ship player){
         return player.hitBox.overlaps(this.hitBox);
     }

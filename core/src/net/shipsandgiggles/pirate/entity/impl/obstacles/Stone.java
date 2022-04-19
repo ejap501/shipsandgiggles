@@ -1,10 +1,12 @@
-package net.shipsandgiggles.pirate.entity.impl.collectible;
+package net.shipsandgiggles.pirate.entity.impl.obstacles;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.currency.Currency;
+import net.shipsandgiggles.pirate.entity.EntityType;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.collectible.Plunder;
@@ -13,7 +15,7 @@ import java.util.UUID;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-public class Coin extends Plunder {
+public class Stone extends Solid{
     public World world;
 
     /** this is the class to control the coin*/
@@ -22,8 +24,8 @@ public class Coin extends Plunder {
 
     /** construction of coins*/
 
-    public Coin(Sprite texture, Location location, float maximumHealth, World world) {
-        super(UUID.randomUUID(),Type.COINS, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
+    public Stone(Sprite texture, Location location, float maximumHealth, World world) {
+        super(UUID.randomUUID(), Solid.Type.STONE, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
 
         Body body;
         BodyDef def = new BodyDef();
@@ -41,7 +43,6 @@ public class Coin extends Plunder {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Configuration.Cat_Collect; /**telling it what category it is */
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
@@ -58,11 +59,10 @@ public class Coin extends Plunder {
 
     @Override
     public void draw(Batch batch) {
-        if(dead){return;}
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
         batch.begin();
-        this.getSkin().draw(batch);//draws coin
+        this.getSkin().draw(batch);//draws stone
         batch.end();
 
     }
@@ -74,13 +74,6 @@ public class Coin extends Plunder {
 
     @Override
     public void death(){
-        if(this.dead) return;
-        Currency.get().give(Currency.Type.GOLD, 10); /** gives instant money if collected*/
-        world.destroyBody(body);
-        this.dead = true;
-    }
 
-    public boolean rangeCheck(Ship player){
-        return player.hitBox.overlaps(this.hitBox);
     }
 }

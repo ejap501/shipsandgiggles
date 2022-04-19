@@ -105,12 +105,16 @@ public abstract class Entity {
 			this.death();
 			return 0f;
 		}
-		if ((this.health = (this.health - damage)) <= 0f) {
+		if ((this.health - damage) <= 0f) {
+			this.health = 0;
 			this.death();
 			return 0f;
 		}
+		if (this.health == 0){
+			return 0f;
+		}
 
-		return this.health;
+		return this.health - damage;
 	}
 
 	/**

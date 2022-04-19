@@ -50,6 +50,12 @@ public class LangwithCollege extends College {
 
 
 	}
+	public void removeFromWorld(){
+		if(dead && !removed){
+			world.destroyBody(this.body);
+			removed = true;
+		}
+	}
 
 	@Override
 	public boolean perform() {
@@ -58,9 +64,13 @@ public class LangwithCollege extends College {
 
 	@Override
 	public void draw(Batch batch) {
-	if(dead){
-		return;
-	}
+		if(dead && !removed){
+			removeFromWorld();
+			return;
+		}
+		else if (dead && removed){
+			return;
+		}
 		this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f));
 		this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
 

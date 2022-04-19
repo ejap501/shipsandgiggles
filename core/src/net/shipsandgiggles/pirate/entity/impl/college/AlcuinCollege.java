@@ -59,6 +59,13 @@ public class AlcuinCollege extends College {
 
     }
 
+    public void removeFromWorld(){
+        if(dead && !removed){
+            world.destroyBody(this.body);
+            removed = true;
+        }
+    }
+
     @Override
     public boolean perform() {
         return false;
@@ -66,7 +73,11 @@ public class AlcuinCollege extends College {
 
     @Override
     public void draw(Batch batch) {
-        if(dead){
+        if(dead && !removed){
+            removeFromWorld();
+            return;
+        }
+        else if (dead && removed){
             return;
         }
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */

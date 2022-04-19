@@ -2,6 +2,7 @@ sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.resources.srcDirs = ["../core/assets"]
 
 eclipse.project.name = appName + "-core"
 targetCompatibility = JavaVersion.VERSION_1_8

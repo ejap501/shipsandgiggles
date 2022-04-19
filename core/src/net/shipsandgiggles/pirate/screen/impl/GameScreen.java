@@ -71,7 +71,7 @@ public class GameScreen implements Screen {
 	private final float Scale = 2;
 	/**graphics */
 	private final SpriteBatch batch; /**batch of images "objects" */
-	public Sprite playerModel;
+	public static Sprite playerModel;
 	public Sprite coinModel;
 	public Sprite speedUpModel;
 	public Sprite invincibilityModel;
@@ -151,7 +151,7 @@ public class GameScreen implements Screen {
 		stoneModelC = new Sprite(new Texture(Gdx.files.internal("models/stone_3.png")));
 		//speedDownModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		playerShips = new Ship(playerModel, 40000f, 0f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
-
+		playerShips.createBody();
 
 		/** map initialization */
 		map = new TmxMapLoader().load("models/map.tmx");
@@ -279,7 +279,7 @@ public class GameScreen implements Screen {
 			}else if(powerUpData.get(i).getPowerUpType() == "Invincible"){
 				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
 					invincibilityTimer = 300;
-					playerShips.setInvincible(true);
+					//playerShips.setInvincible(true);
 				}
 			}
 			if (powerUpData.get(i).rangeCheck(playerShips) && !powerUpData.get(i).dead) {
@@ -340,7 +340,7 @@ public class GameScreen implements Screen {
 		speedTimer -= 1f;
 		invincibilityTimer -= 1f;
 		if (invincibilityTimer == 0){
-			playerShips.setInvincible(false);
+			//playerShips.setInvincible(false);
 		}
 		updateCamera();
 		inputUpdate();

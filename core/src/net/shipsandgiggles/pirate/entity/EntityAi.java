@@ -197,6 +197,7 @@ public class EntityAi implements Steerable<Vector2> {
             if (body.getAngularVelocity() > maxAngVelocity) {
                 body.setAngularVelocity(maxAngVelocity);
             }
+            this.hitBox.setPosition(this.body.getPosition());
         }
     }
     public void shootPlayer(Ship player, World world) {
@@ -208,7 +209,11 @@ public class EntityAi implements Steerable<Vector2> {
                 this.counter = 0;
             }
         }
+        System.out.println(this.hitBox.overlaps(player.hitBox));
+        System.out.println(this.timer);
+        System.out.println(this.health);
         if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
+        System.out.println("ss");
             BallsManager.createBall(world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
             this.timer = 4;
         }
@@ -378,7 +383,6 @@ public class EntityAi implements Steerable<Vector2> {
         }
 
     public void damage(float damageValue){
-        System.out.println("d");
         health -= damageValue;
 
     }

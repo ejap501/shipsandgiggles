@@ -18,7 +18,7 @@ public class Ship extends MovableEntity {
 
 
 	/** creation of the main player class*/
-	private final Body entityBody;
+	private Body entityBody;
 	private final float turnSpeed;
 	private final float driftFactor;
 
@@ -44,11 +44,14 @@ public class Ship extends MovableEntity {
 	public Camera cam;
 	public Vector2 deathPosition = new Vector2(0,0);
 
+	public Location startlocation;
+	public float height;
+	public float width;
+
 	public Rectangle hitBox;
 
 	public static float health;
 	public static float maxHealth = 200f;
-	public static boolean invincible;
 	public float timeToRegen = 0;
 	private float healSpeed = 30;
 	public static int coinMulti = 1;
@@ -63,12 +66,17 @@ public class Ship extends MovableEntity {
 		this.turnSpeed = turnSpeed;
 		this.texture = texture;
 		this.cam = cam;
-		invincible = false;
+		this.startlocation = location;
+		this.height = height;
+		this.width = width;
 
 		/**Creation of Body */
+	}
+
+	public void createBody (){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(location.getX(), location.getY());
+		bodyDef.position.set(startlocation.getX(), startlocation.getY());
 		bodyDef.fixedRotation = false;
 
 		this.entityBody = GameScreen.world.createBody(bodyDef);
@@ -80,7 +88,7 @@ public class Ship extends MovableEntity {
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
 		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
-		this.hitBox = new Rectangle(location.getX(), location.getY(), texture.getWidth(), texture.getHeight());
+		this.hitBox = new Rectangle(startlocation.getX(), startlocation.getY(), texture.getWidth(), texture.getHeight());
 		this.world = GameScreen.world;
 	}
 
@@ -257,17 +265,12 @@ public class Ship extends MovableEntity {
 
 	public Rectangle getHitBox() {return this.hitBox;}
 
-	public void takeDamage(float damage, boolean invincible){
+	public void takeDamage(float damage){
 		timeToRegen = 5f;
-		if (!invincible) {
-			this.health -= damage * 0.8;
-		}
+		this.health -= damage * 0.8;
 		if(this.health <= 0){
 			this.death();
 		}
 	}
-
-	public void setInvincible(boolean isInvincible){invincible = isInvincible;}
-	public boolean getInvincible(){return invincible;}
 }
 

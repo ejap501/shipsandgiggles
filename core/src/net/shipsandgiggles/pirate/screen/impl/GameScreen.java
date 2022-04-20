@@ -119,8 +119,8 @@ public class GameScreen implements Screen {
 	/** Max Spawning */
 	int maxCoins = 200;
 	int maxPowerups = 25;
-	int maxShips = 50;
-	int maxDucks = 25;
+	int maxShips = 20;
+	int maxDucks = 15;
 	int maxStones = 50;
 
 	public GameScreen() {

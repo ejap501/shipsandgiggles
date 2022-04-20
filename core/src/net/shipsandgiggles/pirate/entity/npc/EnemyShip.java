@@ -53,7 +53,7 @@ public class EnemyShip extends NPC{
         this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         this.world = world;
 
-        this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 700, 700);
+        this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 600, 600);
 
 
     }

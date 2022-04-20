@@ -63,7 +63,7 @@ public class AlcuinCollege extends College {
         this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         this.world = world;
 
-        //Creation of a hitbox detector
+        // Creation of a hitbox detector
         this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX()-500,(int)location.getY(), 700,400);
     }
 

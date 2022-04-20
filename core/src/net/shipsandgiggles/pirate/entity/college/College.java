@@ -39,12 +39,12 @@ public abstract class College extends Entity {
 	 * Instantiates the college type
 	 *
 	 * @param uuid : The unique id of the object
-	 * @param type : The type of plunder
+	 * @param type : The type of college
 	 * @param texture : Image used for the object
-	 * @param location : Location of the object in the world
+	 * @param location : Position of the object in the world
 	 * @param maximumHealth : Maximum health of the entity
-	 * @param height : Height of the plunder
-	 * @param width : Width of the plunder
+	 * @param height : Height of the college
+	 * @param width : Width of the college
 	 * */
 	public College(UUID uuid, College.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
 		super(uuid, texture, location, EntityType.COLLEGE, maximumHealth, height, width);

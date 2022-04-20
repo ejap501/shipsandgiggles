@@ -1,52 +1,62 @@
 package net.shipsandgiggles.pirate.entity.collectible;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
-import net.shipsandgiggles.pirate.entity.Entity;
-import net.shipsandgiggles.pirate.entity.EntityType;
-import net.shipsandgiggles.pirate.entity.Location;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.entity.Entity;
+import net.shipsandgiggles.pirate.entity.Location;
+import net.shipsandgiggles.pirate.entity.EntityType;
+
+
 /**
- * Collectible data that allows us to set basic info for collectibles.
+ * Plunder
+ * Class to configure collectible data that allows us to set basic info for collectibles.
+ *
+ * @author Team 23
+ * @author Team 22 : Edward Poulter
+ * @version 1.0
  */
 public abstract class Plunder extends Entity {
+    /** Main data store */
     public Body body;
-    public boolean dead = false;
     public Rectangle hitBox;
     private final Plunder.Type type;
 
+    /** State of existance */
+    public boolean dead = false;
+
+    /** Instantiates the plunder type */
     public Plunder(UUID uuid, Plunder.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
         super(uuid, texture, location, EntityType.PLUNDER, maximumHealth, height, width);
-
         this.type = type;
     }
 
+    /** Fetches the type of plunder */
     public Type getType() {
         return type;
     }
 
-    public abstract boolean perform();
-
+    /** Fetches the body of the plunder collectible */
     public Body getBody(){
         return this.body;
     }
-    public void death() {/** checks coin destruction*/
+
+    /** Kills the collectible body */
+    public void death() {
+        /** Checks plunder destruction*/
         if(this.dead) return;
         this.dead = true;
     }
 
     /**
-     * Types of collectible - allows us to keep track.
+     * Determines the type of collectible - allows us to keep track.
      */
     public enum Type {
-
         COINS;
-
         private final UUID randomId;
-
         /**
          * Assign static value at runtime, as value will not change and maximum of 1 college.
          **/
@@ -55,10 +65,14 @@ public abstract class Plunder extends Entity {
         }
 
         /**
+         * Retrieves the unique id for the plunder object
+         *
          * @return Unique identifier associated with this UUID.
          */
         public UUID getId() {
             return randomId;
         }
     }
+
+    public abstract boolean perform();
 }

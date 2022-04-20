@@ -15,7 +15,7 @@ import net.shipsandgiggles.pirate.entity.EntityType;
  * Plunder
  * Class to configure collectible data that allows us to set basic info for collectibles.
  *
- * @author Team 23
+ * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter
  * @version 1.0
  */

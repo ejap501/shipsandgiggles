@@ -25,13 +25,13 @@ public class PowerupTests {
         World world = new World(new Vector2(0, 0), false);
         Sprite invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
 
-        new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
 
         assertEquals(1, world.getBodyCount());
 
-        new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
-        new powerUp(invincibilityModel, new Location(500f,600f), "Invincible",1f, world);
-        new powerUp(invincibilityModel, new Location(400f,600f), "Invincible",1f, world);
+        new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
+        new powerUp(invincibilityModel, new Location(500f,600f), "Invincible", world);
+        new powerUp(invincibilityModel, new Location(400f,600f), "Invincible", world);
 
 
         assertEquals(4, world.getBodyCount());
@@ -42,15 +42,15 @@ public class PowerupTests {
         World world = new World(new Vector2(0, 0), false);
         Sprite invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
 
-        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
 
         test.death();
 
         assertEquals(0, world.getBodyCount());
 
-        powerUp test2 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
-        powerUp test3 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
-        powerUp test4 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        powerUp test2 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
+        powerUp test3 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
+        powerUp test4 =new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
 
         test2.death();
         test3.death();
@@ -68,7 +68,7 @@ public class PowerupTests {
         Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
         OrthographicCamera camera = new OrthographicCamera();
 
-        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(600f, 600f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
         ship.createBody();
 
@@ -83,7 +83,7 @@ public class PowerupTests {
         Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
         OrthographicCamera camera = new OrthographicCamera();
 
-        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(600f, 800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
         ship.createBody();
 
@@ -95,7 +95,7 @@ public class PowerupTests {
 
         Sprite invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
         World world = new World(new Vector2(0, 0), false);
-        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible",1f, world);
+        powerUp test = new powerUp(invincibilityModel, new Location(600f,600f), "Invincible", world);
         Assert.assertEquals("Invincible",test.getPowerUpType());
     }
 

@@ -20,7 +20,7 @@ public class StoneTests {
         Sprite stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));
         World world = new World(new Vector2(0, 0), false);
 
-        new Stone(stoneModelA, new Location(1,1),1f, world);
+        new Stone(stoneModelA, new Location(1,1), world);
         assertEquals(1, world.getBodyCount());
     }
 

@@ -711,7 +711,7 @@ public class GameScreen implements Screen {
 			}else {
 				model = stoneModelC;
 			}
-			stoneData.add(new Stone(model, new Location(randX,randY),1f, world));
+			stoneData.add(new Stone(model, new Location(randX,randY), world));
 		}
 	}
 

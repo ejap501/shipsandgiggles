@@ -84,7 +84,6 @@ public class AlcuinCollege extends College {
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
         batch.setColor(healthBarColor());
         batch.begin();
-        /**changes the college health colour based on the amount it has */
 
         batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, healthBarWidth(), 10);
         batch.setColor(Color.WHITE);
@@ -127,7 +126,6 @@ public class AlcuinCollege extends College {
     }
 
     public float healthBarWidth(){
-        Sprite skin = this.getSkin();
         Float value = ((float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())));
         return value;
     }

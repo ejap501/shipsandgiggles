@@ -79,21 +79,10 @@ public class Duck extends NPC{
         }
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the ship */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
+
+        batch.setColor(healthBarColor());
         batch.begin();
-
-        this.getSkin().draw(batch);//draws college
-
-        /**changes the npc health colour based on the amount it has */
-        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
-            batch.setColor(Color.GREEN);
-        }
-        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
-            batch.setColor(Color.ORANGE);
-        }
-        else{
-            batch.setColor(Color.RED);
-        }
-
+        this.getSkin().draw(batch);//draws
         batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getWidth() ,this.body.getPosition().y + this.getSkin().getHeight()/2 + 10, (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth())), 5);
         batch.setColor(Color.WHITE);
         batch.end();
@@ -103,6 +92,26 @@ public class Duck extends NPC{
     @Override
     public void shootPlayer(Ship player) {
 
+    }
+
+    public Color healthBarColor(){
+
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            return Color.GREEN;
+        }
+        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            return Color.ORANGE;
+        }
+        else{
+            return Color.RED;
+        }
+
+
+    }
+
+    public float healthBarWidth(){
+        Float value = (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth()));
+        return value;
     }
 
 }

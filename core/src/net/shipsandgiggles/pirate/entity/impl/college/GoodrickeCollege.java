@@ -74,19 +74,11 @@ public class GoodrickeCollege extends College {
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f));
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
 
-        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
-            batch.setColor(Color.GREEN);
-        }
-        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
-            batch.setColor(Color.ORANGE);
-        }
-        else{
-            batch.setColor(Color.RED);
-        }
 
         batch.begin();
+        batch.setColor(healthBarColor());
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, healthBarWidth(), 10);
 
-        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, (float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())), 10);
         batch.setColor(Color.WHITE);
         this.getSkin().draw(batch);
         batch.end();
@@ -110,4 +102,22 @@ public class GoodrickeCollege extends College {
         else if(timer <= 0) this.timer = 0;
         else this.timer -= Gdx.graphics.getDeltaTime();
     }
+    public Color healthBarColor(){
+
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            return Color.GREEN;
+        }
+        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            return Color.ORANGE;
+        }
+        else{
+            return Color.RED;
+        }
+
+
+    }
+    public float healthBarWidth(){
+        return (float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth()));
+    }
+
 }

@@ -66,6 +66,7 @@ public class powerUp extends Plunder {
     @Override
     public void death(){
         if(this.dead) return;
+        world.destroyBody(body);
         this.dead = true;
     }
     public String getPowerUpType(){return powerUpType;}

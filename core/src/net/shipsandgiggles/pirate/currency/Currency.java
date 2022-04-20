@@ -47,19 +47,25 @@ public class Currency {
 	 */
 	public int give(Type type, int amount) {
 		return this.currencyValues.compute(type, (ign, val) -> {
-			if (val == null) {
-				return amount;
-			}
 			if (type == Type.GOLD){
+
+				if (val == null){
+					val = 0;
+				}
 
 				return val + (amount * Ship.coinMulti);
 
 			}else if (type == Type.POINTS) {
 
+				if (val == null){
+					val = 0;
+				}
+
 				return val + (amount * Ship.pointMulti);
 			}
-
-
+			if (val == null) {
+				return amount;
+			}
 			return val + amount;
 		});
 	}

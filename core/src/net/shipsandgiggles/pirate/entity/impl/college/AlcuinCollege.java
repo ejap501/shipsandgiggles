@@ -82,23 +82,13 @@ public class AlcuinCollege extends College {
         }
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
+        batch.setColor(healthBarColor());
         batch.begin();
-
-        this.getSkin().draw(batch);//draws college
-
         /**changes the college health colour based on the amount it has */
-        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
-            batch.setColor(Color.GREEN);
-        }
-        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
-            batch.setColor(Color.ORANGE);
-        }
-        else{
-            batch.setColor(Color.RED);
-        }
 
-        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, (float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())), 10);
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getHeight()/2 + 80 ,this.body.getPosition().y + this.getSkin().getWidth()/2 + 20, healthBarWidth(), 10);
         batch.setColor(Color.WHITE);
+        this.getSkin().draw(batch);
         batch.end();
 
     }
@@ -119,6 +109,27 @@ public class AlcuinCollege extends College {
         }
         else if(timer <= 0) this.timer = 0; /** ensures that there is a cool down between every shot*/
         else this.timer -= Gdx.graphics.getDeltaTime();
+    }
+
+    public Color healthBarColor(){
+
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            return Color.GREEN;
+        }
+        else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            return Color.ORANGE;
+        }
+        else{
+            return Color.RED;
+        }
+
+
+    }
+
+    public float healthBarWidth(){
+        Sprite skin = this.getSkin();
+        Float value = ((float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())));
+        return value;
     }
 
 }

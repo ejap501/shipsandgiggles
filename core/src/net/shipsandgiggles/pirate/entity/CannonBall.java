@@ -31,7 +31,7 @@ public class CannonBall {
     public int multiplier = 1;
 
     CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
-        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */
+        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();

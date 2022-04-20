@@ -169,7 +169,7 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
-		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
 		playerShips.createBody();
 
 		/** map initialization */
@@ -399,7 +399,7 @@ public class GameScreen implements Screen {
 
 		updateCamera();
 		inputUpdate();
-		processInput();
+		processInput(playerShips);
 		handleDrift();
 		//tmr.setView(camera);
 		maprender.setView(camera);
@@ -468,7 +468,7 @@ public class GameScreen implements Screen {
 
 	}
 
-	private void processInput() {
+	private void processInput(Ship playerShips) {
 		/** processing the input created*/
 		float speedMulSet = 1;
 		if (speedTimer > 0){

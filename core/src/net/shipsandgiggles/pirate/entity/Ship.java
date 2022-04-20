@@ -59,7 +59,7 @@ public class Ship extends MovableEntity {
 	public static int damageMulti = 1;
 	public static int speedMulti = 1;
 
-	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
+	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam, World world) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
 		/** constructor*/
 		this.health = this.maxHealth;
@@ -72,6 +72,7 @@ public class Ship extends MovableEntity {
 		this.startlocation = location;
 		this.height = height;
 		this.width = width;
+		this.world = world;
 
 		/**Creation of Body */
 	}
@@ -82,7 +83,7 @@ public class Ship extends MovableEntity {
 		bodyDef.position.set(startlocation.getX(), startlocation.getY());
 		bodyDef.fixedRotation = false;
 
-		this.entityBody = GameScreen.world.createBody(bodyDef);
+		this.entityBody = world.createBody(bodyDef);
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);
 		FixtureDef fixtureDef = new FixtureDef();

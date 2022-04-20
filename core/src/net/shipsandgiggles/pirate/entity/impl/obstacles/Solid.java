@@ -30,10 +30,6 @@ public abstract class Solid extends Entity {
     public Body getBody(){
         return this.body;
     }
-    public void death() {/** checks coin destruction*/
-        if(this.dead) return;
-        this.dead = true;
-    }
 
     /**
      * Types of solid - allows us to keep track.

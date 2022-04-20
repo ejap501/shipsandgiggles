@@ -17,7 +17,6 @@ public class shop1 extends Shop {
 
     public shop1(Sprite texture, Location location, float maximumHealth, World world) {
         super(UUID.randomUUID(), Type.SHOP, texture, location, maximumHealth,texture.getHeight(), texture.getWidth() );
-
         Body body;
         BodyDef def = new BodyDef();
 
@@ -40,7 +39,7 @@ public class shop1 extends Shop {
         this.body = body;
         this.world = world;
 
-        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() -100 ,(int)location.getY(), 600,400);
+        this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() - 200 ,(int)location.getY() -200 , 400,400);
 
     }
 
@@ -66,7 +65,7 @@ public class shop1 extends Shop {
 
     }
 
-    public void rangeCheck(Ship player){
+    public static void rangeCheck(Ship player){
         Ship.buyMenuRange = player.hitBox.overlaps(shop1.hitBox);
 
     }

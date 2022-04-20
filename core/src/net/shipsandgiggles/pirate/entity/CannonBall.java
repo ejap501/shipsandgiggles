@@ -28,15 +28,16 @@ public class CannonBall {
     public boolean teleported = false;
     public float finalX = 0;
     public float finalY = 0;
-    public int multiplier = 1;
+    public int multiplier;
 
-    CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
+    public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
         //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();
         this.target = target;
         this.cannonBall = cannonBall;
+        this.multiplier = multiplier;
 
        def.bullet = true;
        def.type = BodyDef.BodyType.DynamicBody;
@@ -92,41 +93,14 @@ public class CannonBall {
 
 
     public void update(Batch batch) {
-            timer -= Gdx.graphics.getDeltaTime(); /**checks if the ball has reached the maximum time it can be alive */
-            if(timer <= 0 && !this.isDestroyed){
-                LoadingScreen.soundController.playExplosion();/** // plays explosion noise*/
-                finalX = this.body.getPosition().x;
-                finalY = this.body.getPosition().y;
-                GameScreen.add(new Vector2(finalX, finalY)); /** adds explosion animation*/
-                this.world.destroyBody(this.body); /** destroies the ball*/
-                this.isDestroyed = true;
-                BallsManager.removeNext();/** removes it from the array*/
-            }
-            if(!setAngle){ /** check if it has an angle or a target if it doesnt have an angle creates one towards the target*/
-                this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2( this.body.getPosition().x-this.target.x,this.target.y- this.body.getPosition().y  )); // setting the angle towards the target
-                this.setAngle = true;
-                this.angle = this.body.getAngle();//getting the angle
-            }
-            if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().y < 0){ // checks ifthe ball left the play area or has changes in its angle (if collided)
-                teleportBall();
-            }
-
-            this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true); /**applies force to the ball*/
-            Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight()))); /**gets the direction the ball is going towards*/
-            Vector2 position = this.body.getPosition();
-            position.x = position.x + (direction.x - position.x) * speed * PIXEL_PER_METER; /** changes the direction and slightly teleports the ball so it can travel way faster**/
-            position.y = position.y + (direction.y - position.y) * speed * PIXEL_PER_METER;
-            this.body.setTransform(position, this.body.getAngle()); /**moves ball forward**/
-            this.cannonBall.setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y * PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
-            this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
-
+            movement();
             batch.begin();
             this.cannonBall.draw(batch);
             batch.end();
         }
 
     public float getDamageDelt() {
-        return this.damageDelt * this.multiplier;
+        return (this.damageDelt * this.multiplier);
     }
 
     public void teleportBall(){
@@ -137,5 +111,35 @@ public class CannonBall {
         GameScreen.add(new Vector2(finalX, finalY));
         this.body.setTransform(10000,10000,0);
         this.teleported = true;
+    }
+
+    public void movement(){
+        timer -= Gdx.graphics.getDeltaTime(); /**checks if the ball has reached the maximum time it can be alive */
+        if(timer <= 0 && !this.isDestroyed){
+            LoadingScreen.soundController.playExplosion();/** // plays explosion noise*/
+            finalX = this.body.getPosition().x;
+            finalY = this.body.getPosition().y;
+            GameScreen.add(new Vector2(finalX, finalY)); /** adds explosion animation*/
+            this.world.destroyBody(this.body); /** destroies the ball*/
+            this.isDestroyed = true;
+            BallsManager.removeNext();/** removes it from the array*/
+        }
+        if(!setAngle){ /** check if it has an angle or a target if it doesnt have an angle creates one towards the target*/
+            this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2( this.body.getPosition().x-this.target.x,this.target.y- this.body.getPosition().y  )); // setting the angle towards the target
+            this.setAngle = true;
+            this.angle = this.body.getAngle();//getting the angle
+        }
+        if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().y < 0){ // checks ifthe ball left the play area or has changes in its angle (if collided)
+            teleportBall();
+        }
+
+        this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true); /**applies force to the ball*/
+        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight()))); /**gets the direction the ball is going towards*/
+        Vector2 position = this.body.getPosition();
+        position.x = position.x + (direction.x - position.x) * speed * PIXEL_PER_METER; /** changes the direction and slightly teleports the ball so it can travel way faster**/
+        position.y = position.y + (direction.y - position.y) * speed * PIXEL_PER_METER;
+        this.body.setTransform(position, this.body.getAngle()); /**moves ball forward**/
+        this.cannonBall.setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y * PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
+        this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
     }
 }

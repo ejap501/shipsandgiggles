@@ -35,6 +35,7 @@ import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -184,7 +185,6 @@ public class GameScreen implements Screen {
 		player = new EntityAi(playerShips.getEntityBody(), 3);
 		Steerable<Vector2> pp = player;
 
-
 		/** status of entity ai */
 		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
 				.setTimeToTarget(0.01f)
@@ -193,34 +193,13 @@ public class GameScreen implements Screen {
 		bob.setBehavior(arrives);
 
 		/** set up college*/
-		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,1500f), 200f, world);
+		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
-		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,1500f), 200f, world);
+		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
-
-		/** coins*/
-		coinData.add(new Coin(coinModel, new Location(600f,600f), 1f, world));
-		coinData.add(new Coin(coinModel, new Location(670f,600f), 1f, world));
-
-		/** NPCs*/
-		hostileShips.add(new EnemyShip(enemyModelA, new Location(900f,750f), 100f, world));
-		hostileShips.add(new EnemyShip(enemyModelB, new Location(850f,750f), 100f, world));
-		hostileShips.add(new EnemyShip(enemyModelC, new Location(950f,750f), 250f, world));
-		ducks.add(new Duck(duckModel, new Location(800f,750f), 5, world));
-
-		//stoneData.add(new Stone(stoneModelA, new Location(810f,650f),1f, world));
-		//stoneData.add(new Stone(stoneModelB, new Location(870f,650f),1f, world));
-		//stoneData.add(new Stone(stoneModelC, new Location(930f,650f),1f, world));
-
-		/** Powerups*/
-		powerUpData.add(new powerUp(speedUpModel, new Location(740f,600f), "Speed Up",1f, world));
-		//powerUpData.add(new powerUp(speedDownModel, new Location(790f,600f), "Speed Down",1f, world));
-		powerUpData.add(new powerUp(invincibilityModel, new Location(810f,600f), "Invincible",1f, world));
-		powerUpData.add(new powerUp(incDamageModel, new Location(880f,600f), "Damage Increase",1f, world));
-		powerUpData.add(new powerUp(coinMulModel, new Location(950f,600f), "Coin Multiplier",1f, world));
-		powerUpData.add(new powerUp(pointMulModel, new Location(1020f,600f), "Point Multiplier",1f, world));
 		shop = new shop1(langwithCollegeSprite, new Location(500f,500f),-1,world);
+		spawn(200, 50, 25, 50, 25);
 
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
@@ -626,4 +605,77 @@ public class GameScreen implements Screen {
 	}
 	/** adds college captured to check for victory*/
 	public static void collegeCaptured(){collegesCaptured ++;}
+
+	public void spawn(int coins, int ships, int powerups, int stone, int duck){
+		Random rn = new Random();
+		int randX, randY, randModel, randHealth;
+		String randType;
+		Sprite model;
+		for (int i = 0; i < coins; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			coinData.add(new Coin(coinModel, new Location(randX,randY), 1f, world));
+		}
+
+		for (int i = 0; i < ships; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			randModel = rn.nextInt(3);
+			if (randModel == 0){
+				model = enemyModelA;
+				randHealth = 80 + rn.nextInt(40);
+			}else if (randModel == 1){
+				model = enemyModelB;
+				randHealth = 140 + rn.nextInt(20);
+			}else {
+				model = enemyModelC;
+				randHealth = 200 + rn.nextInt(50);
+			}
+			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world));
+		}
+
+		for (int i = 0; i < powerups; i++){
+
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			randModel = rn.nextInt(5);
+			if (randModel == 0){
+				model = speedUpModel;
+				randType = "Speed Up";
+			}else if (randModel == 1){
+				model = incDamageModel;
+				randType = "Damage Increase";
+			}else if (randModel == 1){
+				model = invincibilityModel;
+				randType = "Invincible";
+			}else if (randModel == 1){
+				model = coinMulModel;
+				randType = "Coin Multiplier";
+			}else {
+				model = pointMulModel;
+				randType = "Point Multiplier";
+			}
+			powerUpData.add(new powerUp(model, new Location(randX,randY), randType,1f, world));
+		}
+
+		for (int i = 0; i < stone; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			randModel = rn.nextInt(3);
+			if (randModel == 0){
+				model = stoneModelA;
+			}else if (randModel == 1){
+				model = stoneModelB;
+			}else {
+				model = stoneModelC;
+			}
+			stoneData.add(new Stone(model, new Location(randX,randY),1f, world));
+		}
+
+		for (int i = 0; i < duck; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
+		}
+	}
 }

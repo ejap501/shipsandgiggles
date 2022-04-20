@@ -53,7 +53,7 @@ public class EnemyShip extends NPC{
         this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         this.world = world;
 
-        this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 350, 350);
+        this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 700, 700);
 
 
     }
@@ -104,7 +104,7 @@ public class EnemyShip extends NPC{
 
     @Override /** shooting the player method if the player is close enough*/
     public void shootPlayer(Ship player) {
-        if(this.health == 1 && !this.dead){ /** checks if the college is dead or not*/
+        if(this.health == 1 && !this.dead && !player.dead){ /** checks if the ship is dead or not*/
             this.counter += Gdx.graphics.getDeltaTime();
             if(this.counter >= 1){
                 Currency.get().give(Currency.Type.POINTS, 3);
@@ -112,7 +112,7 @@ public class EnemyShip extends NPC{
                 this.counter = 0;
             }
         }
-        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
+        if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1 && !player.dead) {/** creates shot and shoots*/
             BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
             this.timer = this.cooldownTimer;
         }

@@ -107,7 +107,7 @@ public class CannonBall {
                 this.setAngle = true;
                 this.angle = this.body.getAngle();//getting the angle
             }
-            if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().x > 1920 | this.body.getPosition().y < 0 | this.body.getPosition().y > 1080){ // checks ifthe ball left the play area or has changes in its angle (if collided)
+            if(this.body.getAngle() != this.angle | this.body.getPosition().x < 0 | this.body.getPosition().y < 0){ // checks ifthe ball left the play area or has changes in its angle (if collided)
                 teleportBall();
             }
 

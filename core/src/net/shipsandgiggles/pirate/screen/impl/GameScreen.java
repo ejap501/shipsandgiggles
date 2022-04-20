@@ -193,9 +193,9 @@ public class GameScreen implements Screen {
 		bob.setBehavior(arrives);
 
 		/** set up college*/
-		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,975f), 200f, world);
+		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,1500f), 200f, world);
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
-		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,975f), 200f, world);
+		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(1750f,1500f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 

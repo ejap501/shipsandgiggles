@@ -144,6 +144,28 @@ public class CollegeTests {
 
     }
 
+    @Test
+    public void CollegeShootNoContact(){
+
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+        Location location = new Location(100f,100f);
+
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, location, playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
+        float maximumHealth = 100;
+
+        AlcuinCollege college = new AlcuinCollege(alcuinCollegeSprite,new Location(10000f,10000f),maximumHealth,world);
+        college.shootPlayer(ship);
+        assertEquals(0,BallsManager.listOfBalls.size());
+
+
+    }
+
 
 
 

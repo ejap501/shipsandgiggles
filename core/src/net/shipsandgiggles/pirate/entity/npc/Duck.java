@@ -83,7 +83,7 @@ public class Duck extends NPC{
         batch.setColor(healthBarColor());
         batch.begin();
         this.getSkin().draw(batch);//draws
-        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getWidth() ,this.body.getPosition().y + this.getSkin().getHeight()/2 + 10, (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth())), 5);
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getWidth() ,this.body.getPosition().y + this.getSkin().getHeight()/2 + 10, healthBarWidth(), 5);
         batch.setColor(Color.WHITE);
         batch.end();
 

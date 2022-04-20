@@ -9,9 +9,8 @@ import java.util.UUID;
 public abstract class MovableEntity extends Entity {
 
 	public static float maximumSpeed;
-	public static float maximumBoostedSpeed;
-	public static float minimumBoostedSpeed;
-	private final float originalSpeed;
+	public static float boostedSpeed;
+	private static float originalSpeed;
 	private float speed;
 
 	public MovableEntity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float spawnSpeed, float maximumSpeed, float height, float width) {
@@ -26,14 +25,13 @@ public abstract class MovableEntity extends Entity {
 		return this.speed;
 	}
 
-	public void setSpeed(float speed) {
-		this.speed = speed;
+	public void setSpeed(float speed, float boost) {
+		this.speed = speed * boost;
 	}
 
-	public void setMaxSpeed(float increase, float boost) {
-		this.maximumSpeed += increase;
-		this.maximumBoostedSpeed = this.maximumSpeed * boost;
-		this.minimumBoostedSpeed = this.maximumSpeed / boost;
+	public void setMaxSpeed(float change, float boost) {
+		this.originalSpeed = change;
+		this.boostedSpeed = change * boost;
 	}
 
 	public float getOriginalSpeed() {
@@ -44,10 +42,7 @@ public abstract class MovableEntity extends Entity {
 		return this.maximumSpeed;
 	}
 
-	public float getMaximumBoostedSpeed() {
-		return this.maximumBoostedSpeed;
-	}
-	public float getMinimumBoostedSpeed() {
-		return this.minimumBoostedSpeed;
+	public static float getBoostedSpeed() {
+		return boostedSpeed;
 	}
 }

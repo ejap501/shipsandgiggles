@@ -28,7 +28,7 @@ public class Coin extends Plunder {
         Body body;
         BodyDef def = new BodyDef();
 
-        def.type = BodyDef.BodyType.StaticBody;
+        def.type = BodyDef.BodyType.DynamicBody;
 
         def.position.set(location.getX(), location.getY());
 

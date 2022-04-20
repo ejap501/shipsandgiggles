@@ -105,8 +105,9 @@ public class GameScreen implements Screen {
 	Sprite cannonBall;
 
 	/** Abilities*/
-	float maxSpeed = 100f;
-	float speedMul = 2f;
+	float currentSpeed = 100000f;
+	float maxSpeed = 100000f;
+	float speedMul = 40f;
 	int damageMul = 2;
 	int coinMul = 2;
 	int pointMul = 2;
@@ -118,8 +119,8 @@ public class GameScreen implements Screen {
 
 	/** Max Spawning */
 	int maxCoins = 200;
-	int maxPowerups = 25;
-	int maxShips = 20;
+	int maxPowerups = 250;
+	int maxShips = 0;
 	int maxDucks = 15;
 	int maxStones = 50;
 
@@ -168,7 +169,7 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
-		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera);
 		playerShips.createBody();
 
 		/** map initialization */
@@ -180,7 +181,7 @@ public class GameScreen implements Screen {
 
 		/** creates damping to player */
 		playerShips.getEntityBody().setLinearDamping(0.5f);
-		playerShips.setMaxSpeed(maxSpeed, speedMul);
+		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
@@ -292,6 +293,9 @@ public class GameScreen implements Screen {
 			if (powerUpData.get(i).getPowerUpType() == "Speed Up"){
 				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
 					speedTimer = 600;
+					currentSpeed = maxSpeed * speedMul;
+				}else{
+					currentSpeed = maxSpeed;
 				}
 			}else if(powerUpData.get(i).getPowerUpType() == "Invincible"){
 				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
@@ -365,7 +369,7 @@ public class GameScreen implements Screen {
 
 	public void update() {
 		world.step(1 / 60f, 6, 2);
-		if (speedTimer != 0) {
+		if (speedTimer > 0) {
 			speedTimer -= 1f;
 		}
 		if (invincibilityTimer != 0) {
@@ -396,7 +400,7 @@ public class GameScreen implements Screen {
 		updateCamera();
 		inputUpdate();
 		processInput();
-		handleDirft();
+		handleDrift();
 		//tmr.setView(camera);
 		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
@@ -466,20 +470,20 @@ public class GameScreen implements Screen {
 
 	private void processInput() {
 		/** processing the input created*/
+		float speedMulSet = 1;
+		if (speedTimer > 0){
+			speedMulSet = speedMul;
+		}
 		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
 
 		/** apllying liner velocity to the player based on input*/
-		float turnPercentage = 0;
-		float speed = playerShips.getMaximumSpeed();
-		if (speedTimer != 0) {
-			speed = playerShips.getMaximumBoostedSpeed();
-		}
+		float turnPercentage = 1;
+		float speed = currentSpeed * speedMulSet;
 
-		if (playerShips.getEntityBody().getLinearVelocity().len() < (speed / (2))) {
-			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (speed);
-		} else {
-			turnPercentage = 1;
+
+		if (playerShips.getEntityBody().getLinearVelocity().len() < (100 / (2))) {
+			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (100);
 		}
 
 
@@ -499,9 +503,9 @@ public class GameScreen implements Screen {
 
 		/** applies speed to the player based on input*/
 		if (playerShips.getDriveDirection() == 1) {
-			baseVector.set(0, playerShips.getSpeed());
+			baseVector.set(0, speed);
 		} else if (playerShips.getDriveDirection() == 2) {
-			baseVector.set(0, -playerShips.getSpeed() * 4 / 5);
+			baseVector.set(0, -speed * 4 / 5);
 		}
 		if (playerShips.getEntityBody().getLinearVelocity().len() > 0 && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
 			playerShips.getEntityBody().setLinearDamping(1.75f);
@@ -510,16 +514,16 @@ public class GameScreen implements Screen {
 		}
 		//recordedSpeed = playerShips.getEntityBody().getLinearVelocity().len();
 		if (playerShips.getEntityBody().getLinearVelocity().len() > speed/ 3f) {
-			playerShips.setSpeed(playerShips.getOriginalSpeed() * 2);
+			playerShips.setSpeed(currentSpeed, speedMulSet);
 		} else {
-			playerShips.setSpeed(playerShips.getOriginalSpeed());
+			playerShips.setSpeed(currentSpeed, speedMulSet);
 		}
 		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < speed)) {
 			playerShips.getEntityBody().applyForceToCenter(playerShips.getEntityBody().getWorldVector(baseVector), true);
 		}
 	}
 
-	private void handleDirft() {
+	private void handleDrift() {
 		/** handles drifts of the boat */
 		Vector2 forwardSpeed = playerShips.getForwardVelocity();
 		Vector2 lateralSpeed = playerShips.getLateralVelocity();
@@ -638,7 +642,7 @@ public class GameScreen implements Screen {
 				model = enemyModelC;
 				randHealth = 200 + rn.nextInt(50);
 			}
-			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world));
+			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world, playerShips));
 		}
 
 		for (int i = 0; i < powerups; i++){

@@ -57,6 +57,7 @@ public class Ship extends MovableEntity {
 	public static int coinMulti = 1;
 	public static int pointMulti = 1;
 	public static int damageMulti = 1;
+	public static int speedMulti = 1;
 
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
@@ -292,5 +293,7 @@ public class Ship extends MovableEntity {
 	public static void setDamageMulti(int damageMulti) {
 		Ship.damageMulti = damageMulti;
 	}
+
+
 }
 

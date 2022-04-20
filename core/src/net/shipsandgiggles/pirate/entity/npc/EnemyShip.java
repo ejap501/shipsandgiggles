@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.BallsManager;
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
 
@@ -27,7 +28,7 @@ public class EnemyShip extends NPC{
 
     /** construction of npcs*/
 
-    public EnemyShip(Sprite texture, Location location, float maximumHealth, World world) {
+    public EnemyShip(Sprite texture, Location location, float maximumHealth, World world,  Ship playerShips) {
         super(UUID.randomUUID(), Type.NPC, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
 
         Body body;
@@ -54,7 +55,6 @@ public class EnemyShip extends NPC{
         this.world = world;
 
         this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 600, 600);
-
 
     }
 

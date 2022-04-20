@@ -23,13 +23,13 @@ public class CoinTests {
         World world = new World(new Vector2(0, 0), false);
         Sprite coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 
-        new Coin(coinModel, new Location(600f,600f), 1f, world);
+        new Coin(coinModel, new Location(600f,600f), world);
 
         assertEquals(1, world.getBodyCount());
 
-        new Coin(coinModel, new Location(600f,600f), 1f, world);
-        new Coin(coinModel, new Location(500f,600f), 1f, world);
-        new Coin(coinModel, new Location(400f,600f), 1f, world);
+        new Coin(coinModel, new Location(600f,600f), world);
+        new Coin(coinModel, new Location(500f,600f), world);
+        new Coin(coinModel, new Location(400f,600f), world);
         //Not checking to see if spawning on same tile is ok here as tested in GameScreen
 
         assertEquals(4, world.getBodyCount());
@@ -40,15 +40,15 @@ public class CoinTests {
         World world = new World(new Vector2(0, 0), false);
         Sprite coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 
-        Coin test = new Coin(coinModel, new Location(600f,600f), 1f, world);
+        Coin test = new Coin(coinModel, new Location(600f,600f), world);
 
         test.death();
 
         assertEquals(0, world.getBodyCount());
 
-        Coin test2 =new Coin(coinModel, new Location(600f,600f), 1f, world);
-        Coin test3 =new Coin(coinModel, new Location(600f,600f), 1f, world);
-        Coin test4 =new Coin(coinModel, new Location(600f,600f), 1f, world);
+        Coin test2 =new Coin(coinModel, new Location(600f,600f), world);
+        Coin test3 =new Coin(coinModel, new Location(600f,600f), world);
+        Coin test4 =new Coin(coinModel, new Location(600f,600f), world);
 
         test2.death();
         test3.death();
@@ -67,7 +67,7 @@ public class CoinTests {
         Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
         OrthographicCamera camera = new OrthographicCamera();
 
-        Coin test = new Coin(coinModel, new Location(600f, 600f), 1f, world);
+        Coin test = new Coin(coinModel, new Location(600f, 600f), world);
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(600f, 600f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
         ship.createBody();
 
@@ -82,7 +82,7 @@ public class CoinTests {
         Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
         OrthographicCamera camera = new OrthographicCamera();
 
-        Coin test = new Coin(coinModel, new Location(600f, 600f), 1f, world);
+        Coin test = new Coin(coinModel, new Location(600f, 600f), world);
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(600f, 800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
         ship.createBody();
 

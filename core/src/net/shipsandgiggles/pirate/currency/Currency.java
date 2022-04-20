@@ -14,7 +14,7 @@ import net.shipsandgiggles.pirate.entity.Ship;
  * @version 1.0
  */
 public class Currency {
-	/** Main data store */
+	// Main data store
 	public static Currency INSTANCE;
 	private final Map<Type, Integer> currencyValues;
 
@@ -60,7 +60,7 @@ public class Currency {
 	 * @return New updated balance.
 	 */
 	public int give(Type type, int amount) {
-		/**
+		/*
 		 * Returns the new value and its type for specific cases
 		 * Allows for multiple value stores to be held and updated
 		 * */
@@ -92,10 +92,10 @@ public class Currency {
 	 * @param amount    Amount you wish to take.
 	 */
 	public void take(Type type, int amount) {
-		/** Retrieves the balance of a given type */
+		// Retrieves the balance of a given type
 		int balance = this.balance(type);
 
-		/** Reduces the value for its given type */
+		// Reduces the value for its given type
 		if (this.balance(type) >= amount) {
 			this.currencyValues.put(type, balance - amount);
 		}
@@ -105,11 +105,11 @@ public class Currency {
 	 * Specifies currency Types.
 	 */
 	public enum Type {
-		/** Sets types */
+		// Sets types
 		POINTS("Points"),
 		GOLD("Gold");
 
-		/** Assigns a relevent more detailed name */
+		// Assigns a relevent more detailed name
 		private final String fancyName;
 		Type(String fancyName) {
 			this.fancyName = fancyName;

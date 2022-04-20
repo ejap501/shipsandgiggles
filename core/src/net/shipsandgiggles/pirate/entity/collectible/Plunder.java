@@ -20,17 +20,26 @@ import net.shipsandgiggles.pirate.entity.EntityType;
  * @version 1.0
  */
 public abstract class Plunder extends Entity {
-    /** Main data store */
+    // Main data store
     public Body body;
     public Rectangle hitBox;
     private final Plunder.Type type;
 
-    /** State of existance */
+    // State of existence
     public boolean dead = false;
 
-    /** Instantiates the plunder type */
-    public Plunder(UUID uuid, Plunder.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
-        super(uuid, texture, location, EntityType.PLUNDER, maximumHealth, height, width);
+    /**
+     * Instantiates the plunder type
+     *
+     * @param uuid : The unique id of the object
+     * @param type : The type of plunder
+     * @param texture : Image used for the object
+     * @param location : Location of the object in the world
+     * @param height : Height of the plunder
+     * @param width : Width of the plunder
+     * */
+    public Plunder(UUID uuid, Plunder.Type type, Sprite texture, Location location, float height, float width) {
+        super(uuid, texture, location, EntityType.PLUNDER, 1, height, width);
         this.type = type;
     }
 
@@ -46,20 +55,16 @@ public abstract class Plunder extends Entity {
 
     /** Kills the collectible body */
     public void death() {
-        /** Checks plunder destruction*/
+        // Checks plunder destruction
         if(this.dead) return;
         this.dead = true;
     }
 
-    /**
-     * Determines the type of collectible - allows us to keep track.
-     */
+    /** Determines the type of collectible - allows us to keep track. */
     public enum Type {
         COINS;
         private final UUID randomId;
-        /**
-         * Assign static value at runtime, as value will not change and maximum of 1 college.
-         **/
+        /** Assign static value at runtime, as value will not change and maximum of 1 college. */
         Type() {
             this.randomId = UUID.randomUUID();
         }

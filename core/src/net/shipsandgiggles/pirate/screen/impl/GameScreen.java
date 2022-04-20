@@ -16,6 +16,7 @@ import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -50,11 +51,11 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @version 2.0
  */
 public class GameScreen implements Screen {
-	/** main game screen*/
-	public LangwithCollege langwith;
-	public ConstantineCollege constantine;
+	// Main game screen
 	public AlcuinCollege alcuin;
+	public ConstantineCollege constantine;
 	public GoodrickeCollege goodricke;
+	public LangwithCollege langwith;
 	public shop1 shop;
 	public static float collegesKilled = 0;
 
@@ -63,7 +64,7 @@ public class GameScreen implements Screen {
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<>();
 
-	/** implement world*/
+	// Implement world
 	public static World world;
 	private final Ship playerShips;
 	private ArrayList<Coin> coinData = new ArrayList<>();
@@ -71,11 +72,13 @@ public class GameScreen implements Screen {
 	private ArrayList<Stone> stoneData = new ArrayList<>();
 	private ArrayList<EnemyShip> hostileShips = new ArrayList<>();
 	private ArrayList<Duck> ducks = new ArrayList<>();
-	/** camera work */
+
+	// Camera work
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
-	/** graphics */
-	private final SpriteBatch batch; /** batch of images "objects" */
+
+	// Graphics
+	private final SpriteBatch batch; // Batch of images "objects"
 	public static Sprite playerModel;
 	public Sprite coinModel;
 	public Sprite speedUpModel;
@@ -103,7 +106,7 @@ public class GameScreen implements Screen {
 
 	Sprite cannonBall;
 
-	/** Abilities*/
+	// Abilities
 	float currentSpeed = 100000f;
 	float maxSpeed = 100000f;
 	float speedMul = 40f;
@@ -116,7 +119,7 @@ public class GameScreen implements Screen {
 	int coinTimer = 0;
 	int pointTimer = 0;
 
-	/** Max Spawning */
+	// Max Spawning
 	int maxCoins = 200;
 	int maxPowerups = 250;
 	int maxShips = 15;
@@ -128,7 +131,7 @@ public class GameScreen implements Screen {
 	 * generates the world data and data for entities that exist upon it,
 	 */
 	public GameScreen() {
-		/** initialization of everything*/
+		// Initialization of everything
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), true);
 		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
@@ -148,7 +151,7 @@ public class GameScreen implements Screen {
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
-		/** objects setup*/
+		// Objects setup
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
@@ -166,18 +169,18 @@ public class GameScreen implements Screen {
 		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
 		playerShips.createBody();
 
-		/** map initialization */
+		// Map initialization
 		map = new TmxMapLoader().load("models/map.tmx");
 		maprender = new OrthogonalTiledMapRenderer(map, 1f);
 		new WorldCreator(this);
 
-		/** creates damping to player */
+		// Creates damping to player
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
-		/** enemy creation "bob" and Entity ai controller*/
+		// Enemy creation "bob" and Entity AI controller
 		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f));
 		bob = new EntityAi(body, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
 		bob.setTarget(playerShips.getEntityBody());
@@ -185,14 +188,14 @@ public class GameScreen implements Screen {
 		player = new EntityAi(playerShips.getEntityBody(), 3);
 		Steerable<Vector2> pp = player;
 
-		/** status of entity ai */
-		Arrive<Vector2> arrives = new Arrive<Vector2>(bob, pp)
+		// Status of entity AI
+		Arrive<Vector2> arrives = new Arrive<>(bob, pp)
 				.setTimeToTarget(0.01f)
 				.setArrivalTolerance(175f)
 				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
 
-		/** set up spawning*/
+		// Set up spawning
 		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
@@ -201,7 +204,7 @@ public class GameScreen implements Screen {
 		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
 		spawn(maxCoins, maxDucks, maxPowerups, maxShips, maxStones);
 
-		/** set up hud*/
+		// Set up hud
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
 	}
@@ -214,7 +217,7 @@ public class GameScreen implements Screen {
 	 */
 	@Override
 	public void render(float deltaTime) {
-		/** zoom controller for the intro*/
+		// Zoom controller for the intro
 		if(!intro){
 			camera.zoom -= 0.02f;
 			zoomedAmount += 0.02;
@@ -223,16 +226,16 @@ public class GameScreen implements Screen {
 			}
 		}
 
-		/** does the update method*/
+		// Does the update method
 		update();
 
-		/** colour creation for background*/
+		// Colour creation for background
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		maprender.render();
 		BallsManager.updateBalls(batch);
 
-		/** setting ship position for the sprite of the player ship*/
+		// Setting ship position for the sprite of the player ship
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
@@ -241,7 +244,7 @@ public class GameScreen implements Screen {
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
 
-		/** update all the colleges and entities*/
+		// Update all the colleges and entities
 		playerShips.draw(batch);
 		langwith.draw(batch);
 		langwith.shootPlayer(playerShips);
@@ -253,65 +256,65 @@ public class GameScreen implements Screen {
 		alcuin.shootPlayer(playerShips);
 		shop.draw(batch);
 		shop.rangeCheck(playerShips);
-		for (int i = 0; i < coinData.size(); i++){
-			coinData.get(i).draw(batch);
-			if (coinData.get(i).rangeCheck(playerShips) && !coinData.get(i).dead){
-				coinData.get(i).death();
+		for (Coin coinDatum : coinData) {
+			coinDatum.draw(batch);
+			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
+				coinDatum.death();
 			}
 		}
 
-		for (int i = 0; i < hostileShips.size(); i++){
-			hostileShips.get(i).draw(batch);
-			hostileShips.get(i).shootPlayer(playerShips);
+		for (EnemyShip hostileShip : hostileShips) {
+			hostileShip.draw(batch);
+			hostileShip.shootPlayer(playerShips);
 		}
 
-		for (int i = 0; i < ducks.size(); i++){
-			ducks.get(i).draw(batch);
+		for (Duck duck : ducks) {
+			duck.draw(batch);
 		}
 
-		for (int i = 0; i < powerUpData.size(); i++){
-			powerUpData.get(i).draw(batch);
-			if (powerUpData.get(i).getPowerUpType() == "Speed Up"){
-				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+		for (powerUp powerUpDatum : powerUpData) {
+			powerUpDatum.draw(batch);
+			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
+				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					speedTimer = 600;
 					currentSpeed = maxSpeed * speedMul;
-				}else{
+				} else {
 					currentSpeed = maxSpeed;
 				}
-			}else if(powerUpData.get(i).getPowerUpType() == "Invincible"){
-				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
+				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					invincibilityTimer = 300;
 				}
-			}else if(powerUpData.get(i).getPowerUpType() == "Damage Increase"){
-				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
+				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					damageTimer = 600;
 				}
-			}else if(powerUpData.get(i).getPowerUpType() == "Coin Multiplier"){
-				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
+				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					coinTimer = 900;
 				}
-			}else if(powerUpData.get(i).getPowerUpType() == "Point Multiplier"){
-				if (powerUpData.get(i).rangeCheck(playerShips) && powerUpData.get(i).dead){
+			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
+				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					pointTimer = 900;
 				}
 			}
-			if (powerUpData.get(i).rangeCheck(playerShips) && !powerUpData.get(i).dead) {
-				powerUpData.get(i).death();
+			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+				powerUpDatum.death();
 			}
 		}
 
-		for (int i = 0; i < stoneData.size(); i++){
-			stoneData.get(i).draw(batch);
+		for (Stone stoneDatum : stoneData) {
+			stoneDatum.draw(batch);
 		}
 
-		if(bob.dead == false) {
+		if(!bob.dead) {
 			bob.update(deltaTime, batch, playerShips, world);
 		}
 
-		/** update for the explosion*/
+		// Update for the explosion
 		updateExplosions();
 
-		/** change of ui incase of victory or death or normal hud*/
+		// Change of UI in case of victory or death or normal hud
 		if(playerShips.dead){
 			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
@@ -335,12 +338,15 @@ public class GameScreen implements Screen {
 		hud.updateLabels(batch);
 	}
 
-	/** updating the explosions*/
+	/**
+	 * Updating the explosions
+	 * Adds explosions
+	 * Removes explosions
+	 * */
 	private void updateExplosions() {
 		ArrayList<ExplosionController> removeExplosion = new ArrayList<ExplosionController>();
 		for(ExplosionController explosion : Explosions){
 			explosion.update();
-
 			explosion.draw(batch);
 			if(explosion.remove)removeExplosion.add(explosion);
 		}
@@ -353,7 +359,7 @@ public class GameScreen implements Screen {
 	public void update() {
 		world.step(1 / 60f, 6, 2);
 
-		/** updates powerup timers */
+		// Updates power-up timers
 		if (speedTimer > 0) {
 			speedTimer -= 1f;
 		}
@@ -382,7 +388,6 @@ public class GameScreen implements Screen {
 			playerShips.setPointMulti(1);
 		}
 
-		/** updates camera */
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);
@@ -394,10 +399,13 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Checks for input and performs an action
-	 * Applies to keys "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "C" "X" "NUM_1" "NUM_2"
+	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "C" "X" "NUM_1" "NUM_2"
 	 */
 	public void inputUpdate() {
-		/** checking for inputs*/
+		/*
+		 * Checking for user inputs
+		 * Sets player direction and use of abilities and menus
+		 * */
 		if (playerShips.dead) return;
 		if (playerShips.getEntityBody().getLinearVelocity().len() > 20f) {
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT) | Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -448,7 +456,7 @@ public class GameScreen implements Screen {
 			}
 
 		}
-		/** creating zooming */
+		// creating zooming
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
 		}
@@ -464,7 +472,7 @@ public class GameScreen implements Screen {
 	 * @param playerShips : The player body
 	 */
 	private void processInput(Ship playerShips) {
-		/** processing the input created*/
+		// Processing the input created
 		float speedMulSet = 1;
 		if (speedTimer > 0){
 			speedMulSet = speedMul;
@@ -472,17 +480,17 @@ public class GameScreen implements Screen {
 		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
 
-		/** applying liner velocity to the player based on input*/
+		// Applying liner velocity to the player based on input
 		float turnPercentage = 1;
 		float speed = currentSpeed * speedMulSet;
 
-		if (playerShips.getEntityBody().getLinearVelocity().len() < (100 / (2))) {
+		if (playerShips.getEntityBody().getLinearVelocity().len() < (50)) {
 			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (100);
 		}
 
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
 
-		/** applying angular velocity to the player based on input*/
+		// Applying angular velocity to the player based on input
 		if (playerShips.getTurnDirection() == 1) {
 			playerShips.getEntityBody().setAngularVelocity(-currentTurnSpeed);
 		} else if (playerShips.getTurnDirection() == 2) {
@@ -491,7 +499,7 @@ public class GameScreen implements Screen {
 			playerShips.getEntityBody().setAngularVelocity(0);
 		}
 
-		/** applies speed to the player based on input*/
+		// Applies speed to the player based on input
 		if (playerShips.getDriveDirection() == 1) {
 			baseVector.set(0, speed);
 		} else if (playerShips.getDriveDirection() == 2) {
@@ -503,11 +511,7 @@ public class GameScreen implements Screen {
 			playerShips.getEntityBody().setLinearDamping(0.5f);
 		}
 
-		if (playerShips.getEntityBody().getLinearVelocity().len() > speed/ 3f) {
-			playerShips.setSpeed(currentSpeed, speedMulSet);
-		} else {
-			playerShips.setSpeed(currentSpeed, speedMulSet);
-		}
+		playerShips.setSpeed(currentSpeed, speedMulSet);
 		if (!baseVector.isZero() && (playerShips.getEntityBody().getLinearVelocity().len() < speed)) {
 			playerShips.getEntityBody().applyForceToCenter(playerShips.getEntityBody().getWorldVector(baseVector), true);
 		}
@@ -517,7 +521,7 @@ public class GameScreen implements Screen {
 	 * Handles drift to improve handling
 	 */
 	private void handleDrift() {
-		/** handles drifts of the boat */
+		// Handle drifts of the boat
 		Vector2 forwardSpeed = playerShips.getForwardVelocity();
 		Vector2 lateralSpeed = playerShips.getLateralVelocity();
 
@@ -529,16 +533,16 @@ public class GameScreen implements Screen {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		/** resize function*/
+		// Resize function
 		camera.setToOrtho(false, width / 2, height / 2);
 	}
 
 	/**
-	 * Disposes data
+	 * Disposes of data
 	 */
 	@Override
 	public void dispose() {
-		/** disposing of everything*/
+		// Disposing of everything
 		renderer.dispose();
 		world.dispose();
 		maprender.dispose();
@@ -550,7 +554,7 @@ public class GameScreen implements Screen {
 	 * Updates camera position
 	 */
 	public void updateCamera() {
-		/** updating camera based on states*/
+		// Updating camera based on states
 		if(playerShips.dead) {
 			if(camera.zoom < 2)camera.zoom += 0.005f;
 			CameraManager.lerpOn(camera, playerShips.deathPosition, 0.1f);
@@ -571,7 +575,7 @@ public class GameScreen implements Screen {
 	 * Constructs an enemy body
 	 */
 	public Body createEnemy( boolean isStatic, Vector2 position) {
-		/** creation of the body for the enemy*/
+		// Creation of the body for the enemy
 		Body body;
 		BodyDef def = new BodyDef();
 
@@ -614,12 +618,12 @@ public class GameScreen implements Screen {
 	 * Decrements remaining college count
 	 */
 	public static void collegeKilled(){
-		/** adds for each college killed to count for victory*/
+		// Adds for each college killed to count for victory
 		collegesKilled ++;
 		collegesCaptured--;
 	}
 
-	/** adds college captured to check for victory*/
+	/** Adds college captured to check for victory */
 	public static void collegeCaptured(){collegesCaptured ++;}
 
 	/**
@@ -628,32 +632,32 @@ public class GameScreen implements Screen {
 	 *
 	 * @param coins : Number of coins to be added
 	 * @param duck : Number of ducks to be added
-	 * @param powerups : Number of powerups to be added
+	 * @param powerups : Number of power-ups to be added
 	 * @param ships : Number of ships to be added
 	 * @param stone : Number of stones to be added
 	 */
 	public void spawn(int coins, int duck, int powerups , int ships, int stone){
-		/** initializing */
+		// Initializing
 		Random rn = new Random();
 		int randX, randY, randModel, randHealth;
 		String randType;
 		Sprite model;
 
-		/** coins */
+		// Coins
 		for (int i = 0; i < coins; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			coinData.add(new Coin(coinModel, new Location(randX,randY), 1f, world));
+			coinData.add(new Coin(coinModel, new Location(randX,randY), world));
 		}
 
-		/** ducks */
+		// Ducks
 		for (int i = 0; i < duck; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
 		}
 
-		/** powerups */
+		// Power-ups
 		for (int i = 0; i < powerups; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
@@ -664,20 +668,20 @@ public class GameScreen implements Screen {
 			}else if (randModel == 1){
 				model = incDamageModel;
 				randType = "Damage Increase";
-			}else if (randModel == 1){
+			}else if (randModel == 2){
 				model = invincibilityModel;
 				randType = "Invincible";
-			}else if (randModel == 1){
+			}else if (randModel == 3){
 				model = coinMulModel;
 				randType = "Coin Multiplier";
 			}else {
 				model = pointMulModel;
 				randType = "Point Multiplier";
 			}
-			powerUpData.add(new powerUp(model, new Location(randX,randY), randType,1f, world));
+			powerUpData.add(new powerUp(model, new Location(randX,randY), randType, world));
 		}
 
-		/** ships */
+		// Ships
 		for (int i = 0; i < ships; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
@@ -695,7 +699,7 @@ public class GameScreen implements Screen {
 			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world, playerShips));
 		}
 
-		/** stones */
+		// Stones
 		for (int i = 0; i < stone; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);

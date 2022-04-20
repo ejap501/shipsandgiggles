@@ -22,8 +22,8 @@ public class Coin extends Plunder {
 
     /** construction of coins*/
 
-    public Coin(Sprite texture, Location location, float maximumHealth, World world) {
-        super(UUID.randomUUID(),Type.COINS, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
+    public Coin(Sprite texture, Location location, World world) {
+        super(UUID.randomUUID(),Type.COINS, texture, location, texture.getHeight(), texture.getWidth());
 
         Body body;
         BodyDef def = new BodyDef();

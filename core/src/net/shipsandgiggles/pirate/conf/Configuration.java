@@ -17,7 +17,7 @@ import net.shipsandgiggles.pirate.screen.impl.GameScreen;
  * @version 2.0
  */
 public class Configuration {
-	/** Global configs for variables commonly used */
+	// Global configs for variables commonly used
 	public static final Skin SKIN = new Skin(Gdx.files.internal("skin/comic-ui.json"));
 	public static final float PIXEL_PER_METER = 1f; /** ppi to scale down the world*/
 

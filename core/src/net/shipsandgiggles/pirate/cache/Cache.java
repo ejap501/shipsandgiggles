@@ -16,7 +16,7 @@ import net.shipsandgiggles.pirate.util.Preconditions;
  * @version 1.0
  */
 public class Cache<K, V> {
-	/** Main data store */
+	// Main data store
 	private final Map<K, V> cache;
 	private final Predicate<V> argumentCheck;
 
@@ -38,18 +38,18 @@ public class Cache<K, V> {
 	 * @param value : Data to be stored
 	 */
 	public void cache(K identifier, V value) {
-		/** Validity checks */
+		// Validity checks
 		Preconditions.checkNotNull(identifier, "Identifier for a cache cannot be null!");
 		if (this.argumentCheck != null) {
 			Preconditions.checkArgument(this.argumentCheck, "Entity {val} cannot be added as it has failed the predicate!", value);
 		}
 
-		/** Containment check */
+		// Containment check
 		if (this.cache.containsValue(value)) {
 			throw new IllegalStateException("Cache already contains value " + value + "!");
 		}
 
-		/** Stores data */
+		// Stores data
 		this.cache.put(identifier, value);
 	}
 
@@ -60,15 +60,15 @@ public class Cache<K, V> {
 	 * @param toRemove : Identifier value data is to be removed from
 	 */
 	public void remove(K toRemove) {
-		/** Validity check */
+		// Validity check
 		Preconditions.checkNotNull(toRemove, "Identifier for removal cannot be null!");
 
-		/** Containment check */
+		// Containment check
 		if (!this.cache.containsKey(toRemove)) {
 			throw new NullPointerException("The value " + toRemove + " is not currently in the cache!");
 		}
 
-		/** Removes data */
+		// Removes data
 		this.cache.remove(toRemove);
 	}
 
@@ -80,10 +80,10 @@ public class Cache<K, V> {
 	 * @return Value stored in cache
 	 */
 	public Optional<V> find(K toFind) {
-		/** Validity check */
+		// Validity check
 		Preconditions.checkNotNull(toFind, "Identifier for a cache cannot be null!");
 
-		/** Returned data */
+		// Returned data
 		return Optional.ofNullable(this.cache.get(toFind));
 	}
 }

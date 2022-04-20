@@ -22,8 +22,8 @@ public class powerUp extends Plunder {
 
     /** construction of coins*/
 
-    public powerUp(Sprite texture, Location location, String type,float maximumHealth, World world) {
-        super(UUID.randomUUID(), Plunder.Type.COINS, texture, location, maximumHealth, texture.getHeight(), texture.getWidth());
+    public powerUp(Sprite texture, Location location, String type, World world) {
+        super(UUID.randomUUID(), Plunder.Type.COINS, texture, location, texture.getHeight(), texture.getWidth());
         powerUpType = type;
         Body body;
         BodyDef def = new BodyDef();

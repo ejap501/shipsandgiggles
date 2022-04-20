@@ -55,7 +55,7 @@ public class Stone extends Solid{
 
     @Override
     public void draw(Batch batch) {
-        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
+        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the stone */
         this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
         batch.begin();
         this.getSkin().draw(batch);//draws stone

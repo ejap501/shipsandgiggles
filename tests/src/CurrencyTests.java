@@ -15,6 +15,9 @@ public class CurrencyTests {
     @Test
     public void makeCurrencyGold(){
 
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        ////////////////////////////////
+
 
         int gold = Currency.get().balance(Currency.Type.GOLD);
 
@@ -23,7 +26,10 @@ public class CurrencyTests {
 
     @Test
     public void subtractCurrencyGold(){
-        Ship.coinMulti = 1;
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        ////////////////////////////////
+
+
         Currency.get().give(Currency.Type.GOLD, 100);
         Currency.get().take(Currency.Type.GOLD, 100);
         int gold = Currency.get().balance(Currency.Type.GOLD);
@@ -33,6 +39,10 @@ public class CurrencyTests {
 
     @Test
     public void addCurrencyGold(){
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        ////////////////////////////////
+
+
         Currency.get().give(Currency.Type.GOLD, 100);
         int gold = Currency.get().balance(Currency.Type.GOLD);
 
@@ -42,6 +52,10 @@ public class CurrencyTests {
 
     @Test
     public void subtractToNegativeCurrencyGold(){
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        ////////////////////////////////
+
+
         Currency.get().take(Currency.Type.GOLD, 100);
         int gold = Currency.get().balance(Currency.Type.GOLD);
 
@@ -50,6 +64,10 @@ public class CurrencyTests {
 
     @Test
     public void addCurrencyGoldWithMulti(){
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        ////////////////////////////////
+
+
         Ship.coinMulti = 2;
         Currency.get().give(Currency.Type.GOLD, 100);
         int gold = Currency.get().balance(Currency.Type.GOLD);
@@ -60,6 +78,9 @@ public class CurrencyTests {
     }
     public void makeCurrencyPoints(){
 
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+        ////////////////////////////////
+
 
         int gold = Currency.get().balance(Currency.Type.POINTS);
 
@@ -68,6 +89,10 @@ public class CurrencyTests {
 
     @Test
     public void subtractCurrencyPoints(){
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+        ////////////////////////////////
+
+
         Ship.pointMulti = 1;
         Currency.get().give(Currency.Type.POINTS, 100);
         Currency.get().take(Currency.Type.POINTS, 100);
@@ -78,6 +103,10 @@ public class CurrencyTests {
 
     @Test
     public void addCurrencyPoints(){
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+        ////////////////////////////////
+
+
         Currency.get().give(Currency.Type.POINTS, 100);
         int gold = Currency.get().balance(Currency.Type.POINTS);
 
@@ -87,6 +116,9 @@ public class CurrencyTests {
 
     @Test
     public void subtractToNegativeCurrencyPoints(){
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+        ////////////////////////////////
+
         Currency.get().take(Currency.Type.POINTS, 100);
         int gold = Currency.get().balance(Currency.Type.POINTS);
 
@@ -95,6 +127,9 @@ public class CurrencyTests {
 
     @Test
     public void addCurrencyGoldWithPoints(){
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+        ////////////////////////////////
+
         Ship.pointMulti = 2;
         Currency.get().give(Currency.Type.POINTS, 100);
         int gold = Currency.get().balance(Currency.Type.POINTS);

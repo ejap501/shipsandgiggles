@@ -181,7 +181,7 @@ public class GameScreen implements Screen {
 		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
 		// Enemy creation "bob" and Entity AI controller
-		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f));
+		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f),world);
 		bob = new EntityAi(body, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
 		bob.setTarget(playerShips.getEntityBody());
 
@@ -574,7 +574,7 @@ public class GameScreen implements Screen {
 	/**
 	 * Constructs an enemy body
 	 */
-	public Body createEnemy( boolean isStatic, Vector2 position) {
+	public static Body createEnemy(boolean isStatic, Vector2 position, World world) {
 		// Creation of the body for the enemy
 		Body body;
 		BodyDef def = new BodyDef();

@@ -18,7 +18,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 public class EntityAi implements Steerable<Vector2> {
     /** the creation and AI of the enemy boat*/
-    Body body;
+    public Body body;
     boolean tagged;
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
     Sprite texture;
@@ -36,7 +36,7 @@ public class EntityAi implements Steerable<Vector2> {
     public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
     SteeringBehavior<Vector2> behavior;
-    SteeringAcceleration<Vector2> steeringOutput;
+    public SteeringAcceleration<Vector2> steeringOutput;
 
 
 
@@ -148,7 +148,7 @@ public class EntityAi implements Steerable<Vector2> {
         return this.texture;
     }
 
-    protected void applySteering (SteeringAcceleration<Vector2> steeringOutput, float deltaTime) {
+    public void applySteering (SteeringAcceleration<Vector2> steeringOutput, float deltaTime) {
         if(isPlayer){
             return;
         }
@@ -179,6 +179,7 @@ public class EntityAi implements Steerable<Vector2> {
                this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
 
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
+                System.out.println(this.body.getPosition());
 
             }
 
@@ -209,9 +210,6 @@ public class EntityAi implements Steerable<Vector2> {
                 this.counter = 0;
             }
         }
-        System.out.println(this.hitBox.overlaps(player.hitBox));
-        System.out.println(this.timer);
-        System.out.println(this.health);
         if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
         System.out.println("ss");
             BallsManager.createBall(world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);

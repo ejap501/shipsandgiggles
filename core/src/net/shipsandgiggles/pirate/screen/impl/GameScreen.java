@@ -116,6 +116,13 @@ public class GameScreen implements Screen {
 	int coinTimer = 0;
 	int pointTimer = 0;
 
+	/** Max Spawning */
+	int maxCoins = 200;
+	int maxPowerups = 25;
+	int maxShips = 50;
+	int maxDucks = 25;
+	int maxStones = 50;
+
 	public GameScreen() {
 
 		/** initialization of everything*/
@@ -161,7 +168,7 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
-		playerShips = new Ship(playerModel, 40000f, 0f, 0.3f, 1f, new Location(_width / 2f, _height / 2f), playerModel.getHeight(), playerModel.getWidth(), camera);
+		playerShips = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera);
 		playerShips.createBody();
 
 		/** map initialization */
@@ -198,8 +205,8 @@ public class GameScreen implements Screen {
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
-		shop = new shop1(langwithCollegeSprite, new Location(500f,500f),-1,world);
-		spawn(200, 50, 25, 50, 25);
+		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
+		spawn(maxCoins, maxShips, maxPowerups, maxStones, maxDucks);
 
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
@@ -374,8 +381,8 @@ public class GameScreen implements Screen {
 			playerShips.setDamageMulti(1);
 		}
 		if (coinTimer != 0){
-			playerShips.setCoinMulti(coinMul);
 			coinTimer -= 1f;
+			playerShips.setCoinMulti(coinMul);
 		}else{
 			playerShips.setCoinMulti(1);
 		}

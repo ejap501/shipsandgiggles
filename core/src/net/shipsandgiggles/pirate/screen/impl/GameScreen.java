@@ -3,50 +3,54 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.steer.Steerable;
-import com.badlogic.gdx.ai.steer.behaviors.Arrive;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+
+import java.util.Random;
+import java.util.ArrayList;
+
 import net.shipsandgiggles.pirate.*;
-import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
-import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
-import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
-import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
+import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
-import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
-import net.shipsandgiggles.pirate.listener.WorldContactListener;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
-import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.BallsManager;
-import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
-import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
-import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
-import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
 import net.shipsandgiggles.pirate.screen.ScreenType;
-
-import java.util.ArrayList;
-import java.util.Random;
+import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.BallsManager;
+import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
+import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
+import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
+import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
+import net.shipsandgiggles.pirate.listener.WorldContactListener;
+import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
+import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-
-
-
-
+/**
+ * Game Screen
+ * Class to generate the various screens used to play the game.
+ * Instantiates all screen types and displays current screen.
+ *
+ * @author Team 23
+ * @author Team 22: Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter
+ * @version 2.0
+ */
 public class GameScreen implements Screen {
-
 	/** main game screen*/
-
 	public LangwithCollege langwith;
 	public ConstantineCollege constantine;
 	public AlcuinCollege alcuin;
@@ -62,18 +66,16 @@ public class GameScreen implements Screen {
 	/** implement world*/
 	public static World world;
 	private final Ship playerShips;
-	private Coin coins;
-	private Coin another;
 	private ArrayList<Coin> coinData = new ArrayList<>();
 	private ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private ArrayList<Stone> stoneData = new ArrayList<>();
 	private ArrayList<EnemyShip> hostileShips = new ArrayList<>();
 	private ArrayList<Duck> ducks = new ArrayList<>();
-	/** camera work*/
+	/** camera work */
 	private final OrthographicCamera camera;
 	private final float Scale = 2;
-	/**graphics */
-	private final SpriteBatch batch; /**batch of images "objects" */
+	/** graphics */
+	private final SpriteBatch batch; /** batch of images "objects" */
 	public static Sprite playerModel;
 	public Sprite coinModel;
 	public Sprite speedUpModel;
@@ -88,13 +90,10 @@ public class GameScreen implements Screen {
 	public Sprite enemyModelB;
 	public Sprite enemyModelC;
 	public Sprite duckModel;
-	//public Sprite speedDownModel;
 
 	private final Box2DDebugRenderer renderer;
-	//private final OrthoCachedTiledMapRenderer tmr;
 	private final TiledMap map;
 	private OrthogonalTiledMapRenderer maprender;
-	float recordedSpeed = 0;
 	int cameraState = 0;
 	public Sprite water;
 	public boolean intro = false;
@@ -124,13 +123,14 @@ public class GameScreen implements Screen {
 	int maxDucks = 15;
 	int maxStones = 50;
 
+	/**
+	 * Initialises the Game Screen,
+	 * generates the world data and data for entities that exist upon it,
+	 */
 	public GameScreen() {
-
 		/** initialization of everything*/
-
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), true);
-
 		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
 		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
 		Sprite goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
@@ -148,23 +148,17 @@ public class GameScreen implements Screen {
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
-
-
 		/** objects setup*/
-
-
-
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
 		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
 		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
-		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/coin_multipler.png")));
+		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/coin_multiplier.png")));
 		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/point_multiplier.png")));
 		stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));
 		stoneModelB = new Sprite(new Texture(Gdx.files.internal("models/stone_2.png")));
 		stoneModelC = new Sprite(new Texture(Gdx.files.internal("models/stone_3.png")));
-		//speedDownModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		enemyModelA = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
@@ -176,8 +170,6 @@ public class GameScreen implements Screen {
 		map = new TmxMapLoader().load("models/map.tmx");
 		maprender = new OrthogonalTiledMapRenderer(map, 1f);
 		new WorldCreator(this);
-
-		//TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get("collider").getObjects());
 
 		/** creates damping to player */
 		playerShips.getEntityBody().setLinearDamping(0.5f);
@@ -200,27 +192,26 @@ public class GameScreen implements Screen {
 				.setDecelerationRadius(50);
 		bob.setBehavior(arrives);
 
-		/** set up college*/
+		/** set up spawning*/
 		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
 		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
-		spawn(maxCoins, maxShips, maxPowerups, maxStones, maxDucks);
+		spawn(maxCoins, maxDucks, maxPowerups, maxShips, maxStones);
 
+		/** set up hud*/
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
-
-
 	}
 
-
-	@Override
-	public void show() {
-
-	}
-
+	/**
+	 * Renders the visual data for all objects
+	 * Changes and renders new visual data for ships
+	 *
+	 * @param deltaTime Delta time (elapsed time since last game tick)
+	 */
 	@Override
 	public void render(float deltaTime) {
 		/** zoom controller for the intro*/
@@ -232,33 +223,23 @@ public class GameScreen implements Screen {
 			}
 		}
 
-
 		/** does the update method*/
 		update();
+
 		/** colour creation for background*/
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		/** draws the water manually to use less resources*/
-		//water.draw(batch);
-		batch.end();
 		maprender.render();
-		//tmr.render();
 		BallsManager.updateBalls(batch);
 
 		/** setting ship position for the sprite of the player ship*/
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
-
-
-
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
-
-
 
 		/** update all the colleges and entities*/
 		playerShips.draw(batch);
@@ -323,13 +304,12 @@ public class GameScreen implements Screen {
 			stoneData.get(i).draw(batch);
 		}
 
-		//renderer.render(world, camera.combined.scl(PIXEL_PER_METER));
 		if(bob.dead == false) {
 			bob.update(deltaTime, batch, playerShips, world);
 		}
+
 		/** update for the explosion*/
 		updateExplosions();
-
 
 		/** change of ui incase of victory or death or normal hud*/
 		if(playerShips.dead){
@@ -367,8 +347,13 @@ public class GameScreen implements Screen {
 		Explosions.removeAll(removeExplosion);
 	}
 
+	/**
+	 * Updates the state of each object
+	 */
 	public void update() {
 		world.step(1 / 60f, 6, 2);
+
+		/** updates powerup timers */
 		if (speedTimer > 0) {
 			speedTimer -= 1f;
 		}
@@ -397,16 +382,20 @@ public class GameScreen implements Screen {
 			playerShips.setPointMulti(1);
 		}
 
+		/** updates camera */
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);
 		handleDrift();
-		//tmr.setView(camera);
 		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 	}
 
+	/**
+	 * Checks for input and performs an action
+	 * Applies to keys "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "C" "X" "NUM_1" "NUM_2"
+	 */
 	public void inputUpdate() {
 		/** checking for inputs*/
 		if (playerShips.dead) return;
@@ -419,7 +408,6 @@ public class GameScreen implements Screen {
 				playerShips.setTurnDirection(0);
 			}
 		}
-
 
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) | Gdx.input.isKeyPressed(Input.Keys.W)) {
 			playerShips.setDriveDirection(1);
@@ -438,11 +426,13 @@ public class GameScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getEntityBody().getPosition());
 		}
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
 			if (cameraState == 0) cameraState = 1;
 			else if (cameraState == 1) cameraState = 0;
 			else if (cameraState == -1) cameraState = 1;
 		}
+
 		if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
 			if (cameraState == 0) cameraState = -1;
 			else if (cameraState == 1) cameraState = -1;
@@ -468,6 +458,11 @@ public class GameScreen implements Screen {
 
 	}
 
+	/**
+	 * Processes input based on an action
+	 *
+	 * @param playerShips : The player body
+	 */
 	private void processInput(Ship playerShips) {
 		/** processing the input created*/
 		float speedMulSet = 1;
@@ -477,20 +472,15 @@ public class GameScreen implements Screen {
 		if (playerShips.dead) return;
 		Vector2 baseVector = new Vector2(0, 0);
 
-		/** apllying liner velocity to the player based on input*/
+		/** applying liner velocity to the player based on input*/
 		float turnPercentage = 1;
 		float speed = currentSpeed * speedMulSet;
-
 
 		if (playerShips.getEntityBody().getLinearVelocity().len() < (100 / (2))) {
 			turnPercentage = playerShips.getEntityBody().getLinearVelocity().len() / (100);
 		}
 
-
 		float currentTurnSpeed = playerShips.getTurnSpeed() * turnPercentage;
-
-
-
 
 		/** applying angular velocity to the player based on input*/
 		if (playerShips.getTurnDirection() == 1) {
@@ -512,7 +502,7 @@ public class GameScreen implements Screen {
 		} else {
 			playerShips.getEntityBody().setLinearDamping(0.5f);
 		}
-		//recordedSpeed = playerShips.getEntityBody().getLinearVelocity().len();
+
 		if (playerShips.getEntityBody().getLinearVelocity().len() > speed/ 3f) {
 			playerShips.setSpeed(currentSpeed, speedMulSet);
 		} else {
@@ -523,6 +513,9 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Handles drift to improve handling
+	 */
 	private void handleDrift() {
 		/** handles drifts of the boat */
 		Vector2 forwardSpeed = playerShips.getForwardVelocity();
@@ -531,40 +524,31 @@ public class GameScreen implements Screen {
 		playerShips.getEntityBody().setLinearVelocity(forwardSpeed.x + lateralSpeed.x * playerShips.getDriftFactor(), forwardSpeed.y + lateralSpeed.y * playerShips.getDriftFactor());
 	}
 
+	/**
+	 * Resizes the camera
+	 */
 	@Override
 	public void resize(int width, int height) {
 		/** resize function*/
 		camera.setToOrtho(false, width / 2, height / 2);
-		//viewport.update(width,height, true);
-		//batch.setProjectionMatrix(camera.combined);
 	}
 
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
+	/**
+	 * Disposes data
+	 */
 	@Override
 	public void dispose() {
 		/** disposing of everything*/
 		renderer.dispose();
 		world.dispose();
-		//tmr.dispose();
 		maprender.dispose();
 		batch.dispose();
 		map.dispose();
 	}
 
+	/**
+	 * Updates camera position
+	 */
 	public void updateCamera() {
 		/** updating camera based on states*/
 		if(playerShips.dead) {
@@ -583,7 +567,11 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public Body createEnemy( boolean isStatic, Vector2 position) {/** creation of the body for the enemy*/
+	/**
+	 * Constructs an enemy body
+	 */
+	public Body createEnemy( boolean isStatic, Vector2 position) {
+		/** creation of the body for the enemy*/
 		Body body;
 		BodyDef def = new BodyDef();
 
@@ -595,58 +583,78 @@ public class GameScreen implements Screen {
 		def.fixedRotation = true;
 		body = world.createBody(def);
 
-
 		return body;
 	}
+
+	/**
+	 * Returns the map
+	 */
 	public TiledMap getMap() {
 		return map;
 	}
 
+	/**
+	 * Returns the world
+	 */
 	public World getWorld(){
 		return world;
 	}
+
+	/**
+	 * Adds a new explosion to the world
+	 *
+	 * @param pp : Position of explosion
+	 */
 	public static void add(Vector2 pp){
 		Explosions.add(new ExplosionController(pp));
 	}
 
+	/**
+	 * Increments killed college count
+	 * Decrements remaining college count
+	 */
 	public static void collegeKilled(){
 		/** adds for each college killed to count for victory*/
 		collegesKilled ++;
 		collegesCaptured--;
 	}
+
 	/** adds college captured to check for victory*/
 	public static void collegeCaptured(){collegesCaptured ++;}
 
-	public void spawn(int coins, int ships, int powerups, int stone, int duck){
+	/**
+	 * Determines spawning
+	 * Manages spawning of coins, ships, powerups, stones, and ducks
+	 *
+	 * @param coins : Number of coins to be added
+	 * @param duck : Number of ducks to be added
+	 * @param powerups : Number of powerups to be added
+	 * @param ships : Number of ships to be added
+	 * @param stone : Number of stones to be added
+	 */
+	public void spawn(int coins, int duck, int powerups , int ships, int stone){
+		/** initializing */
 		Random rn = new Random();
 		int randX, randY, randModel, randHealth;
 		String randType;
 		Sprite model;
+
+		/** coins */
 		for (int i = 0; i < coins; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			coinData.add(new Coin(coinModel, new Location(randX,randY), 1f, world));
 		}
 
-		for (int i = 0; i < ships; i++){
+		/** ducks */
+		for (int i = 0; i < duck; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			randModel = rn.nextInt(3);
-			if (randModel == 0){
-				model = enemyModelA;
-				randHealth = 80 + rn.nextInt(40);
-			}else if (randModel == 1){
-				model = enemyModelB;
-				randHealth = 140 + rn.nextInt(20);
-			}else {
-				model = enemyModelC;
-				randHealth = 200 + rn.nextInt(50);
-			}
-			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world, playerShips));
+			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
 		}
 
+		/** powerups */
 		for (int i = 0; i < powerups; i++){
-
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			randModel = rn.nextInt(5);
@@ -669,6 +677,25 @@ public class GameScreen implements Screen {
 			powerUpData.add(new powerUp(model, new Location(randX,randY), randType,1f, world));
 		}
 
+		/** ships */
+		for (int i = 0; i < ships; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			randModel = rn.nextInt(3);
+			if (randModel == 0){
+				model = enemyModelA;
+				randHealth = 80 + rn.nextInt(40);
+			}else if (randModel == 1){
+				model = enemyModelB;
+				randHealth = 140 + rn.nextInt(20);
+			}else {
+				model = enemyModelC;
+				randHealth = 200 + rn.nextInt(50);
+			}
+			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world, playerShips));
+		}
+
+		/** stones */
 		for (int i = 0; i < stone; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
@@ -682,11 +709,25 @@ public class GameScreen implements Screen {
 			}
 			stoneData.add(new Stone(model, new Location(randX,randY),1f, world));
 		}
+	}
 
-		for (int i = 0; i < duck; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
-		}
+	@Override
+	public void show() {
+
+	}
+
+	@Override
+	public void pause() {
+
+	}
+
+	@Override
+	public void resume() {
+
+	}
+
+	@Override
+	public void hide() {
+
 	}
 }

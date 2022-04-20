@@ -59,7 +59,7 @@ public class CannonBall {
 
     }
     CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
-        LoadingScreen.soundController.playCannonShot();
+        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
         Body body;
         BodyDef def = new BodyDef();

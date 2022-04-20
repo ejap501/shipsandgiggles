@@ -64,11 +64,11 @@ public abstract class College extends Entity {
 	/** Kills the college body */
 	public void death() {
 		// To give chance to player to keep the college alive
-		if(this.getHealth() != 1){
-			this.health = 1;
-			GameScreen.collegeCaptured();
-			return;
-		}
+		//if(this.getHealth() != 1){
+		//	this.health = 1;
+		//	GameScreen.collegeCaptured();
+		//	return;
+		//}
 
 		// Terminate method if already dead
 		if(this.dead) return;

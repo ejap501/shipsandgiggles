@@ -117,6 +117,7 @@ public class CollegeTests {
 
         college.shootPlayer(ship);
         assertEquals(1,BallsManager.listOfBalls.size());
+        BallsManager.listOfBalls.clear();
 
 
     }

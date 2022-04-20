@@ -88,6 +88,7 @@ public class EnemyShipsTest {
 
         badShip.shootPlayer(ship);
         assertEquals(1, BallsManager.listOfBalls.size());
+        BallsManager.listOfBalls.clear();
 
 
     }
@@ -126,6 +127,7 @@ public class EnemyShipsTest {
 
         badShip.shootPlayer(ship);
         assertEquals(0, BallsManager.listOfBalls.size());
+
 
 
     }

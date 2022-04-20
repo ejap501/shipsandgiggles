@@ -125,8 +125,7 @@ public class EnemyShip extends NPC{
     }
 
     public float healthBarWidth(){
-        Sprite skin = this.getSkin();
-        Float value = (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth()));
+        float value = (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth()));
         return value;
     }
 }

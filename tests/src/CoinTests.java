@@ -37,6 +37,9 @@ public class CoinTests {
     }
     @Test
     public void killCoin() {
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        /////////////////////////
+
         World world = new World(new Vector2(0, 0), false);
         Sprite coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 

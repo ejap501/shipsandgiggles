@@ -1,15 +1,18 @@
 package net.shipsandgiggles.pirate;
 
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 /**
+ * World Creator
  * This is the class where all boundaries and collisions are created for the map.
+ *
  * @author Ethan Alabaster
  * @version 1.0
  */
@@ -42,7 +45,6 @@ public class WorldCreator {
             fDef.shape = shape;
             fDef.filter.categoryBits = Configuration.Cat_walls;
             fixture = body.createFixture(fDef);
-
     }
 }
 }

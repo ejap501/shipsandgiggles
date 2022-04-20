@@ -81,7 +81,7 @@ public abstract class College extends Entity {
 		//this.body.setTransform(10000,10000, 2);
 	}
 
-	/** Types of college - allows us to keep track.*/
+	/** Types of college - allows us to keep track. */
 	public enum Type {
 		LANGWITH;
 		private final UUID randomId;
@@ -90,6 +90,7 @@ public abstract class College extends Entity {
 		Type() {
 			this.randomId = UUID.randomUUID();
 		}
+
 		/**
 		 * Retrieves the unique id for the college object
 		 *

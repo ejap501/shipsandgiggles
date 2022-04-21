@@ -52,11 +52,11 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  */
 public class GameScreen implements Screen {
 	// Main game screen
-	public AlcuinCollege alcuin;
-	public ConstantineCollege constantine;
-	public GoodrickeCollege goodricke;
-	public LangwithCollege langwith;
-	public shop1 shop;
+	public static AlcuinCollege alcuin;
+	public static ConstantineCollege constantine;
+	public static GoodrickeCollege goodricke;
+	public static LangwithCollege langwith;
+	public static shop1 shop;
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
@@ -66,50 +66,56 @@ public class GameScreen implements Screen {
 
 	// Implement world
 	public static World world;
-	private final Ship playerShips;
-	private ArrayList<Coin> coinData = new ArrayList<>();
-	private ArrayList<powerUp> powerUpData = new ArrayList<>();
-	private ArrayList<Stone> stoneData = new ArrayList<>();
-	private ArrayList<EnemyShip> hostileShips = new ArrayList<>();
-	private ArrayList<Duck> ducks = new ArrayList<>();
+	private static Ship playerShips;
+	private static ArrayList<Coin> coinData = new ArrayList<>();
+	private static ArrayList<powerUp> powerUpData = new ArrayList<>();
+	private static ArrayList<Stone> stoneData = new ArrayList<>();
+	private static ArrayList<EnemyShip> hostileShips = new ArrayList<>();
+	private static ArrayList<Duck> ducks = new ArrayList<>();
 
 	// Camera work
-	private final OrthographicCamera camera;
+	private static OrthographicCamera camera;
 	private final float Scale = 2;
 
 	// Graphics
 	private final SpriteBatch batch; // Batch of images "objects"
 	public static Sprite playerModel;
-	public Sprite coinModel;
-	public Sprite speedUpModel;
-	public Sprite invincibilityModel;
-	public Sprite incDamageModel;
-	public Sprite coinMulModel;
-	public Sprite pointMulModel;
-	public Sprite stoneModelA;
-	public Sprite stoneModelB;
-	public Sprite stoneModelC;
-	public Sprite enemyModelA;
-	public Sprite enemyModelB;
-	public Sprite enemyModelC;
-	public Sprite duckModel;
+	public static Sprite coinModel;
+	public static Sprite speedUpModel;
+	public static Sprite invincibilityModel;
+	public static Sprite incDamageModel;
+	public static Sprite coinMulModel;
+	public static Sprite pointMulModel;
+	public static Sprite stoneModelA;
+	public static Sprite stoneModelB;
+	public static Sprite stoneModelC;
+	public static Sprite enemyModelA;
+	public static Sprite enemyModelB;
+	public static Sprite enemyModelC;
+	public static Sprite duckModel;
+	public static Sprite alcuinCollegeSprite;
+	public static Sprite constantineCollegeSprite;
+	public static Sprite goodrickeCollegeSprite;
+	public static Sprite langwithCollegeSprite;
+	public static Sprite bobsSprite;
 
 	private final Box2DDebugRenderer renderer;
 	private final TiledMap map;
 	private OrthogonalTiledMapRenderer maprender;
 	int cameraState = 0;
-	public Sprite water;
+	public static Sprite water;
 	public boolean intro = false;
 	public float zoomedAmount = 0;
-	EntityAi bob, player;
+	static EntityAi bob;
+	static EntityAi player;
 	public static int collegesCaptured = 0;
 
-	Sprite cannonBall;
+	public static Sprite cannonBall;
 
 	// Abilities
-	float currentSpeed = 100000f;
+	static float currentSpeed = 100000f;
 	float maxSpeed = 100000f;
-	float speedMul = 40f;
+	static float speedMul = 40f;
 	int damageMul = 2;
 	int coinMul = 2;
 	int pointMul = 2;
@@ -120,11 +126,11 @@ public class GameScreen implements Screen {
 	int pointTimer = 0;
 
 	// Max Spawning
-	int maxCoins = 200;
-	int maxPowerups = 250;
-	int maxShips = 15;
-	int maxDucks = 15;
-	int maxStones = 50;
+	static int maxCoins = 200;
+	static int maxPowerups = 250;
+	static int maxShips = 15;
+	static int maxDucks = 15;
+	static int maxStones = 50;
 
 	/**
 	 * Initialises the Game Screen,
@@ -132,16 +138,10 @@ public class GameScreen implements Screen {
 	 */
 	public GameScreen() {
 		// Initialization of everything
+		createSprites();
+
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), true);
-		Sprite alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
-		Sprite constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
-		Sprite goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
-		Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
-
-		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
-		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
-
 		camera = new OrthographicCamera();
 		int _height = Gdx.graphics.getHeight();
 		int _width = Gdx.graphics.getWidth();
@@ -151,7 +151,28 @@ public class GameScreen implements Screen {
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
-		// Objects setup
+		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f),world);
+		createEntities(body,world,camera);
+
+		// Map initialization
+		map = new TmxMapLoader().load("models/map.tmx");
+		maprender = new OrthogonalTiledMapRenderer(map, 1f);
+		new WorldCreator(this);
+
+
+		// Set up hud
+		hud = new HUDmanager(batch);
+		deathScreen = new DeathScreen(batch);
+	}
+
+	public static boolean createSprites(){
+		world = new World(new Vector2(0, 0), true);
+		alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
+		constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
+		goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
+		langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
 		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
@@ -166,23 +187,22 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
+		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
+		return true; //Successful
+	}
+
+	public static void createEntities(Body bobBody,World world,OrthographicCamera camera){
+
 		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
 		playerShips.createBody();
-
-		// Map initialization
-		map = new TmxMapLoader().load("models/map.tmx");
-		maprender = new OrthogonalTiledMapRenderer(map, 1f);
-		new WorldCreator(this);
 
 		// Creates damping to player
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
-		Sprite bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 
 		// Enemy creation "bob" and Entity AI controller
-		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f),world);
-		bob = new EntityAi(body, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
+		bob = new EntityAi(bobBody, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
 		bob.setTarget(playerShips.getEntityBody());
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
@@ -202,11 +222,11 @@ public class GameScreen implements Screen {
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
-		spawn(maxCoins, maxDucks, maxPowerups, maxShips, maxStones);
+		spawn(maxCoins, maxDucks, maxPowerups, maxShips, maxStones,world);
 
-		// Set up hud
-		hud = new HUDmanager(batch);
-		deathScreen = new DeathScreen(batch);
+
+
+
 	}
 
 	/**
@@ -236,8 +256,14 @@ public class GameScreen implements Screen {
 		BallsManager.updateBalls(batch);
 
 		// Setting ship position for the sprite of the player ship
+		System.out.println(playerShips.getPosition());
+		System.out.println("//////////////////////////////////");
+
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
+
+
+		System.out.println(playerShips.getPosition());
 
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
@@ -636,7 +662,7 @@ public class GameScreen implements Screen {
 	 * @param ships : Number of ships to be added
 	 * @param stone : Number of stones to be added
 	 */
-	public void spawn(int coins, int duck, int powerups , int ships, int stone){
+	public static void spawn(int coins, int duck, int powerups, int ships, int stone,World world){
 		// Initializing
 		Random rn = new Random();
 		int randX, randY, randModel, randHealth;

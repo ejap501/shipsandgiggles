@@ -209,7 +209,6 @@ public class EntityAi implements Steerable<Vector2> {
                 // sets new angle towards player
                 this.setAngleToTarget(this.getAngleToTarget() + ((float)Math.atan2(this.target.getPosition().y - this.getPosition().y, this.target.getPosition().x - this.getPosition().x) - 1.5708f - this.angleToTarget) * turnMultiplier * PIXEL_PER_METER);
                 this.getBody().setTransform(this.body.getPosition().x, this.body.getPosition().y, this.getAngleToTarget());
-                System.out.println(this.body.getPosition());
             }
         }
 
@@ -245,13 +244,10 @@ public class EntityAi implements Steerable<Vector2> {
                 this.counter = 0;
             }
         }
-        System.out.println(this.hitBox.overlaps(player.hitBox));
-        System.out.println(this.timer);
-        System.out.println(this.health);
+
 
         // Creates shot and shoots
         if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {/** creates shot and shoots*/
-            System.out.println("ss");
             BallsManager.createBall(world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
             this.timer = 4;
         }

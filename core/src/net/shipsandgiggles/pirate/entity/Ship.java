@@ -289,10 +289,7 @@ public class Ship extends MovableEntity {
 	 * @return Players position in the world
 	 */
 	public Vector2 getPosition() {
-		Vector2 position = new Vector2();
-		position.x = super.getLocation().getX();
-		position.y = super.getLocation().getY();
-		return position;
+		return this.entityBody.getPosition();
 	}
 
 	/**

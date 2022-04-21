@@ -80,6 +80,7 @@ public class CurrencyTests {
         Currency.get().take(Currency.Type.GOLD, 200);
         Ship.coinMulti = 1;
     }
+    @Test
     public void makeCurrencyPoints(){
 
         Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));

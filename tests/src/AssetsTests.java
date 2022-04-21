@@ -1,16 +1,10 @@
 import com.badlogic.gdx.Gdx;
-
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Asset Test
- *
- * @author Team 22 : Sam Pearson
- * @version 1.0
- */
 @RunWith(GdxTestRunner.class)
 public class AssetsTests {
 

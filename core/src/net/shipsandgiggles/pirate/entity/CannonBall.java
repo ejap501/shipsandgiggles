@@ -1,20 +1,25 @@
 package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
-
+/**
+ * Cannon Ball
+ * This is the creation and update for each individual ball
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class CannonBall {
-
-    /** this is the creation and update for each individual ball*/
-
+    // Main data store
     public float timer = 0.8f;
     public World world;
     public Body body;
@@ -30,82 +35,127 @@ public class CannonBall {
     public float finalY = 0;
     public int multiplier;
 
+    /**
+     * Instantiates the cannon ball object
+     *
+     * @param world : World data
+     * @param cannonBall : Image used for the object
+     * @param multiplier : Damage multiplier
+     * @param width : Width of the object sprite
+     * @param height : Height of the object sprite
+     * @param position : Ball location of the object in the world
+     * @param target : Target location of the object in the world
+     * @param categoryBits : Category of the object
+     * @param maskBit : Object mask
+     * @param groupIndex : Position in group
+     */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
         //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
+
+        // Instantiating a body
         Body body;
         BodyDef def = new BodyDef();
         this.target = target;
         this.cannonBall = cannonBall;
         this.multiplier = multiplier;
 
-       def.bullet = true;
-       def.type = BodyDef.BodyType.DynamicBody;
-
+        def.bullet = true;
+        def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(position.x, position.y);
 
-        /**creation of the body */
+        // Creation of the body
         body = world.createBody(def);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-        fixtureDef.filter.categoryBits = categoryBits;/** telling it what it is*/
-        fixtureDef.filter.maskBits = (short) (maskBit); /**telling it what it can hit */
+        fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
+        fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.filter.groupIndex = groupIndex;
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
-
     }
+
+    /**
+     * Instantiates the cannon ball object
+     *
+     * @param world : World data
+     * @param cannonBall : Image used for the object
+     * @param width : Width of the object sprite
+     * @param height : Height of the object sprite
+     * @param position : Ball location of the object in the world
+     * @param target : Target location of the object in the world
+     * @param categoryBits : Category of the object
+     * @param maskBit : Object mask
+     * @param groupIndex : Position in group
+     */
     CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
         //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
+
+        // Instantiating a body
         Body body;
         BodyDef def = new BodyDef();
         this.angle = target;
         this.cannonBall = cannonBall;
 
-
-       def.bullet = true;
-       def.type = BodyDef.BodyType.DynamicBody;
-
+        def.bullet = true;
+        def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(position.x, position.y);
 
-        /**body creation */
+        // Creation of the body
         body = world.createBody(def);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
-        fixtureDef.filter.categoryBits = categoryBits; /** telling it what it is*/
-        fixtureDef.filter.maskBits = (short) (maskBit); /** telling it what it can hit*/
+        fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
+        fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.filter.groupIndex = groupIndex;
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
         this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, angle); //sets the angle
         this.setAngle = true;
-
     }
 
-
+    /**
+     * Updates the state of each cannonball
+     *
+     * @param batch : The batch of spite data
+     */
     public void update(Batch batch) {
-            movement();
-            batch.begin();
-            this.cannonBall.draw(batch);
-            batch.end();
-        }
+        movement();
+        batch.begin();
+        this.cannonBall.draw(batch);
+        batch.end();
+    }
 
+    /**
+     * Applies damage to an object
+     *
+     * @return Damage dealt
+     */
     public float getDamageDelt() {
         return (this.damageDelt * this.multiplier);
     }
 
+    /**
+     * Used to increase the speed of the cannon fire
+     * Applies the explosion sound effect (when initially fired)
+     */
     public void teleportBall(){
+        // Checks if teleported
         if(teleported) return;
+
+        // Plays explosion noise
         LoadingScreen.soundController.playExplosion();
+
+        // Teleports cannonball
         finalX = this.body.getPosition().x;
         finalY = this.body.getPosition().y;
         GameScreen.add(new Vector2(finalX, finalY));
@@ -113,18 +163,36 @@ public class CannonBall {
         this.teleported = true;
     }
 
+    /**
+     * Applies movement to the cannonball
+     */
     public void movement(){
-        timer -= Gdx.graphics.getDeltaTime(); /**checks if the ball has reached the maximum time it can be alive */
+        // Checks if the ball has reached the maximum time it can be alive
+        timer -= Gdx.graphics.getDeltaTime();
         if(timer <= 0 && !this.isDestroyed){
-            LoadingScreen.soundController.playExplosion();/** // plays explosion noise*/
+            // Plays explosion noise
+            LoadingScreen.soundController.playExplosion();
+
+            // Sets final position
             finalX = this.body.getPosition().x;
             finalY = this.body.getPosition().y;
-            GameScreen.add(new Vector2(finalX, finalY)); /** adds explosion animation*/
-            this.world.destroyBody(this.body); /** destroies the ball*/
+
+            // Adds explosion animation
+            GameScreen.add(new Vector2(finalX, finalY));
+
+            // Destorys the cannonball
+            this.world.destroyBody(this.body);
             this.isDestroyed = true;
-            BallsManager.removeNext();/** removes it from the array*/
+
+            // Removes the cannonball from the array
+            BallsManager.removeNext();
         }
-        if(!setAngle){ /** check if it has an angle or a target if it doesnt have an angle creates one towards the target*/
+
+        /*
+        Checks if the cannonball has an angle or a target
+        If it doesn't have an angle, create one towards the target
+        */
+        if(!setAngle){
             this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, (float)Math.atan2( this.body.getPosition().x-this.target.x,this.target.y- this.body.getPosition().y  )); // setting the angle towards the target
             this.setAngle = true;
             this.angle = this.body.getAngle();//getting the angle
@@ -133,12 +201,19 @@ public class CannonBall {
             teleportBall();
         }
 
-        this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true); /**applies force to the ball*/
-        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight()))); /**gets the direction the ball is going towards*/
+        // Applies force to the ball
+        this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true);
+
+        // Gets the direction the ball is going towards
+        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight())));
         Vector2 position = this.body.getPosition();
-        position.x = position.x + (direction.x - position.x) * speed * PIXEL_PER_METER; /** changes the direction and slightly teleports the ball so it can travel way faster**/
+
+        // Changes the direction and slightly teleports the ball so it can travel way faster
+        position.x = position.x + (direction.x - position.x) * speed * PIXEL_PER_METER;
         position.y = position.y + (direction.y - position.y) * speed * PIXEL_PER_METER;
-        this.body.setTransform(position, this.body.getAngle()); /**moves ball forward**/
+
+        // Moves ball forward
+        this.body.setTransform(position, this.body.getAngle());
         this.cannonBall.setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y * PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
         this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
     }

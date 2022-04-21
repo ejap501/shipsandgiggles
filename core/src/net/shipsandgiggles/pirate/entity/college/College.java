@@ -15,6 +15,7 @@ import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 /**
+ * College
  * College data that allows us to perform animations / fights more easily.
  *
  * @author Team 23

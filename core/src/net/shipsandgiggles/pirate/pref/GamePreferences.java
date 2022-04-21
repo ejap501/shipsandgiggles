@@ -3,8 +3,16 @@ package net.shipsandgiggles.pirate.pref;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+/**
+ * Game Preferences
+ * Determines saved option preferences.
+ * Allows for the toggling of sound options
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class GamePreferences {
-
+	// Sets naming conventions
 	private static final String PREF_NAME = "ShipsAndGiggles";
 	private static final String PREF_MUSIC_ENABLED = "music.enabled";
 	private static final String PREF_VOLUME_ENABLED = "volume.enabled";
@@ -12,19 +20,25 @@ public class GamePreferences {
 	private static final String PREF_MUSIC_LEVEL = "music.level";
 	private static GamePreferences INSTANCE;
 
+	/**
+	 * Sets a new preference instance
+	 */
 	private GamePreferences() {
 		if (INSTANCE != null) {
 			throw new IllegalStateException("Cannot initialise a singleton class twice (GamePreferences)!");
 		}
-
 		INSTANCE = this;
 	}
 
+	/**
+	 * Sets the selected preference options
+	 *
+	 * @return Game preferences
+	 */
 	public static GamePreferences get() {
 		if (INSTANCE == null) {
 			INSTANCE = new GamePreferences();
 		}
-
 		return INSTANCE;
 	}
 
@@ -90,8 +104,13 @@ public class GamePreferences {
 		this.prefs().flush();
 	}
 
-	public void setMusicVolumeLevel(float value) {
-		this.prefs().putFloat(PREF_MUSIC_LEVEL, value);
+	/**
+	 * Set the volume level for all game music.
+	 *
+	 * @param level Floating number to set it to (0 is off, 1 is full).
+	 */
+	public void setMusicVolumeLevel(float level) {
+		this.prefs().putFloat(PREF_MUSIC_LEVEL, level);
 		this.prefs().flush();
 	}
 }

@@ -1,13 +1,17 @@
-import com.badlogic.gdx.Gdx;
-import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+import net.shipsandgiggles.pirate.currency.Currency;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+/**
+ * Currency Test
+ *
+ * @author Team 22 : Sam Pearson
+ * @version 1.0
+ */
 @RunWith(GdxTestRunner.class)
 public class CurrencyTests {
 

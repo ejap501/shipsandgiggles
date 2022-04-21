@@ -2,22 +2,29 @@ package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import java.util.UUID;
 
+/**
+ * Ship
+ * Creation of the main player class
+ *
+ * @author Team 23
+ * @author Team 22 : Edward Poulter
+ * @version 1.0
+ */
 public class Ship extends MovableEntity {
-
-
-	/** creation of the main player class*/
+	// Main data store
 	private Body entityBody;
 	private final float turnSpeed;
 	private final float driftFactor;
@@ -59,9 +66,23 @@ public class Ship extends MovableEntity {
 	public static int damageMulti = 1;
 	public static int speedMulti = 1;
 
+	/**
+	 * Initialises the player ship
+	 *
+	 * @param texture : Image used for the object
+	 * @param spawnSpeed : Max speed of ship
+	 * @param maxSpeed : Acceleration to max speed of ship
+	 * @param driftFactor : Drift of ship
+	 * @param turnSpeed : Turn speed of the ship
+	 * @param location : Coordinate position of the ship in the world
+	 * @param height : Height of the ship
+	 * @param width : Width of the ship
+	 * @param cam : Camera
+	 * @param world : World data
+	 */
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam, World world) {
 		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
-		/** constructor*/
+		// Constructor
 		this.health = this.maxHealth;
 		this.turnDirection = 0;
 		this.driveDirection = 0;
@@ -73,11 +94,11 @@ public class Ship extends MovableEntity {
 		this.height = height;
 		this.width = width;
 		this.world = world;
-
-		/**Creation of Body */
 	}
 
+	/** Creation of Body */
 	public void createBody (){
+		// Constructs body
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(startlocation.getX(), startlocation.getY());
@@ -92,12 +113,21 @@ public class Ship extends MovableEntity {
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
 		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
+
+		// Constructs hitbox detector
 		this.hitBox = new Rectangle(startlocation.getX(), startlocation.getY(), texture.getWidth(), texture.getHeight());
+
+		// Sets world
 		this.world = GameScreen.world;
 	}
 
+	/**
+	 * Draws player on screen
+	 *
+	 * @param batch : The batch of sprite data
+	 */
 	@Override
-	public void draw(Batch batch) { /** draws player on screen*/
+	public void draw(Batch batch) {
 		if(dead) {
 			//GameScreen.zoomOut(0.1f);
 			return;
@@ -108,34 +138,73 @@ public class Ship extends MovableEntity {
 		this.hitBox.setPosition(this.getEntityBody().getPosition());
 	}
 
+	/**
+	 * Shoots the player
+	 *
+	 * @param player : Assigns the player
+	 */
 	@Override
 	public void shootPlayer(Ship player) {}
 
+	/**
+	 * Checks if player is dead
+	 * If not dead, then set them as dead and gets their last position
+	 * */
 	@Override
-	public void death() { /** checks if player is dead if not then sets them as dead and gets their last position*/
+	public void death() {
 		if(this.dead) return;
 		this.deathPosition.x = this.getEntityBody().getPosition().x;
 		this.deathPosition.y = this.getEntityBody().getPosition().y;
 		this.dead = true;
 	}
 
-	public void shoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){ /** shooting function for a singular shot towards the mouse */
+	/**
+	 * Shooting function for a singular shot towards the mouse
+	 *
+	 * @param world : World data
+	 * @param cannonBallSprite : Texture of cannonball
+	 * @param cam : Camera
+	 * @param categoryBits : Object categorisation type
+	 * @param maskBit : Masking
+	 * @param groupIndex : Position in cannonball array
+	 */
+	public void shoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
 		Vector3 mouse_position = new Vector3(0,0,0);
-		mouse_position.set(Gdx.input.getX(), Gdx.input.getY(), 0); /** gets mouse position*/
+		mouse_position.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		cam.unproject(mouse_position);
-		BallsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), damageMulti, cannonBallSprite, categoryBits, maskBit, groupIndex); /** creates shot*/
+		BallsManager.createBall(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), new Vector2(mouse_position.x, mouse_position.y), damageMulti, cannonBallSprite, categoryBits, maskBit, groupIndex);
 	}
 
-	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) { /** creates the burst shot*/
+	/**
+	 * Shooting function for a burst shot
+	 *
+	 * @param world : World data
+	 * @param cannonBallSprite : Texture of cannonball
+	 * @param cam : Camera
+	 * @param categoryBits : Object categorisation type
+	 * @param maskBit : Masking
+	 * @param groupIndex : Position in cannonball array
+	 */
+	public void burstShoot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
 		float angle = this.getEntityBody().getAngle();
 		System.out.println(Math.toDegrees(angle));
 		BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), angle, cannonBallSprite, categoryBits, maskBit, groupIndex);
-		BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex); /** creation at an angle of the ball */
-		this.rapidShot = true; /** sets the rapid ball to true so we can shoot the side balls*/
+		BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -180), cannonBallSprite, categoryBits, maskBit, groupIndex);
+		this.rapidShot = true;
 		this.numberOfShotsLeft = this.shotsInRapidShot;
 	}
 
-	public void rapidShot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){ /** does the rapid side shots */
+	/**
+	 * Shooting function for a rapid shot
+	 *
+	 * @param world : World data
+	 * @param cannonBallSprite : Texture of cannonball
+	 * @param cam : Camera
+	 * @param categoryBits : Object categorisation type
+	 * @param maskBit : Masking
+	 * @param groupIndex : Position in cannonball array
+	 */
+	public void rapidShot(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex){
 		float angle = this.getEntityBody().getAngle();
 		if(this.rapidShot && this.timeBetweenRapidShots <= 0){
 			BallsManager.createBallAtAngle(world, new Vector2(this.getEntityBody().getPosition().x, this.getEntityBody().getPosition().y), (float)Math.toRadians(Math.toDegrees(angle) -90), cannonBallSprite, categoryBits, maskBit, groupIndex);
@@ -143,7 +212,9 @@ public class Ship extends MovableEntity {
 			this.timeBetweenRapidShots = this.rapidShotCoolDown;
 			this.numberOfShotsLeft--;
 		}
-		if(this.numberOfShotsLeft <= 0){ /** cool down management*/
+
+		// Cooldown
+		if(this.numberOfShotsLeft <= 0){
 			this.rapidShot = false;
 		}
 		if(this.timeBetweenRapidShots <= 0){
@@ -152,11 +223,23 @@ public class Ship extends MovableEntity {
 		if(this.timeBetweenRapidShots >= 0){
 			this.timeBetweenRapidShots -= Gdx.graphics.getDeltaTime();
 		}
-
 	}
-	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) { /** checks for updated shots and if the player shoots or not*/
+
+	/**
+	 * Checks for updated shots and if the player shoots or not
+	 *
+	 * @param world : World data
+	 * @param cannonBallSprite : Texture of cannonball
+	 * @param cam : Camera
+	 * @param categoryBits : Object categorisation type
+	 * @param maskBit : Masking
+	 * @param groupIndex : Position in cannonball array
+	 */
+	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
+		// Checks if dead
 		if(this.dead) return;
-		/** health management */
+
+		// Health management
 		if(this.timeToRegen > 0){
 			this.timeToRegen -= Gdx.graphics.getDeltaTime();
 		}
@@ -170,22 +253,22 @@ public class Ship extends MovableEntity {
 			}
 		}
 
-
-		/** checks for rapid shots*/
+		// Checks for rapid shots
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0){ /**if player is shooting then shoot */
+		// If player is shooting then shoot
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
 			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 
-		if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0){ /** if player uses burst then shoot burst*/
+		// If player uses burst then shoot burst
+		if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
 			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 
-
-		/** cool down management */
+		// Cool down management
 		if(burstTimer >= 0){
 			burstTimer -= Gdx.graphics.getDeltaTime();
 		}
@@ -198,36 +281,50 @@ public class Ship extends MovableEntity {
 		else {
 			shootingTimer = 0;
 		}
-
 	}
 
-
-
-	/** gets the position of the player*/
+	/**
+	 * Gets the position of the player
+	 *
+	 * @return Players position in the world
+	 */
 	public Vector2 getPosition() {
 		Vector2 position = new Vector2();
-
 		position.x = super.getLocation().getX();
 		position.y = super.getLocation().getY();
-
 		return position;
 	}
 
+	/**
+	 * @return Player texture
+	 */
 	public Sprite getSprite(){
 		return this.texture;
 	}
 
+	/**
+	 * @return Player body
+	 */
 	public Body getEntityBody() {
 		return this.entityBody;
 	}
 
+	/**
+	 * @return Forward velocity in 2d plane
+	 */
 	public Vector2 getForwardVelocity() {
 		Vector2 currentNormal = this.getEntityBody().getWorldVector(new Vector2(0, 1));
 		float dotProduct = currentNormal.dot(this.getEntityBody().getLinearVelocity());
-
 		return multiply(dotProduct, currentNormal);
 	}
 
+	/**
+	 * Maths for scalar multiplication of vector
+	 *
+	 * @param a : Scalar
+	 * @param v : vector
+	 * @return Product
+	 */
 	public Vector2 multiply(float a, Vector2 v) {
 		return new Vector2(a * v.x, a * v.y);
 	}
@@ -239,36 +336,65 @@ public class Ship extends MovableEntity {
 		return multiply(dotProduct, currentNormal);
 	}
 
+	/**
+	 * @param texture : Texture to be applied
+	 */
 	public void setTexture(Sprite texture){
 		this.texture = texture;
 	}
 
+	/**
+	 * @return Direction player is facing
+	 */
 	public float getTurnDirection() {
 		return this.turnDirection;
 	}
 
+	/**
+	 * @param turnDirection : Apply a new turn direction
+	 */
 	public void setTurnDirection(float turnDirection) {
 		this.turnDirection = turnDirection;
 	}
 
+	/**
+	 * @return Speed of player turning
+	 */
 	public float getTurnSpeed() {
 		return this.turnSpeed;
 	}
 
+	/**
+	 * @return Direction of player drive
+	 */
 	public float getDriveDirection() {
 		return this.driveDirection;
 	}
 
+	/**
+	 * @param driveDirection : Set new drive direction
+	 */
 	public void setDriveDirection(float driveDirection) {
 		this.driveDirection = driveDirection;
 	}
 
+	/**
+	 * @return Player drift
+	 */
 	public float getDriftFactor() {
 		return this.driftFactor;
 	}
 
+	/**
+	 * @return Hitbox detector
+	 */
 	public Rectangle getHitBox() {return this.hitBox;}
 
+	/**
+	 * Takes damage from being hit
+	 *
+	 * @param damage : Damage dealt to the player
+	 */
 	public void takeDamage(float damage){
 		timeToRegen = 5f;
 		if (!invincible) {
@@ -279,22 +405,40 @@ public class Ship extends MovableEntity {
 		}
 	}
 
+	/**
+	 * Set player invincible state
+	 *
+	 * @param invincible : New state
+	 */
 	public void setInvincible(boolean invincible) {
 		this.invincible = invincible;
 	}
 
+	/**
+	 * Multiplier for coin collection
+	 *
+	 * @param multiplier : New multiplier value
+	 */
 	public void setCoinMulti(int multiplier){
 		this.coinMulti = multiplier;
 	}
 
+	/**
+	 * Multiplier for point collection
+	 *
+	 * @param multiplier : New multiplier value
+	 */
 	public void setPointMulti(int multiplier){
 		this.pointMulti = multiplier;
 	}
 
+	/**
+	 * Damage multiplier for attack
+	 *
+	 * @param damageMulti : New multiplier value
+	 */
 	public static void setDamageMulti(int damageMulti) {
 		Ship.damageMulti = damageMulti;
 	}
-
-
 }
 

@@ -1,19 +1,26 @@
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import net.shipsandgiggles.pirate.entity.Location;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static junit.framework.TestCase.assertEquals;
+
+/**
+ * Shop Test
+ *
+ * @author Team 22 : Sam Pearson
+ * @version 1.0
+ */
 @RunWith(GdxTestRunner.class)
 public class ShopTests {
 

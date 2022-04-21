@@ -1,20 +1,30 @@
 package net.shipsandgiggles.pirate;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.maps.objects.PolylineMapObject;
+
 import net.shipsandgiggles.pirate.conf.Configuration;
 
+/**
+ * Tiled Object Util
+ * Dynamic body creation of the map
+ * Used to create colliders that the player interacts with so the player doesn't drive outside the map
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class TiledObjectUtil {
-
+	/**
+	 * Applies tile objects
+	 *
+	 * @param world : World data
+	 * @param objects : World objects
+	 */
 	public static void parseTiledObjectLayer(World world, MapObjects objects) {
-
-		/** dynamic body creation of the map to create colliders that the player interacts with so the player doesnt drive out side of the map*/
-
-
-		/** checks for map object*/
+		// Checks for map object
 		for (MapObject object : objects) {
 			if (!(object instanceof PolylineMapObject)) {
 				continue;
@@ -34,16 +44,23 @@ public class TiledObjectUtil {
 		}
 	}
 
+	/**
+	 * Creates a new polyline
+	 * Creates the lines that are used in the Tiled application
+	 *
+	 * @param polyline : Constructed line between determined points
+	 * @return The chain shape containing a polyline
+	 */
 	private static ChainShape createPolyLine(PolylineMapObject polyline) {
-		/** creates the lines that are used in the Tiled application*/
-		float[] vertices = polyline.getPolyline().getTransformedVertices(); /** gets the corners of each line*/
-		Vector2[] worldVertices = new Vector2[vertices.length / 2];/** gets the length of those lines*/
+		// Gets the data used to create each line
+		float[] vertices = polyline.getPolyline().getTransformedVertices();
+		Vector2[] worldVertices = new Vector2[vertices.length / 2];
 
-		for (int i = 0; i < worldVertices.length; i++) { /** adds the body to the line*/
+		// Creates the chainshape and returns it
+		for (int i = 0; i < worldVertices.length; i++) {
 			worldVertices[i] = new Vector2(vertices[i * 2] / Configuration.PIXEL_PER_METER, vertices[i * 2 + 1] / Configuration.PIXEL_PER_METER);
 		}
-
-		ChainShape cs = new ChainShape(); /** creates the chainshape and returns it */
+		ChainShape cs = new ChainShape();
 		cs.createChain(worldVertices);
 		return cs;
 	}

@@ -3,44 +3,50 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import net.shipsandgiggles.pirate.conf.Configuration;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+
 import net.shipsandgiggles.pirate.screen.ScreenType;
+import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.task.ChangeScreenTask;
 
+/**
+ * Information Screen
+ * Displays the information screen
+ * Displays upon game start
+ * Adds the ui for the information screen
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class InformationScreen implements Screen {
-
-    /** the information screen before the game begins*/
-    /** all using simple ui */
-
+    // Main data store
     private Stage stage;
     private Table table;
-
     private Timer.Task task;
-    public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));;
-    private final SpriteBatch batch = new SpriteBatch();;
+    private final SpriteBatch batch = new SpriteBatch();
+    public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
 
+    /** Displays the information screen */
     @Override
     public void show() {
+        // Construct table
         this.table = new Table();
-
         this.table.setFillParent(true);
-
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(this.stage);
         this.stage.addActor(this.table);
 
-        /** creating all the labels*/
+        // Creating all the labels
         Label informationLabel = new Label("INFORMATION!", Configuration.SKIN, "title");
         informationLabel.setAlignment(Align.center);
 
@@ -67,7 +73,7 @@ public class InformationScreen implements Screen {
         Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
         spaceToSkip.setAlignment(Align.center);
 
-        /**Creates a uniform X/Y table. */
+        // Creates a uniform X/Y table.
         this.table.add(informationLabel);
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
@@ -105,8 +111,13 @@ public class InformationScreen implements Screen {
         this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);
     }
 
+    /**
+     * Renders the information screen to the world
+     *
+     * @param deltaTime : Delta time (elapsed time since last game tick)
+     */
     @Override
-    public void render(float delta) {
+    public void render(float deltaTime) {
         Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
@@ -119,9 +130,35 @@ public class InformationScreen implements Screen {
         takeInput();
     }
 
+    /**
+     * Resizes the information screen to fit the viewport
+     *
+     * @param width : Width of the screen
+     * @param height : Height of the screen
+     */
     @Override
     public void resize(int width, int height) {
         this.stage.getViewport().update(width, height, true);
+    }
+
+    /** Hiding the screen after display */
+    @Override
+    public void hide() {
+        this.stage.getRoot().getColor().a = 0;
+        this.stage.getRoot().addAction(Actions.fadeOut(1));
+    }
+
+    /** Disposing of the screen data */
+    @Override
+    public void dispose() {
+        this.stage.dispose();
+    }
+
+    /** User input to proceed to next step (termination of the information screen) */
+    public void takeInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            this.task.run();
+        }
     }
 
     @Override
@@ -132,22 +169,5 @@ public class InformationScreen implements Screen {
     @Override
     public void resume() {
 
-    }
-
-    @Override
-    public void hide() {
-        this.stage.getRoot().getColor().a = 0;
-        this.stage.getRoot().addAction(Actions.fadeOut(1));
-    }
-
-    @Override
-    public void dispose() {
-        this.stage.dispose();
-    }
-
-    public void takeInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            this.task.run();
-        }
     }
 }

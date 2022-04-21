@@ -8,10 +8,14 @@ import java.util.UUID;
 // TODO: Implement with actual engine (mainly return types).
 
 /**
+ * Entity
  * Base class of all entities in the game.
+ *
+ * @author Team 23
+ * @version 1.0
  */
 public abstract class Entity {
-
+	// Main data store
 	private final UUID uuid;
 	private final Sprite texture;
 	private final Location location;
@@ -19,10 +23,18 @@ public abstract class Entity {
 	private final float maximumHealth;
 	private final float height;
 	private final float width;
-
 	public float health;
 
-
+	/**
+	 * Instantiates the entity
+	 *
+	 * @param uuid : The unique id of the object
+	 * @param texture : Image used for the object
+	 * @param location : Position of the object in the world
+	 * @param maximumHealth : Maximum health of the entity
+	 * @param height : Height of the entity
+	 * @param width : Width of the entity
+	 */
 	public Entity(UUID uuid, Sprite texture, Location location, EntityType entityType, float maximumHealth, float height, float width) {
 		this.uuid = uuid;
 		this.texture = texture;
@@ -118,9 +130,6 @@ public abstract class Entity {
 		return this.health;
 	}
 
-	/**
-	 * Draw the entity onto the batch.
-	 */
 	public void draw(Batch batch) {
 	}
 

@@ -1,43 +1,43 @@
 package net.shipsandgiggles.pirate;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.currency.Currency;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.screen.impl.GameScreen;
+import net.shipsandgiggles.pirate.currency.Currency;
+import net.shipsandgiggles.pirate.conf.Configuration;
 
-import java.awt.*;
-
+/**
+ * HUD Manager
+ * Manages the data displayed on the hud
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class HUDmanager {
-
-    /** a manager for the HUD */
-
+    // Main data store
     public Stage stage;
+    public static int gold;
+    public static int score;
     private Viewport viewport;
 
-    public static int score;
-    public static int gold;
-
-    public float fontScale = 1.5f;
     public float timeCounter = 0;
+    public float fontScale = 1.5f;
     public float coolDownTimerTime;
+    public Texture healthBar = new Texture("models/bar.png");
 
-    public Texture healthBar = new Texture("models/bar.png"); /** gets helthbar textures*/
-
-    /** setting labels and getting other textures*/
+    // Setting labels and getting other textures
     Label scoreLabelCounter;
     Label goldLabel;
     Label scoreLabel;
@@ -56,18 +56,22 @@ public class HUDmanager {
     Table bottomLeftTable = new Table();
 
 
+    /**
+     * Initialises the hud
+     *
+     * @param batch : The batch of sprite data
+     */
     public HUDmanager(SpriteBatch batch){
-        /** setting the score*/
+        // Setting the score
         score = Currency.get().balance(Currency.Type.POINTS);
         gold = Currency.get().balance(Currency.Type.GOLD);
 
-        /** setting a view port and stage for the camera to paste it on the screen and not map*/
+        // Setting a view port and stage for the camera to paste it on the screen and not map
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
         stage = new Stage(viewport, batch);
 
-        /**creation of the top left bit of the screen */
+        // Creation of the top left bit of the screen
         Table topLeftTable = new Table();
-
         topLeftTable.setSize(200,Gdx.graphics.getHeight());
         topLeftTable.top().left();
 
@@ -76,8 +80,7 @@ public class HUDmanager {
         cooldownTimer = new Label("" + coolDownTimerTime, Configuration.SKIN, "big");
         scoreLabel = new Label("Score: ", Configuration.SKIN, "big");
 
-        /** order of adding the UI*/
-
+        // Order of adding the UI
         topLeftTable.add(goldCoin);
         topLeftTable.add(goldLabel);
 
@@ -87,14 +90,12 @@ public class HUDmanager {
 
         stage.addActor(topLeftTable);
 
-
-        /** creation of bottom left of the screen*/
+        // Creation of bottom left of the screen
         abalities.setSize(Gdx.graphics.getWidth(),200);
         abalities.top().left();
 
         cooldown.add(burstLogo);
         shop.add(shopRangeCooldown);
-
 
         abalities.add(shootLogo);
         abalities.add(cooldown);
@@ -106,19 +107,25 @@ public class HUDmanager {
 
         healthLabel = new Label("Health: ", Configuration.SKIN, "big");
         health = new Label("" + Ship.health + " / " + Ship.maxHealth, Configuration.SKIN, "big");
-        /** adds order */
+
+        // Adds order
         bottomLeftTable.add(healthLabel);
         bottomLeftTable.add(health);
         bottomLeftTable.setPosition(150, 200);
         bottomLeftTable.row();
         stage.addActor(bottomLeftTable);
     }
-    /** updates all the variables on screen*/
+
+    /**
+     * Updates all the variables on screen
+     *
+     * @param batch : The batch of sprite data
+     * */
     public void updateLabels(Batch batch){
         coolDownTimerTime = Ship.burstTimer;
         String healthText = " " + Ship.health;
 
-        /** change colour of healthbar based on health percentage*/
+        // Changes colour of health bar based on health percentage
         if(Ship.health > (Ship.maxHealth * 0.49)){
             batch.setColor(Color.GREEN);
             health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
@@ -132,13 +139,14 @@ public class HUDmanager {
             health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
         }
 
-        /** draw health bar*/
+        // Draws health bar
         batch.begin();
         batch.draw(healthBar, 0,140,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
         batch.end();
 
         batch.setColor(Color.WHITE);
-        /** update variables and give points to player every 2 seconds*/
+
+        // Update variables and give points to player every 2 seconds
         timeCounter += Gdx.graphics.getDeltaTime();
         if(timeCounter >= 2){
             Currency.get().give(Currency.Type.POINTS, 1);
@@ -166,10 +174,7 @@ public class HUDmanager {
             shop.add(shopRangeCooldown);
         }
 
-
-
-
-
+        // Updates balance
         gold = Currency.get().balance(Currency.Type.GOLD);
         score = Currency.get().balance(Currency.Type.POINTS);
 

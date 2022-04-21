@@ -1,16 +1,25 @@
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
+
 import com.badlogic.gdx.physics.box2d.World;
+
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static junit.framework.TestCase.assertEquals;
 
+/**
+ * Duck Test
+ *
+ * @author Team 22 : Sam Pearson
+ * @version 1.0
+ */
 @RunWith(GdxTestRunner.class)
 public class DuckTests {
 

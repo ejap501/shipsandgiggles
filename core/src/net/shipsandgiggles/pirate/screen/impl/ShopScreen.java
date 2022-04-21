@@ -8,47 +8,54 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
 import net.shipsandgiggles.pirate.PirateGame;
-import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.screen.ScreenType;
+import net.shipsandgiggles.pirate.conf.Configuration;
 
+/**
+ * Shop screen
+ * Accessed to purchase stuff from shop
+ *
+ * @author Team 23 : Modified (Some methods copied from other classes)
+ * @author Team 22 : Sam Pearson
+ * @version 1.0
+ */
 public class ShopScreen implements Screen {
-
-	/** preference screen in the main menu*/
-
+	// Main data store
 	private Stage stage;
 	private Table table;
 
+	// Costs
 	public int speedCost = 25;
 	public int multiCost = 35;
 	public int healthCost = 55;
 	public int cooldownCost = 45;
 
+	/** Displays the shop screen */
 	@Override
 	public void show() {
-
-
+		// Construct table
 		this.stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(this.stage);
-
 		this.table = new Table();
 		this.table.setFillParent(true);
 		this.stage.addActor(this.table);
-
 		final Table Back = new Table();
 		Back.setFillParent(true);
 		stage.addActor(Back);
 
+		// Sets labels
 		Label health = new Label(healthCost + "coins",Configuration.SKIN);
 		Label multi = new Label(multiCost + "coins",Configuration.SKIN);
 		Label speed = new Label(speedCost + "coins",Configuration.SKIN);
 		Label cooldown = new Label(cooldownCost + "coins",Configuration.SKIN);
 
-
+		// Constructs buttons
 		TextButton backButton = new TextButton("Back", Configuration.SKIN);
 		backButton.addListener(
 				new ChangeListener() {
@@ -110,7 +117,7 @@ public class ShopScreen implements Screen {
 					}});
 
 
-
+		// Creates a uniform X/Y table.
 		this.table.add(healthButton);
 		this.table.add(health);
 		this.table.row().pad(10, 0, 10, 0);
@@ -124,25 +131,38 @@ public class ShopScreen implements Screen {
 		this.table.add(cooldown);
 		this.table.row().pad(10, 0, 10, 0);
 
-
 		Back.add(backButton);
 		Back.top().left();
-
-
-
 	}
 
+	/**
+	 * Renders the shop screen to the world
+	 *
+	 * @param deltaTime : Delta time (elapsed time since last game tick)
+	 */
 	@Override
-	public void render(float delta) {
+	public void render(float deltaTime) {
 		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}
 
+	/**
+	 * Resizes the shop screen to fit the viewport
+	 *
+	 * @param width : Width of the screen
+	 * @param height : Height of the screen
+	 */
 	@Override
 	public void resize(int width, int height) {
 		this.stage.getViewport().update(width, height, true);
+	}
+
+	/** Disposing of the screen data */
+	@Override
+	public void dispose() {
+		this.stage.dispose();
 	}
 
 	@Override
@@ -158,10 +178,5 @@ public class ShopScreen implements Screen {
 	@Override
 	public void hide() {
 
-	}
-
-	@Override
-	public void dispose() {
-		this.stage.dispose();
 	}
 }

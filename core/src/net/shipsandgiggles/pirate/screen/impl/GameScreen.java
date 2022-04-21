@@ -213,7 +213,7 @@ public class GameScreen implements Screen {
 	 * Renders the visual data for all objects
 	 * Changes and renders new visual data for ships
 	 *
-	 * @param deltaTime Delta time (elapsed time since last game tick)
+	 * @param deltaTime : Delta time (elapsed time since last game tick)
 	 */
 	@Override
 	public void render(float deltaTime) {

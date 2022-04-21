@@ -1,35 +1,53 @@
 package net.shipsandgiggles.pirate.listener;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
-import net.shipsandgiggles.pirate.entity.EntityAi;
-import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.entity.college.College;
-import net.shipsandgiggles.pirate.entity.CannonBall;
-import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
-import net.shipsandgiggles.pirate.entity.npc.NPC;
 
+import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.npc.NPC;
+import net.shipsandgiggles.pirate.entity.EntityAi;
+import net.shipsandgiggles.pirate.entity.CannonBall;
+import net.shipsandgiggles.pirate.entity.college.College;
+
+/**
+ * World contact listener
+ * Checks for world collisions
+ *
+ * @author Team 23
+ * @version 1.0
+ */
 public class WorldContactListener implements ContactListener {
-    /** checks for any collides in the game*/
+    /**
+     * Performs actions based on contact type
+     *
+     * @param contact : Contact instance check
+     */
     @Override
     public void beginContact(Contact contact) {
+        // Sets fixtures
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
         if(fixtureA == null || fixtureB == null || fixtureB.getUserData() == null || fixtureA.getUserData() == null) return;
 
-        if(fixtureB.getUserData() instanceof CannonBall){ /** checks if the collider is a cannon ball*/
+        // Checks if the collider is a cannonball
+        if(fixtureB.getUserData() instanceof CannonBall){
             CannonBall ball = (CannonBall) fixtureB.getUserData();
-            if(fixtureA.getUserData() instanceof College){ /** checks if its a college*/
+            // Checks for a college collision
+            if(fixtureA.getUserData() instanceof College){
                 College college = (College) fixtureA.getUserData();
-                college.damage(ball.getDamageDelt()); /** applies damage to college*/
+                // Applies damage to the college
+                college.damage(ball.getDamageDelt());
             }
+            // Checks for a player collision
             if(fixtureA.getUserData() instanceof Ship){
-                Ship ship = (Ship) fixtureA.getUserData(); /** checks if its a player */
-                ship.takeDamage(ball.getDamageDelt()); /** applies damage to ship */
+                Ship ship = (Ship) fixtureA.getUserData();
+                // Applies damage to the ship
+                ship.takeDamage(ball.getDamageDelt());
             }
+            // Checks for a NPC collision
             if(fixtureA.getUserData() instanceof NPC){
-                NPC npc = (NPC)  fixtureA.getUserData(); /** checks if its a NPC */
-                npc.damage(ball.getDamageDelt()); /** applies damage to NPC */
+                NPC npc = (NPC)  fixtureA.getUserData();
+                // Applies damage to the NPC
+                npc.damage(ball.getDamageDelt());
             }
 
             if(fixtureA.getUserData() instanceof EntityAi){
@@ -37,15 +55,31 @@ public class WorldContactListener implements ContactListener {
                 entity.damage(ball.getDamageDelt());
             }
         }
-
     }
 
+    /**
+     * Terminates contact
+     *
+     * @param contact : Contact instance
+     */
     @Override
     public void endContact(Contact contact) {}
 
+    /**
+     * Terminates contact with manifold
+     *
+     * @param contact : Contact instance
+     * @param oldManifold : Manifold used
+     */
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {}
 
+    /**
+     * Terminates contact with impulse
+     *
+     * @param contact : Contact instance
+     * @param impulse : Impulse used
+     */
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {}
 }

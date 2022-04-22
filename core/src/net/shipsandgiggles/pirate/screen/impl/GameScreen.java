@@ -256,14 +256,14 @@ public class GameScreen implements Screen {
 		BallsManager.updateBalls(batch);
 
 		// Setting ship position for the sprite of the player ship
-		System.out.println(playerShips.getPosition());
-		System.out.println("//////////////////////////////////");
+		//System.out.println(playerShips.getPosition());
+		//System.out.println("//////////////////////////////////");
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 
-		System.out.println(playerShips.getPosition());
+		//System.out.println(playerShips.getPosition());
 
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));

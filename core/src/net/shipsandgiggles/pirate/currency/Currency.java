@@ -11,7 +11,8 @@ import net.shipsandgiggles.pirate.entity.Ship;
  * Used for code cleanup
  *
  * @author Team 23
- * @version 1.0
+ * @author Team 22: Sam Pearson
+ * @version 2.0
  */
 public class Currency {
 	// Main data store
@@ -54,6 +55,7 @@ public class Currency {
 	/**
 	 * Updates specific instance's balances
 	 * Increments specified balances
+	 * Edited from original
 	 *
 	 * @param type   Type of currency you wish to give.
 	 * @param amount Amount you wish to give the player.

@@ -12,6 +12,7 @@ import net.shipsandgiggles.pirate.entity.EntityType;
 
 /**
  * Shop data that allows access to a shop window when within a given range
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Sam Pearson

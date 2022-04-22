@@ -20,6 +20,7 @@ import net.shipsandgiggles.pirate.conf.Configuration;
 /**
  * Shop screen
  * Accessed to purchase stuff from shop
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Sam Pearson

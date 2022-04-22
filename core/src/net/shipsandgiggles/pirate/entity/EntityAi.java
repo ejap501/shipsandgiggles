@@ -20,10 +20,11 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 /**
  * Entity AI
  * The creation and AI of the enemy boat
+ * Edited from original
  *
  * @author Team 23
  * @author Team 22 : Edward Poulter
- * @version 1.0
+ * @version 2.0
  */
 public class EntityAi implements Steerable<Vector2> {
     // Main data store

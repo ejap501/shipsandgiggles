@@ -22,10 +22,11 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 /**
  * Langwith College
  * This is the class to control the Langwith college it is practically the same for each other college.
+ * Edited from original
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter
- * @version 1.0
+ * @version 2.0
  */
 public class LangwithCollege extends College {
 	// World data

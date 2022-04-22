@@ -66,6 +66,7 @@ public class ShipTests {
         ship.setSpeed(500f, 500f);
         ship.setTurnDirection(2);
         ship.setDriveDirection(1);
+        ship.getEntityBody().setLinearVelocity(new Vector2(100,100));
         for (int i = 0; i < 20; i++) {
 
             ship.getSprite().setPosition(ship.getEntityBody().getPosition().x * PIXEL_PER_METER - (ship.getSkin().getWidth() / 2f), ship.getEntityBody().getPosition().y * PIXEL_PER_METER - (ship.getSkin().getHeight() / 2f));

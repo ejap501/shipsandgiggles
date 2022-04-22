@@ -16,6 +16,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 /**
  * shop1
  * Class to configure data relevant to the Shop collectible.
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Sam Pearson
@@ -28,6 +29,7 @@ public class shop1 extends Shop {
     /**
      * This is the class to control the Shop
      * Used for the construction of coin objects
+     * New based on existing layout from other class
      *
      * @param texture : Sprite image data
      * @param location : Coordinate data for position in world

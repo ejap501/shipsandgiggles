@@ -17,6 +17,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 /**
  * Coin
  * Class to configure data relevant to the coin collectible.
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter

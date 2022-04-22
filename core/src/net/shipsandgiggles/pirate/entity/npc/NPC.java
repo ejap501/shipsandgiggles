@@ -15,6 +15,7 @@ import net.shipsandgiggles.pirate.entity.EntityType;
 
 /**
  * NPC data that allows us to perform animations / fights more easily.
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter

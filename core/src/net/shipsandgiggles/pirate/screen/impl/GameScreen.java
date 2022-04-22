@@ -45,6 +45,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * Game Screen
  * Class to generate the various screens used to play the game.
  * Instantiates all screen types and displays current screen.
+ * Edited from original
  *
  * @author Team 23
  * @author Team 22: Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter

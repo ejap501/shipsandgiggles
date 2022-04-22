@@ -12,6 +12,7 @@ import net.shipsandgiggles.pirate.entity.EntityType;
 
 /**
  * Solid obstacles that provide collision for the player
+ * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter

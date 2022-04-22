@@ -30,6 +30,7 @@ public class Duck extends NPC{
     /**
      * This is the class to control the ducks
      * Used for the construction of duck entities
+     * New based on existing layout from other class
      *
      * @param texture : Sprite image data
      * @param location : Coordinate data for position in world

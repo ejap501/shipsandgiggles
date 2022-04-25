@@ -17,7 +17,8 @@ public enum ScreenType {
 	GAME(GameScreen.class),
 	PREFERENCE(PreferenceScreen.class),
 	INFORMATION(InformationScreen.class),
-	SHOP(ShopScreen.class);
+	SHOP(ShopScreen.class),
+	DIFFICULTY(DifficultyScreen.class);
 
 	// Creation of different screen types
 	private static final Cache<ScreenType, Screen> SCREEN_CACHE = new Cache<>(null);

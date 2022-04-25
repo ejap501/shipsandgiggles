@@ -9,6 +9,7 @@ import java.util.UUID;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.collectible.Plunder;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -26,7 +27,7 @@ public class powerUp extends Plunder {
     public World world;
 
     // Type data
-    public static String powerUpType;
+    public String powerUpType;
 
     /**
      * This is the class to control the power-up collectibles
@@ -39,7 +40,7 @@ public class powerUp extends Plunder {
     public powerUp(Sprite texture, Location location, String type, World world) {
         super(UUID.randomUUID(), Plunder.Type.COINS, texture, location, texture.getHeight(), texture.getWidth());
         // Setting power-up type
-        powerUpType = type;
+        this.powerUpType = type;
 
         // Instantiating a body
         Body body;
@@ -94,7 +95,7 @@ public class powerUp extends Plunder {
     }
 
     /** Retrieves the type of the power-up */
-    public String getPowerUpType(){return powerUpType;}
+    public String getPowerUpType(){return this.powerUpType;}
 
     /**
      * Checks for contact with player body

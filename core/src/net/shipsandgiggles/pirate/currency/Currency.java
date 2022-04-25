@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 /**
  * Currency
@@ -42,6 +43,9 @@ public class Currency {
 		return INSTANCE;
 	}
 
+
+
+
 	/**
 	 * Provides the instance balance
 	 *
@@ -71,7 +75,7 @@ public class Currency {
 				if (val == null){
 					val = 0;
 				}
-				return val + (amount * Ship.coinMulti);
+				return (val + (amount * Ship.coinMulti));
 			}else if (type == Type.POINTS) {
 
 				if (val == null){

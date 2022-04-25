@@ -28,7 +28,7 @@ public class DuckTests {
         Sprite duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
         World world = new World(new Vector2(0, 0), false);
 
-        new Duck(duckModel, new Location(1,1),1f, world);
+        new Duck(duckModel, 300f, new Location(1,1),1, world);
         assertEquals(1, world.getBodyCount());
     }
 
@@ -40,7 +40,7 @@ public class DuckTests {
         float maximumHealth = 100;
         World world = new World(new Vector2(0, 0), false);
 
-        Duck duck = new Duck(duckModel,location,maximumHealth,world);
+        Duck duck = new Duck(duckModel, 300f, location, (int) maximumHealth,world);
         duck.damage(20);
         assertEquals("Green", Color.GREEN,duck.healthBarColor());
 
@@ -59,7 +59,7 @@ public class DuckTests {
         float maximumHealth = 100;
         World world = new World(new Vector2(0, 0), false);
 
-        Duck duck = new Duck(duckModel,location,maximumHealth,world);
+        Duck duck = new Duck(duckModel, 300f, location, (int) maximumHealth,world);
         duck.damage(20);
         assertEquals("Green",51.2f,duck.healthBarWidth());
 

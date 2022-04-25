@@ -1,6 +1,8 @@
 package net.shipsandgiggles.pirate.entity.npc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -9,9 +11,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.util.UUID;
 
 import net.shipsandgiggles.pirate.entity.Entity;
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.EntityType;
+
+import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
 /**
  * NPC data that allows us to perform animations / fights more easily.
@@ -21,9 +26,8 @@ import net.shipsandgiggles.pirate.entity.EntityType;
  * @author Team 22 : Edward Poulter
  * @version 1.0
  */
-public abstract class NPC extends Entity {
+public abstract class NPC extends EntityAi {
     // Main data store
-    private final NPC.Type type;
     public Body body;
     public Rectangle hitBox;
     public float counter = 0;
@@ -39,18 +43,16 @@ public abstract class NPC extends Entity {
     /**
      * Instantiates the NPC type
      *
-     * @param uuid : The unique id of the object
-     * @param type : The type of NPC
+     * @param boundingRadius : Radius of the AI detection
      * @param texture : Image used for the object
      * @param location : Position of the object in the world
      * @param maximumHealth : Maximum health of the entity
      * @param height : Height of the NPC
      * @param width : Width of the NPC
      * */
-    public NPC(UUID uuid, NPC.Type type, Sprite texture, Location location, float maximumHealth, float height, float width) {
-        super(uuid, texture, location, EntityType.NPC, maximumHealth, height, width);
-            this.type = type;
-        }
+    public NPC(Body body,float boundingRadius, Sprite texture, Location location, int maximumHealth, int height, int width) {
+        super(body,boundingRadius, texture, maximumHealth,  location, width, height);
+    }
 
     /** Fetches the body of the NPC */
     public Body getBody(){
@@ -66,26 +68,5 @@ public abstract class NPC extends Entity {
         Currency.get().give(Currency.Type.GOLD, 50);
         this.dead = true;
     }
-
-    /** Types of NPC - allows us to keep track.*/
-    public enum Type {
-        NPC;
-        private final UUID randomId;
-
-        /** Assign static value at runtime, as value will not change and maximum of 1 NPC. */
-        Type() {
-                this.randomId = UUID.randomUUID();
-            }
-        /**
-         * Retrieves the unique id for the NPC object
-         *
-         * @return Unique identifier associated with this UUID.
-         */
-        public UUID getId() {
-                return randomId;
-            }
-    }
-
-        public abstract boolean perform();
-    }
+}
 

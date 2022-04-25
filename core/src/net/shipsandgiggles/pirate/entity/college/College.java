@@ -76,7 +76,7 @@ public abstract class College extends Entity {
 
 		// Gives instant money and score if the player decides to kill them
 		GameScreen.collegeKilled();
-		Currency.get().give(Currency.Type.POINTS, 250);
+		Currency.get().give(Currency.Type.POINTS, 250 );
 		Currency.get().give(Currency.Type.GOLD, 500);
 		this.dead = true;
 		//this.body.setTransform(10000,10000, 2);

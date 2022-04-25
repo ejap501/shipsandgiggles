@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.Weather;
 import net.shipsandgiggles.pirate.entity.npc.NPC;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.CannonBall;
@@ -58,6 +59,13 @@ public class WorldContactListener implements ContactListener {
             if(fixtureA.getUserData() instanceof EntityAi){
                 EntityAi entity = (EntityAi) fixtureA.getUserData();
                 entity.damage(ball.getDamageDelt());
+            }
+        }
+        if(fixtureB.getUserData() instanceof Ship){
+            Ship ship = (Ship) fixtureB.getUserData();
+            if(fixtureA.getUserData() instanceof Weather){
+                Weather weather = (Weather) fixtureA.getUserData();
+                Gdx.app.log("Weather", "collision");
             }
         }
     }

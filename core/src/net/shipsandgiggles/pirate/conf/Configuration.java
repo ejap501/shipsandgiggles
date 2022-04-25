@@ -31,6 +31,7 @@ public class Configuration {
 	public static final short Cat_College = 8;
 	public static final short Cat_Collect = 16;
 	public static final short Cat_Shop = 32;
+	public static final short Cat_Weather = 64;
 
 	/** The world */
 	public static final World world = GameScreen.world;

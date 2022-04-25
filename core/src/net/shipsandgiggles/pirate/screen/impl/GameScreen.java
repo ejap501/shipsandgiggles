@@ -123,11 +123,11 @@ public class GameScreen implements Screen {
 	int coinMulBefore = 1;
 	int coinMul = 2;
 	int pointMul = 2;
-	int speedTimer = -1;
-	int damageTimer = -1;
-	int invincibilityTimer = -1;
-	public static int coinTimer = -1;
-	int pointTimer = -1;
+	public static float speedTimer = -1f;
+	public static float damageTimer = -1f;
+	public static float invincibilityTimer = -1f;
+	public static float coinTimer = -1f;
+	public static float pointTimer = -1f;
 
 	// Max Spawning
 	static int maxCoins;
@@ -245,6 +245,7 @@ public class GameScreen implements Screen {
 	 */
 	@Override
 	public void render(float deltaTime) {
+		System.out.println(coinTimer);
 		// Zoom controller for the intro
 		if(!intro){
 			camera.zoom -= 0.02f;
@@ -305,18 +306,18 @@ public class GameScreen implements Screen {
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
 
 				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
-					speedTimer = 600;
+					speedTimer = 6;
 					currentSpeed = maxSpeed * speedMul;
 				} else {
 					currentSpeed = maxSpeed;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					invincibilityTimer = 300;
+					invincibilityTimer = 3;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					damageTimer = 900;
+					damageTimer = 9;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -324,7 +325,7 @@ public class GameScreen implements Screen {
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					pointTimer = 900;
+					pointTimer = 9;
 				}
 			}
 			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -420,21 +421,21 @@ public class GameScreen implements Screen {
 		}
 
 		if (coinTimer == 900){
-			coinTimer -= 1f;
+			coinTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setCoinMulti(playerShips.getCoinMulti() * 3, true);
-		}else if (coinTimer == 0){
-			coinTimer -= 1f;
+		}else if (coinTimer <= 0 && coinTimer != -1){
+			coinTimer -= Gdx.graphics.getDeltaTime();;
 			playerShips.setCoinMulti(-1, false);
 		}
 		else if (coinTimer >= 0){
 			coinTimer -= 1f;
 		}
 
-		if (pointTimer == 900){
-			pointTimer -= 1f;
+		if (pointTimer == 9){
+			pointTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
 		}else if (pointTimer == 0){
-			pointTimer -= 1f;
+			pointTimer -=Gdx.graphics.getDeltaTime();;
 			playerShips.setPointMulti(-1, false);
 		}
 		else if (pointTimer >= 0){

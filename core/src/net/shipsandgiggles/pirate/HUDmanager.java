@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 /**
  * HUD Manager
@@ -35,6 +36,7 @@ public class HUDmanager {
     public float timeCounter = 0;
     public float fontScale = 1.5f;
     public float coolDownTimerTime;
+
     public Texture healthBar = new Texture("models/bar.png");
 
     // Setting labels and getting other textures
@@ -44,6 +46,16 @@ public class HUDmanager {
     Label cooldownTimer;
     Label health;
     Label healthLabel;
+    Label invTimer;
+    Label speedTimer;
+    Label coinTimer;
+    Label pointTimer;
+    Label damTimer;
+    Label invLabel ;
+    Label coinLabel ;
+    Label pointLabel;
+    Label speedLabel;
+    Label damLabel ;
     Image goldCoin = new Image(new Texture("models/gold_coin.png"));
     Image burstLogo = new Image(new Texture("models/burst_icon.png"));
     Image shootLogo = new Image(new Texture("models/attack_icon.png"));
@@ -54,6 +66,7 @@ public class HUDmanager {
     Stack shop = new Stack();
     Table abalities = new Table();
     Table bottomLeftTable = new Table();
+    Table topRightTable =  new Table();
 
 
     /**
@@ -75,10 +88,25 @@ public class HUDmanager {
         topLeftTable.setSize(200,Gdx.graphics.getHeight());
         topLeftTable.top().left();
 
+        topRightTable.setSize(400,Gdx.graphics.getHeight());
+        topRightTable.pad(0,3000,900,0);
+
         scoreLabelCounter = new Label(String.format("%06d", score), Configuration.SKIN, "big");
         goldLabel = new Label(String.format("%06d", gold), Configuration.SKIN, "big");
         cooldownTimer = new Label("" + coolDownTimerTime, Configuration.SKIN, "big");
         scoreLabel = new Label("Score: ", Configuration.SKIN, "big");
+
+        invLabel = new Label("Invincibility Timer : ", Configuration.SKIN, "big");
+        coinLabel = new Label("Coin Multiplier Timer : ", Configuration.SKIN, "big");
+        pointLabel = new Label("Point Multiplier Timer : ", Configuration.SKIN, "big");
+        speedLabel = new Label("Speed Boost Timer : ", Configuration.SKIN, "big");
+        damLabel = new Label("Damage Boost Timer : ", Configuration.SKIN, "big");
+
+        invTimer  = new Label("" + GameScreen.invincibilityTimer, Configuration.SKIN, "big");
+        coinTimer  = new Label("" + GameScreen.coinTimer, Configuration.SKIN, "big");
+        pointTimer  = new Label("" + GameScreen.pointTimer, Configuration.SKIN, "big");
+        speedTimer  = new Label("" + GameScreen.speedTimer, Configuration.SKIN, "big");
+        damTimer  = new Label("" + GameScreen.damageTimer, Configuration.SKIN, "big");
 
         // Order of adding the UI
         topLeftTable.add(goldCoin);
@@ -88,7 +116,25 @@ public class HUDmanager {
         topLeftTable.add(scoreLabel);
         topLeftTable.add(scoreLabelCounter);
 
+        topRightTable.add(invLabel);
+        topRightTable.add(invTimer);
+        topRightTable.row();
+        topRightTable.add(coinLabel);
+        topRightTable.add(coinTimer);
+        topRightTable.row();
+        topRightTable.add(pointLabel);
+        topRightTable.add(pointTimer);
+        topRightTable.row();
+        topRightTable.add(speedLabel);
+        topRightTable.add(speedTimer);
+        topRightTable.row();
+        topRightTable.add(damLabel);
+        topRightTable.add(damTimer);
+        topRightTable.row();
+
+
         stage.addActor(topLeftTable);
+        stage.addActor(topRightTable);
 
         // Creation of bottom left of the screen
         abalities.setSize(Gdx.graphics.getWidth(),200);
@@ -165,6 +211,53 @@ public class HUDmanager {
             cooldown.removeActor(cooldownTimer);
             cooldown.add(burstLogo);
         }
+
+        if(GameScreen.coinTimer > 0){
+            String coinText = "" + GameScreen.coinTimer;
+            coinTimer.setText("" + coinText.substring(0,3));
+            coinTimer.setFontScale(1.2f);
+        }
+        else{
+            coinTimer.setText(0);
+        }
+
+        if(GameScreen.pointTimer > 0){
+            String pointText = "" + GameScreen.pointTimer;
+            pointTimer.setText("" + pointText.substring(0,3));
+            pointTimer.setFontScale(1.2f);
+        }
+        else {
+            pointTimer.setText(0);
+        }
+
+        if(GameScreen.damageTimer > 0){
+            String damageText = "" + GameScreen.damageTimer;
+            damTimer.setText("" + damageText.substring(0,3));
+            damTimer.setFontScale(1.2f);
+        }
+        else {
+            damTimer.setText(0);
+        }
+
+        if(GameScreen.speedTimer > 0){
+            String speedText = "" + GameScreen.speedTimer;
+            speedTimer.setText("" + speedText.substring(0,3));
+            speedTimer.setFontScale(1.2f);
+        }
+        else {
+            speedTimer.setText(0);
+        }
+
+        if(GameScreen.invincibilityTimer > 0){
+            String invText = "" + GameScreen.invincibilityTimer;
+            invTimer.setText("" + invText.substring(0,3));
+            invTimer.setFontScale(1.2f);
+        }
+        else {
+            invTimer.setText(0);
+        }
+
+
 
         if(Ship.buyMenuRange){
             shop.removeActor(shopRangeCooldown);

@@ -8,14 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.shipsandgiggles.pirate.PirateGame;
-import net.shipsandgiggles.pirate.entity.Ship;
-import net.shipsandgiggles.pirate.currency.Currency;
-import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.currency.Currency;
+import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.screen.ScreenType;
+import net.shipsandgiggles.pirate.task.ChangeScreenTask;
 
 /**
  * Shop screen
@@ -26,16 +26,12 @@ import net.shipsandgiggles.pirate.conf.Configuration;
  * @author Team 22 : Sam Pearson
  * @version 1.0
  */
-public class ShopScreen implements Screen {
+public class DifficultyScreen implements Screen {
 	// Main data store
 	private Stage stage;
 	private Table table;
 
-	// Costs
-	public int speedCost = 25;
-	public int multiCost = 35;
-	public int healthCost = 55;
-	public int cooldownCost = 45;
+	public static int difficulty = 0;
 
 	/** Displays the shop screen */
 	@Override
@@ -50,12 +46,6 @@ public class ShopScreen implements Screen {
 		Back.setFillParent(true);
 		stage.addActor(Back);
 
-		// Sets labels
-		Label health = new Label(healthCost + "coins",Configuration.SKIN);
-		Label multi = new Label(multiCost + "coins",Configuration.SKIN);
-		Label speed = new Label(speedCost + "coins",Configuration.SKIN);
-		Label cooldown = new Label(cooldownCost + "coins",Configuration.SKIN);
-
 		// Constructs buttons
 		TextButton backButton = new TextButton("Back", Configuration.SKIN);
 		backButton.addListener(
@@ -63,78 +53,52 @@ public class ShopScreen implements Screen {
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
+						PirateGame.get().changeScreen(ScreenType.LOADING);
+					}});
+
+		TextButton easyButton = new TextButton("Easy", Configuration.SKIN);
+		easyButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						difficulty = 1;
 						PirateGame.get().changeScreen(ScreenType.GAME);
+
 					}});
 
-		TextButton healthButton = new TextButton("Health + 20", Configuration.SKIN);
-		healthButton.addListener(
+		TextButton normalButton = new TextButton("Normal", Configuration.SKIN);
+		normalButton.addListener(
 				new ChangeListener() {
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
-						if (Currency.get().balance(Currency.Type.GOLD) >= healthCost) {
-							Currency.get().take(Currency.Type.GOLD, healthCost);
-							Ship.maxHealth += 20;
-							healthCost +=  50;
-							health.setText(healthCost + "coins");
-						}
+						difficulty = 2;
+						PirateGame.get().changeScreen(ScreenType.GAME);
+
 					}});
 
-		TextButton multiButton = new TextButton("Multiplier + 1", Configuration.SKIN);
-		multiButton.addListener(
+		TextButton hardButton = new TextButton("Hard", Configuration.SKIN);
+		hardButton.addListener(
 				new ChangeListener() {
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
-						if (Currency.get().balance(Currency.Type.GOLD) >= multiCost) {
-							Currency.get().take(Currency.Type.GOLD, multiCost);
-							Ship.coinMulti += 1;
-							multiCost +=  50;
-							multi.setText(multiCost + "coins");
-						}
-					}});
+						difficulty = 3;
+						PirateGame.get().changeScreen(ScreenType.GAME);
 
-		TextButton speedButton = new TextButton("Speed x 1.25", Configuration.SKIN);
-		speedButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						if (Currency.get().balance(Currency.Type.GOLD) >= speedCost) {
-							Currency.get().take(Currency.Type.GOLD, speedCost);
-							Ship.maximumSpeed += 25f;
-							speedCost +=  50;
-							speed.setText(speedCost + "coins");
 						}
-					}});
+					});
 
-		TextButton coolDownButton = new TextButton("Cooldown - 0.25", Configuration.SKIN);
-		coolDownButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						if (Currency.get().balance(Currency.Type.GOLD) >= cooldownCost) {
-							Currency.get().take(Currency.Type.GOLD, cooldownCost);
-							Ship.burstCoolDown -= 0.25;
-							cooldownCost +=  50;
-							cooldown.setText(cooldownCost + "coins");
-						}
-					}});
 
 
 		// Creates a uniform X/Y table.
-		this.table.add(healthButton);
-		this.table.add(health);
 		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(multiButton);
-		this.table.add(multi);
+		this.table.add(easyButton);
 		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(speedButton);
-		this.table.add(speed);
+		this.table.add(normalButton);
 		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(coolDownButton);
-		this.table.add(cooldown);
+		this.table.add(hardButton);
 		this.table.row().pad(10, 0, 10, 0);
 
 		Back.add(backButton);

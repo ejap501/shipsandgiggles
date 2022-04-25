@@ -127,11 +127,11 @@ public class GameScreen implements Screen {
 	int pointTimer = 0;
 
 	// Max Spawning
-	static int maxCoins = 200;
-	static int maxPowerups = 250;
-	static int maxShips = 15;
-	static int maxDucks = 15;
-	static int maxStones = 50;
+	static int maxCoins;
+	static int maxPowerups;
+	static int maxShips;
+	static int maxDucks;
+	static int maxStones;
 
 	/**
 	 * Initialises the Game Screen,
@@ -223,7 +223,7 @@ public class GameScreen implements Screen {
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
-		spawn(maxCoins, maxDucks, maxPowerups, maxShips, maxStones,world);
+		spawn(world);
 
 
 
@@ -657,13 +657,29 @@ public class GameScreen implements Screen {
 	 * Determines spawning
 	 * Manages spawning of coins, ships, powerups, stones, and ducks
 	 *
-	 * @param coins : Number of coins to be added
-	 * @param duck : Number of ducks to be added
-	 * @param powerups : Number of power-ups to be added
-	 * @param ships : Number of ships to be added
-	 * @param stone : Number of stones to be added
 	 */
-	public static void spawn(int coins, int duck, int powerups, int ships, int stone,World world){
+	public static void spawn(World world){
+		if (DifficultyScreen.difficulty == 1){
+			maxCoins = 150;
+			maxPowerups = 100;
+			maxShips = 20;
+			maxDucks = 40;
+			maxStones = 30;
+		}
+		else if(DifficultyScreen.difficulty == 2){
+			maxCoins = 100;
+			maxPowerups = 75;
+			maxShips = 30;
+			maxDucks = 50;
+			maxStones = 40;
+		}
+		else{
+			maxCoins = 50;
+			maxPowerups = 50;
+			maxShips = 40;
+			maxDucks = 60;
+			maxStones = 50;
+		}
 		// Initializing
 		Random rn = new Random();
 		int randX, randY, randModel, randHealth;
@@ -671,21 +687,21 @@ public class GameScreen implements Screen {
 		Sprite model;
 
 		// Coins
-		for (int i = 0; i < coins; i++){
+		for (int i = 0; i < maxCoins; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			coinData.add(new Coin(coinModel, new Location(randX,randY), world));
 		}
 
 		// Ducks
-		for (int i = 0; i < duck; i++){
+		for (int i = 0; i < maxDucks; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
 		}
 
 		// Power-ups
-		for (int i = 0; i < powerups; i++){
+		for (int i = 0; i < maxPowerups; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			randModel = rn.nextInt(5);
@@ -709,7 +725,7 @@ public class GameScreen implements Screen {
 		}
 
 		// Ships
-		for (int i = 0; i < ships; i++){
+		for (int i = 0; i < maxShips; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			randModel = rn.nextInt(3);
@@ -727,7 +743,7 @@ public class GameScreen implements Screen {
 		}
 
 		// Stones
-		for (int i = 0; i < stone; i++){
+		for (int i = 0; i < maxStones; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			randModel = rn.nextInt(3);

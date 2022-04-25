@@ -55,10 +55,6 @@ public class WorldContactListener implements ContactListener {
 
             }
 
-            if(fixtureA.getUserData() instanceof EntityAi){
-                EntityAi entity = (EntityAi) fixtureA.getUserData();
-                entity.damage(ball.getDamageDelt());
-            }
         }
     }
 

@@ -180,10 +180,6 @@ public class EntityAi implements Steerable<Vector2> {
         // Terminates if dead
         if(dead){return;}
 
-        // Draws ship
-        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); // Sets position of the ship
-        this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
-
         // Draws health bar and ship
         batch.setColor(healthBarColor());
         batch.begin();

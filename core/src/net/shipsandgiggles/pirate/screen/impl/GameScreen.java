@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
 		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
 		// Enemy creation "bob" and Entity AI controller
-		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1800f), 100, world);
+		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1600f), 100, world);
 		bob.setTarget(playerShips.getEntityBody());
 
 

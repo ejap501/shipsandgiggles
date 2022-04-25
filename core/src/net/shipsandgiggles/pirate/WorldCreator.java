@@ -45,6 +45,7 @@ public class WorldCreator {
             fDef.shape = shape;
             fDef.filter.categoryBits = Configuration.Cat_walls;
             fixture = body.createFixture(fDef);
+
+        }
     }
-}
 }

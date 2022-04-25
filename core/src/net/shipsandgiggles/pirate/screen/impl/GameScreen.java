@@ -23,12 +23,10 @@ import java.util.ArrayList;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
-import net.shipsandgiggles.pirate.entity.EntityAi;
-import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.conf.Configuration;
-import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
 import net.shipsandgiggles.pirate.entity.impl.shop.shop1;
 import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
@@ -111,6 +109,7 @@ public class GameScreen implements Screen {
 	static EntityAi bob;
 	static EntityAi player;
 	public static int collegesCaptured = 0;
+	private Weather weather;
 
 	public static Sprite cannonBall;
 
@@ -150,6 +149,7 @@ public class GameScreen implements Screen {
 		int _width = Gdx.graphics.getWidth();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
+		weather = new Weather(this);
 
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
@@ -276,6 +276,7 @@ public class GameScreen implements Screen {
 
 		// Update all the colleges and entities
 		playerShips.draw(batch);
+		weather.draw(batch);
 		langwith.draw(batch);
 		langwith.shootPlayer(playerShips);
 		constantine.draw(batch);

@@ -32,7 +32,6 @@ public class WorldContactListener implements ContactListener {
         // Checks if the collider is a cannonball
         if(fixtureB.getUserData() instanceof CannonBall){
             CannonBall ball = (CannonBall) fixtureB.getUserData();
-            System.out.println("sssssssssssss");
             // Checks for a college collision
             if(fixtureA.getUserData() instanceof College){
                 College college = (College) fixtureA.getUserData();

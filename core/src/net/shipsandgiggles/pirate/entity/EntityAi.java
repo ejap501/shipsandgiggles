@@ -81,7 +81,6 @@ public class EntityAi implements Steerable<Vector2> {
         this.zeroLinearSpeedThreshold = 0.1f;
         this.speedMultiplier = 60f;
         this.turnMultiplier = 0.01f;
-        System.out.println("dsada");
         this.tagged = false;
         this.body.setFixedRotation(false);
         MassData MassData = new MassData();
@@ -99,11 +98,11 @@ public class EntityAi implements Steerable<Vector2> {
         this.dead = false;
 
         // Constructs hitbox detector
-        this.hitBox =  new Rectangle(this.body.getPosition().x, this.body.getPosition().y, texture.getWidth() + 350, texture.getHeight() + 350);
+        this.hitBox =  new Rectangle(this.body.getPosition().x - 300, this.body.getPosition().y - 300, texture.getWidth() + 600, texture.getHeight() + 600);
 
         // Constructs fixture
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
+        shape.setAsBox((width / 2f) / PIXEL_PER_METER , (height / 2f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;

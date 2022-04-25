@@ -294,17 +294,6 @@ public class GameScreen implements Screen {
 
 			}
 		}
-/*
-		for (EnemyShip hostileShip : hostileShips) {
-			//hostileShip.draw(batch);
-			//hostileShip.shootPlayer(playerShips);
-		}
-
-		for (Duck duck : ducks) {
-			duck.draw(batch);
-		}
-
- */
 
 		for (powerUp powerUpDatum : powerUpData) {
 			//System.out.println(powerUpDatum.getPowerUpType());
@@ -350,6 +339,11 @@ public class GameScreen implements Screen {
 		for (EnemyShip hostileShip : hostileShips) {
 			hostileShip.update(deltaTime, batch, playerShips, world);
 		}
+
+		//for (Duck duck : ducks) {
+		//	duck.update(deltaTime, batch, playerShips, world);
+		//}
+
 
 
 
@@ -688,21 +682,21 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 15;
+			maxShips = 5;
 			maxDucks = 40;
 			maxStones = 30;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
 			maxPowerups = 75;
-			maxShips = 20;
+			maxShips = 10;
 			maxDucks = 50;
 			maxStones = 40;
 		}
 		else{
 			maxCoins = 50;
 			maxPowerups = 50;
-			maxShips = 30;
+			maxShips = 15;
 			maxDucks = 60;
 			maxStones = 50;
 		}

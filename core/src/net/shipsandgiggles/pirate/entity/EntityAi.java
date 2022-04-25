@@ -148,12 +148,13 @@ public class EntityAi implements Steerable<Vector2> {
      * @param world : World data
      */
     public void update(float deltaTime, Batch batch,Ship player, World world){
-        if(isPlayer){
+        if(isPlayer || dead){
             return;
         }
         if (health == 0 && !dead){
             death(world);
         }
+
         else if(behavior != null){
             // Calculates if needs steering
             this.steeringOutput = behavior.calculateSteering(steeringOutput);

@@ -50,8 +50,8 @@ public abstract class NPC extends EntityAi {
      * @param height : Height of the NPC
      * @param width : Width of the NPC
      * */
-    public NPC(float boundingRadius, Sprite texture, Location location, int maximumHealth, int height, int width) {
-        super(boundingRadius, texture, maximumHealth, (com.badlogic.gdx.ai.utils.Location) location, width, height);
+    public NPC(Body body,float boundingRadius, Sprite texture, Location location, int maximumHealth, int height, int width) {
+        super(body,boundingRadius, texture, maximumHealth,  location, width, height);
     }
 
     /** Fetches the body of the NPC */

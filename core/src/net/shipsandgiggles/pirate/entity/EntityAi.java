@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -63,8 +62,9 @@ public class EntityAi implements Steerable<Vector2> {
      * @param width : Width of the enemy
      * @param height : Height of the enemy
      */
-    public EntityAi(float boundingRadius, Sprite texture, int maxHealth, Location location, int width, int height){
+    public EntityAi(Body body, float boundingRadius, Sprite texture, int maxHealth, Location location, int width, int height){
         // Constructor
+        this.body = body;
         this.boundingRadius = boundingRadius;
         this.texture = texture;
         this.width = width;
@@ -80,7 +80,7 @@ public class EntityAi implements Steerable<Vector2> {
         this.zeroLinearSpeedThreshold = 0.1f;
         this.speedMultiplier = 60f;
         this.turnMultiplier = 0.01f;
-
+        System.out.println("dsada");
         this.tagged = false;
         this.body.setFixedRotation(false);
         MassData MassData = new MassData();
@@ -495,6 +495,11 @@ public class EntityAi implements Steerable<Vector2> {
         return outVector;
     }
 
+    @Override
+    public com.badlogic.gdx.ai.utils.Location<Vector2> newLocation() {
+        return null;
+    }
+
     /**
      * @return Enemy body
      */
@@ -597,13 +602,6 @@ public class EntityAi implements Steerable<Vector2> {
         this.body = body;
     }
 
-    /**
-     * @return null
-     */
-    @Override
-    public Location<Vector2> newLocation() {
-        return null;
-    }
 
     @Override
     public void setOrientation(float orientation) {

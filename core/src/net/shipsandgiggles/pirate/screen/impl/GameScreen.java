@@ -154,6 +154,7 @@ public class GameScreen implements Screen {
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
+
 		Body body = createEnemy(false, new Vector2(_width / 3f, _height / 6f),world);
 		createEntities(body,world,camera);
 
@@ -203,10 +204,10 @@ public class GameScreen implements Screen {
 		playerShips.getEntityBody().setLinearDamping(0.5f);
 		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
-
 		// Enemy creation "bob" and Entity AI controller
-		bob = new EnemyShip(bobsSprite, 300f, new Location(2000f, 1800f), 100, world);
+		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1800f), 100, world);
 		bob.setTarget(playerShips.getEntityBody());
+
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
 		Steerable<Vector2> pp = player;
@@ -225,7 +226,7 @@ public class GameScreen implements Screen {
 		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
 
 		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
-		spawn(world);
+		spawn(world,  pp);
 
 
 
@@ -345,6 +346,11 @@ public class GameScreen implements Screen {
 		if(!bob.dead) {
 			bob.update(deltaTime, batch, playerShips, world);
 		}
+		for (EnemyShip hostileShip : hostileShips) {
+			hostileShip.update(deltaTime, batch, playerShips, world);
+		}
+
+
 
 		// Update for the explosion
 		updateExplosions();
@@ -677,7 +683,7 @@ public class GameScreen implements Screen {
 	 * Manages spawning of coins, ships, powerups, stones, and ducks
 	 *
 	 */
-	public static void spawn(World world){
+	public static void spawn(World world, Steerable<Vector2> pp){
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
@@ -716,8 +722,10 @@ public class GameScreen implements Screen {
 		for (int i = 0; i < maxDucks; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			ducks.add(new Duck(duckModel, 300f, new Location(randX,randY), 5, world));
+			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
+			ducks.add(new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world));
 		}
+
 
 		// Power-ups
 		for (int i = 0; i < maxPowerups; i++){
@@ -743,8 +751,6 @@ public class GameScreen implements Screen {
 			powerUpData.add(new powerUp(model, new Location(randX,randY), randType, world));
 		}
 
-
-
 		// Ships
 		for (int i = 0; i < maxShips; i++){
 			randX = 50 + rn.nextInt(3950);
@@ -760,11 +766,10 @@ public class GameScreen implements Screen {
 				model = enemyModelC;
 				randHealth = 200 + rn.nextInt(50);
 			}
-			EnemyShip newEnemy = new EnemyShip(model, 300f, new Location(randX,randY), randHealth, world);
+			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
+			EnemyShip newEnemy = new EnemyShip(body,model, 300f, new Location(randX,randY), randHealth, world);
 			newEnemy.setTarget(playerShips.getEntityBody());
 
-			player = new EntityAi(playerShips.getEntityBody(), 3);
-			Steerable<Vector2> pp = player;
 
 			// Status of entity AI
 			Arrive<Vector2> arrives = new Arrive<>(newEnemy, pp)

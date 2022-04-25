@@ -40,11 +40,11 @@ public class EnemyShip extends NPC{
      * @param maximumHealth : Maximum health of the college, used for combat
      * @param world : World data
      * */
-    public EnemyShip(Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
+    public EnemyShip(Body body, Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
+        super(body,boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
 
         // Instantiating a body
-        Body body;
+        this.body = body;
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(location.getX(), location.getY());
@@ -60,7 +60,6 @@ public class EnemyShip extends NPC{
         fixtureDef.filter.categoryBits = Configuration.Cat_Enemy; // Telling it what category it is
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
-        this.body = body;
         setBody(body);
         this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         this.world = world;

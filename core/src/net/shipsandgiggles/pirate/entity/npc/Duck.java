@@ -36,11 +36,10 @@ public class Duck extends NPC{
      * @param location : Coordinate data for position in world
      * @param world : World data
      * */
-    public Duck(Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
+    public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
+        super(body,boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
 
         // Instantiating a body
-        Body body;
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(location.getX(), location.getY());

@@ -18,8 +18,8 @@ import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.task.ChangeScreenTask;
 
 /**
- * Shop screen
- * Accessed to purchase stuff from shop
+ * Difficulty screen
+ * Accessed to set difficulty
  * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)

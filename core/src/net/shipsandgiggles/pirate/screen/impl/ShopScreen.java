@@ -37,6 +37,11 @@ public class ShopScreen implements Screen {
 	public int healthCost = 55;
 	public int cooldownCost = 45;
 
+	public int speedTier = 1;
+	public int multiTier = 1;
+	public int healthTier = 1;
+	public int cooldownTier = 1;
+
 	/** Displays the shop screen */
 	@Override
 	public void show() {
@@ -51,10 +56,11 @@ public class ShopScreen implements Screen {
 		stage.addActor(Back);
 
 		// Sets labels
-		Label health = new Label(healthCost + "coins",Configuration.SKIN);
-		Label multi = new Label(multiCost + "coins",Configuration.SKIN);
-		Label speed = new Label(speedCost + "coins",Configuration.SKIN);
-		Label cooldown = new Label(cooldownCost + "coins",Configuration.SKIN);
+		Label coinAmount = new Label(Currency.get().balance(Currency.Type.GOLD) + "coins",Configuration.SKIN,"big");
+		Label health = new Label(healthCost + "coins",Configuration.SKIN,"big");
+		Label multi = new Label(multiCost + "coins",Configuration.SKIN,"big");
+		Label speed = new Label(speedCost + "coins",Configuration.SKIN,"big");
+		Label cooldown = new Label(cooldownCost + "coins",Configuration.SKIN,"big");
 
 		// Constructs buttons
 		TextButton backButton = new TextButton("Back", Configuration.SKIN);
@@ -66,7 +72,7 @@ public class ShopScreen implements Screen {
 						PirateGame.get().changeScreen(ScreenType.GAME);
 					}});
 
-		TextButton healthButton = new TextButton("Health + 20", Configuration.SKIN);
+		TextButton healthButton = new TextButton("Health + 20 - Tier " + healthTier, Configuration.SKIN);
 		healthButton.addListener(
 				new ChangeListener() {
 					@Override
@@ -77,10 +83,13 @@ public class ShopScreen implements Screen {
 							Ship.maxHealth += 20;
 							healthCost +=  50;
 							health.setText(healthCost + "coins");
+							coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");
+							healthTier +=1 ;
+							healthButton.setText("Health + 20 - Tier " + healthTier);
 						}
 					}});
 
-		TextButton multiButton = new TextButton("Multiplier + 1", Configuration.SKIN);
+		TextButton multiButton = new TextButton("Multiplier + 1 - Tier " + multiTier, Configuration.SKIN);
 		multiButton.addListener(
 				new ChangeListener() {
 					@Override
@@ -91,10 +100,13 @@ public class ShopScreen implements Screen {
 							Ship.coinMulti += 1;
 							multiCost +=  50;
 							multi.setText(multiCost + "coins");
+							coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");
+							multiTier +=1 ;
+							multiButton.setText("Multiplier + 1 - Tier " + multiTier);
 						}
 					}});
 
-		TextButton speedButton = new TextButton("Speed x 1.25", Configuration.SKIN);
+		TextButton speedButton = new TextButton("Speed x 1.25 - Tier " + speedTier, Configuration.SKIN);
 		speedButton.addListener(
 				new ChangeListener() {
 					@Override
@@ -105,10 +117,13 @@ public class ShopScreen implements Screen {
 							Ship.maximumSpeed += 25f;
 							speedCost +=  50;
 							speed.setText(speedCost + "coins");
+							coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");
+							speedTier +=1 ;
+							speedButton.setText("Speed x 1.25 - Tier " + speedTier);
 						}
 					}});
 
-		TextButton coolDownButton = new TextButton("Cooldown - 0.25", Configuration.SKIN);
+		TextButton coolDownButton = new TextButton("Cooldown - 0.25 - Tier " + cooldownTier, Configuration.SKIN);
 		coolDownButton.addListener(
 				new ChangeListener() {
 					@Override
@@ -119,6 +134,9 @@ public class ShopScreen implements Screen {
 							Ship.burstCoolDown -= 0.25;
 							cooldownCost +=  50;
 							cooldown.setText(cooldownCost + "coins");
+							coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");
+							cooldownTier +=1 ;
+							coolDownButton.setText("Cooldown - 0.25 - Tier " + cooldownTier);
 						}
 					}});
 
@@ -137,7 +155,8 @@ public class ShopScreen implements Screen {
 		this.table.add(cooldown);
 		this.table.row().pad(10, 0, 10, 0);
 
-		Back.add(backButton);
+		Back.add(backButton).pad(0, 0, 0, 100);
+		Back.add(coinAmount);
 		Back.top().left();
 	}
 

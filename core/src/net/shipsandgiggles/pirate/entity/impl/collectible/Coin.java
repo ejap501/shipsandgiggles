@@ -11,6 +11,7 @@ import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.collectible.Plunder;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -94,7 +95,7 @@ public class Coin extends Plunder {
         if(this.dead) return;
 
         // Gives money if collected
-        Currency.get().give(Currency.Type.GOLD, 10);
+        Currency.get().give(Currency.Type.GOLD, (10));
 
         // Kills off the body
         world.destroyBody(body);

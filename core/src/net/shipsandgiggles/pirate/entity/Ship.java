@@ -65,6 +65,8 @@ public class Ship extends MovableEntity {
 	public static int pointMulti = 1;
 	public static int damageMulti = 1;
 	public static int speedMulti = 1;
+	public int priorCoinMulti = -1;
+	public int priorPointMulti = -1;
 
 	/**
 	 * Initialises the player ship
@@ -416,8 +418,27 @@ public class Ship extends MovableEntity {
 	 *
 	 * @param multiplier : New multiplier value
 	 */
-	public void setCoinMulti(int multiplier){
-		this.coinMulti = multiplier;
+	public void setCoinMulti(int multiplier,boolean fromBoost){
+
+		if (multiplier == -1){ //Reset after boost
+			coinMulti = priorCoinMulti;
+			priorCoinMulti = -1;
+			return;
+		}
+
+		if (!fromBoost && priorCoinMulti != -1){  //Increase while in a boost to return to
+			priorCoinMulti += multiplier;
+			return;
+
+		}
+		if (fromBoost && priorCoinMulti == -1){ // From a boost, store previous value to return to
+			priorCoinMulti = getCoinMulti();
+		}
+		coinMulti += multiplier;
+	}
+
+	public int getCoinMulti(){
+		return coinMulti;
 	}
 
 	/**
@@ -425,8 +446,27 @@ public class Ship extends MovableEntity {
 	 *
 	 * @param multiplier : New multiplier value
 	 */
-	public void setPointMulti(int multiplier){
-		this.pointMulti = multiplier;
+	public void setPointMulti(int multiplier, boolean fromBoost){
+
+		if (multiplier == -1){ //Reset after boost
+			pointMulti = priorPointMulti;
+			priorPointMulti = -1;
+			return;
+		}
+
+		if (!fromBoost && priorPointMulti != -1){  //Increase while in a boost to return to
+			priorPointMulti += multiplier;
+			return;
+
+		}
+		if (fromBoost && priorPointMulti == -1){ // From a boost, store previous value to return to
+			priorPointMulti = getCoinMulti();
+		}
+		pointMulti += multiplier;
+	}
+
+	public int getPointMulti(){
+		return pointMulti;
 	}
 
 	/**

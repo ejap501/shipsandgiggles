@@ -97,7 +97,7 @@ public class ShopScreen implements Screen {
 						LoadingScreen.soundController.playButtonPress();
 						if (Currency.get().balance(Currency.Type.GOLD) >= multiCost) {
 							Currency.get().take(Currency.Type.GOLD, multiCost);
-							Ship.coinMulti += 1;
+							GameScreen.playerShips.setCoinMulti(1,false);
 							multiCost +=  50;
 							multi.setText(multiCost + "coins");
 							coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");

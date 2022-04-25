@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 
@@ -19,6 +20,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @version 1.0
  */
 public class CannonBall {
+    public short categoryBits;
     // Main data store
     public float timer = 0.8f;
     public World world;
@@ -59,6 +61,7 @@ public class CannonBall {
         this.target = target;
         this.cannonBall = cannonBall;
         this.multiplier = multiplier;
+        this.categoryBits = categoryBits;
 
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
@@ -101,6 +104,7 @@ public class CannonBall {
         BodyDef def = new BodyDef();
         this.angle = target;
         this.cannonBall = cannonBall;
+        this.categoryBits = categoryBits;
 
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
@@ -141,6 +145,9 @@ public class CannonBall {
      * @return Damage dealt
      */
     public float getDamageDelt() {
+        if (this.categoryBits == Configuration.Cat_Player){
+            return this.damageDelt;
+        }
         return (this.damageDelt * this.multiplier);
     }
 

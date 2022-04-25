@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import net.shipsandgiggles.pirate.*;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
 import net.shipsandgiggles.pirate.entity.EntityAi;
@@ -67,7 +68,7 @@ public class GameScreen implements Screen {
 
 	// Implement world
 	public static World world;
-	private static Ship playerShips;
+	public static Ship playerShips;
 	private static ArrayList<Coin> coinData = new ArrayList<>();
 	private static ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private static ArrayList<Stone> stoneData = new ArrayList<>();
@@ -118,13 +119,14 @@ public class GameScreen implements Screen {
 	float maxSpeed = 100000f;
 	static float speedMul = 40f;
 	int damageMul = 2;
+	int coinMulBefore = 1;
 	int coinMul = 2;
 	int pointMul = 2;
-	int speedTimer = 0;
-	int damageTimer = 0;
-	int invincibilityTimer = 0;
-	int coinTimer = 0;
-	int pointTimer = 0;
+	int speedTimer = -1;
+	int damageTimer = -1;
+	int invincibilityTimer = -1;
+	public static int coinTimer = -1;
+	int pointTimer = -1;
 
 	// Max Spawning
 	static int maxCoins;
@@ -287,6 +289,7 @@ public class GameScreen implements Screen {
 			coinDatum.draw(batch);
 			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
 				coinDatum.death();
+
 			}
 		}
 
@@ -300,8 +303,10 @@ public class GameScreen implements Screen {
 		}
 
 		for (powerUp powerUpDatum : powerUpData) {
+			//System.out.println(powerUpDatum.getPowerUpType());
 			powerUpDatum.draw(batch);
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
+
 				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
 					speedTimer = 600;
 					currentSpeed = maxSpeed * speedMul;
@@ -309,24 +314,25 @@ public class GameScreen implements Screen {
 					currentSpeed = maxSpeed;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
 					invincibilityTimer = 300;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
-					damageTimer = 600;
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+					damageTimer = 900;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
 					coinTimer = 900;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
 					pointTimer = 900;
 				}
 			}
 			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
 				powerUpDatum.death();
+
 			}
 		}
 
@@ -390,29 +396,40 @@ public class GameScreen implements Screen {
 		if (speedTimer > 0) {
 			speedTimer -= 1f;
 		}
-		if (invincibilityTimer != 0) {
+		if (invincibilityTimer >= 0) {
 			invincibilityTimer -= 1f;
 			playerShips.setInvincible(true);
 		}else{
 			playerShips.setInvincible(false);
 		}
-		if (damageTimer != 0){
+		if (damageTimer >= 0){
 			damageTimer -= 1f;
 			playerShips.setDamageMulti(damageMul);
+
 		}else{
 			playerShips.setDamageMulti(1);
 		}
-		if (coinTimer != 0){
+
+		if (coinTimer == 900){
 			coinTimer -= 1f;
-			playerShips.setCoinMulti(coinMul);
-		}else{
-			playerShips.setCoinMulti(1);
+			playerShips.setCoinMulti(playerShips.getCoinMulti() * 3, true);
+		}else if (coinTimer == 0){
+			coinTimer -= 1f;
+			playerShips.setCoinMulti(-1, false);
 		}
-		if (pointTimer != 0){
+		else if (coinTimer >= 0){
+			coinTimer -= 1f;
+		}
+
+		if (pointTimer == 900){
 			pointTimer -= 1f;
-			playerShips.setPointMulti(pointMul);
-		}else{
-			playerShips.setPointMulti(1);
+			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
+		}else if (pointTimer == 0){
+			pointTimer -= 1f;
+			playerShips.setPointMulti(-1, false);
+		}
+		else if (pointTimer >= 0){
+			pointTimer -= 1f;
 		}
 
 		updateCamera();
@@ -662,7 +679,7 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 20;
+			maxShips = 0;
 			maxDucks = 40;
 			maxStones = 30;
 		}
@@ -724,6 +741,8 @@ public class GameScreen implements Screen {
 			powerUpData.add(new powerUp(model, new Location(randX,randY), randType, world));
 		}
 
+
+
 		// Ships
 		for (int i = 0; i < maxShips; i++){
 			randX = 50 + rn.nextInt(3950);
@@ -757,6 +776,7 @@ public class GameScreen implements Screen {
 			stoneData.add(new Stone(model, new Location(randX,randY), world));
 		}
 	}
+
 
 	@Override
 	public void show() {

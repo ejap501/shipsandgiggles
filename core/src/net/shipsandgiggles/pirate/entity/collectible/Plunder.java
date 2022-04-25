@@ -9,6 +9,7 @@ import java.util.UUID;
 import net.shipsandgiggles.pirate.entity.Entity;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.EntityType;
+import net.shipsandgiggles.pirate.entity.Ship;
 
 
 /**
@@ -55,7 +56,7 @@ public abstract class Plunder extends Entity {
     }
 
     /** Kills the collectible body */
-    public void death() {
+    public void death(Ship player) {
         // Checks plunder destruction
         if(this.dead) return;
         this.dead = true;

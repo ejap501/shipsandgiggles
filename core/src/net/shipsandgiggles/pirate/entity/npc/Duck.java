@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.conf.Configuration;
@@ -23,7 +24,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @author Team 22 : Edward Poulter
  * @version 1.0
  */
-public class Duck extends NPC{
+public class Duck extends EntityAi {
     // World data
     public World world;
 
@@ -37,7 +38,7 @@ public class Duck extends NPC{
      * @param world : World data
      * */
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(body,boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
+        super(body,boundingRadius, texture, maximumHealth, location,(int) texture.getHeight(), (int) texture.getWidth());
 
         // Instantiating a body
         BodyDef def = new BodyDef();
@@ -58,14 +59,5 @@ public class Duck extends NPC{
         this.body = body;
         this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         this.world = world;
-    }
-
-    /** Kills the duck body */
-    public void removeFromWorld(){
-        // Kills off the body
-        if(dead && !removed){
-            world.destroyBody(this.body);
-            removed = true;
-        }
     }
 }

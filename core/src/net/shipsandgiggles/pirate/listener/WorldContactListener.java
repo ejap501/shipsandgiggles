@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.*;
 
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Weather;
-import net.shipsandgiggles.pirate.entity.npc.NPC;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.CannonBall;
 import net.shipsandgiggles.pirate.entity.college.College;
@@ -48,8 +47,8 @@ public class WorldContactListener implements ContactListener {
                 Gdx.app.log("cannonball - ship", "collision");
             }
             // Checks for a NPC collision
-            if(fixtureA.getUserData() instanceof NPC){
-                NPC npc = (NPC)  fixtureA.getUserData();
+            if(fixtureA.getUserData() instanceof EntityAi){
+                EntityAi npc = (EntityAi)  fixtureA.getUserData();
                 // Applies damage to the NPC
                 npc.damage(ball.getDamageDelt());
                 Gdx.app.log("cannonball - NPC", "collision");

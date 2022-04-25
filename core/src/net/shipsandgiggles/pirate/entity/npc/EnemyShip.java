@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.currency.Currency;
@@ -28,7 +29,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @author Team 22 : Edward Poulter
  * @version 1.0
  */
-public class EnemyShip extends NPC{
+public class EnemyShip extends EntityAi {
     // World data
     public World world;
 
@@ -41,7 +42,7 @@ public class EnemyShip extends NPC{
      * @param world : World data
      * */
     public EnemyShip(Body body, Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(body,boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
+        super(body,boundingRadius, texture,  maximumHealth, location,(int) texture.getHeight(), (int) texture.getWidth());
 
         // Instantiating a body
         this.body = body;
@@ -66,14 +67,5 @@ public class EnemyShip extends NPC{
 
         // Creation of a hitbox detector
         this.hitBox = new Rectangle((int)location.getX(),(int)location.getY(), 600, 600);
-    }
-
-    /** Kills the ship body */
-    public void removeFromWorld(){
-        // Kills off the body
-        if(dead && !removed){
-            world.destroyBody(this.body);
-            removed = true;
-        }
     }
 }

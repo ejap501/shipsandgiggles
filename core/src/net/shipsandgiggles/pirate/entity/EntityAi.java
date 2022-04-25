@@ -41,12 +41,13 @@ public class EntityAi implements Steerable<Vector2> {
     float amountOfRotations = 0;
     private boolean independentFacing = false; // Defines if the entity can move in a direction other than the way it faces)
     float angleToTarget = 0;
+    public Rectangle hitBox;
     int health;
     int maxHealth;
-    public boolean dead;
+    public boolean dead = false;
     public float counter = 0;
     public float timer = 0f;
-    private Rectangle hitBox;
+
     public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
     SteeringBehavior<Vector2> behavior;
@@ -151,7 +152,7 @@ public class EntityAi implements Steerable<Vector2> {
         if(isPlayer || dead){
             return;
         }
-        if (health == 0 && !dead){
+        if (health <= 0 && !dead){
             death(world);
         }
 
@@ -177,7 +178,10 @@ public class EntityAi implements Steerable<Vector2> {
             this.getSprite().draw(batch);
             batch.end();
         }
+        draw(batch);
+    }
 
+    public void draw(Batch batch){
         // Terminates if dead
         if(dead){return;}
 
@@ -535,7 +539,7 @@ public class EntityAi implements Steerable<Vector2> {
         // Kills enemy
         world.destroyBody(body);
         this.dead = true;
-        }
+    }
 
     /**
      * Applies damage to enemy
@@ -631,4 +635,3 @@ public class EntityAi implements Steerable<Vector2> {
 
 
 }
-

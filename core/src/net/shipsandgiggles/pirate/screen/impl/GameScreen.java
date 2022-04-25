@@ -679,21 +679,21 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 0;
+			maxShips = 15;
 			maxDucks = 40;
 			maxStones = 30;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
 			maxPowerups = 75;
-			maxShips = 30;
+			maxShips = 20;
 			maxDucks = 50;
 			maxStones = 40;
 		}
 		else{
 			maxCoins = 50;
 			maxPowerups = 50;
-			maxShips = 40;
+			maxShips = 30;
 			maxDucks = 60;
 			maxStones = 50;
 		}

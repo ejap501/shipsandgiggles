@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import net.shipsandgiggles.pirate.*;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
@@ -60,6 +61,7 @@ public class GameScreen implements Screen {
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
+	private final ScreenViewport viewport;
 	public DeathScreen deathScreen;
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<>();
@@ -145,9 +147,11 @@ public class GameScreen implements Screen {
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), true);
 		camera = new OrthographicCamera();
+		viewport = new ScreenViewport(camera);
 		int _height = Gdx.graphics.getHeight();
 		int _width = Gdx.graphics.getWidth();
-		camera.setToOrtho(false, _width / Scale, _height / Scale);
+		camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 		weather = new Weather(this);
 
@@ -338,11 +342,12 @@ public class GameScreen implements Screen {
 		}
 		for (EnemyShip hostileShip : hostileShips) {
 			hostileShip.update(deltaTime, batch, playerShips, world);
+
 		}
 
-		//for (Duck duck : ducks) {
-		//	duck.update(deltaTime, batch, playerShips, world);
-		//}
+		for (Duck duck : ducks) {
+			duck.update(deltaTime, batch, playerShips, world);
+		}
 
 
 
@@ -369,6 +374,7 @@ public class GameScreen implements Screen {
 			deathScreen.stage.draw();
 			return;
 		}
+		renderer.render(world, camera.combined);
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.draw();
 		hud.updateLabels(batch);
@@ -482,27 +488,9 @@ public class GameScreen implements Screen {
 			System.out.println(playerShips.getEntityBody().getPosition());
 		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-			if (cameraState == 0) cameraState = 1;
-			else if (cameraState == 1) cameraState = 0;
-			else if (cameraState == -1) cameraState = 1;
-		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-			if (cameraState == 0) cameraState = -1;
-			else if (cameraState == 1) cameraState = -1;
-			else if (cameraState == -1) cameraState = 0;
-		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-			if(cameraState == 5){
-				cameraState = 0;
-			}
-			else{
-				cameraState = 5;
-			}
 
-		}
 		// creating zooming
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
@@ -608,14 +596,12 @@ public class GameScreen implements Screen {
 			return;
 		}
 		if (cameraState == 0) {
-			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
+			camera.position.x = player.body.getPosition().x;
+			camera.position.y = player.body.getPosition().y;
+			camera.update();
+			maprender.setView(camera);
 		}
-		if (cameraState == -1) {
-			CameraManager.lockOn(camera, playerShips.getEntityBody().getPosition());
-		}
-		if (cameraState == 5) {
-			CameraManager.lerpOn(camera, bob.getBody().getPosition(), 0.1f);
-		}
+
 	}
 
 	/**

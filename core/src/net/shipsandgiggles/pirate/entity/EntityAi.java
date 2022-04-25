@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
@@ -27,9 +28,13 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @version 2.0
  */
 public class EntityAi implements Steerable<Vector2> {
+    private int width;
+    private int height;
+    private Location location;
     // Main data store
     public Body body;
     boolean tagged;
+    public Texture healthBar = new Texture("models/bar.png");
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
     Sprite texture;
     boolean isPlayer;
@@ -51,17 +56,21 @@ public class EntityAi implements Steerable<Vector2> {
     /**
      * Creation of the Ai of the enemy
      *
-     * @param body : Enemy entity
      * @param boundingRadius : Positional bounds
      * @param texture: Image used for the object
+     * @param maxHealth Maximum health of the entity
+     * @param location : Location of the entity
      * @param width : Width of the enemy
      * @param height : Height of the enemy
      */
-    public EntityAi(Body body, float boundingRadius, Sprite texture, int width, int height){
+    public EntityAi(float boundingRadius, Sprite texture, int maxHealth, Location location, int width, int height){
         // Constructor
-        this.body = body;
         this.boundingRadius = boundingRadius;
         this.texture = texture;
+        this.width = width;
+        this.height = height;
+        this.location = location;
+        this.maxHealth = maxHealth;
 
         this.isPlayer = false;
         this.maxLinearSpeed = 5000;
@@ -167,6 +176,21 @@ public class EntityAi implements Steerable<Vector2> {
             this.getSprite().draw(batch);
             batch.end();
         }
+
+        // Terminates if dead
+        if(dead){return;}
+
+        // Draws ship
+        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); // Sets position of the ship
+        this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
+
+        // Draws health bar and ship
+        batch.setColor(healthBarColor());
+        batch.begin();
+        this.getSkin().draw(batch);
+        batch.draw(healthBar, this.body.getPosition().x - this.getSkin().getWidth() ,this.body.getPosition().y + this.getSkin().getHeight()/2 + 10, healthBarWidth(), 5);
+        batch.setColor(Color.WHITE);
+        batch.end();
     }
 
     /**
@@ -521,6 +545,59 @@ public class EntityAi implements Steerable<Vector2> {
     }
 
     /**
+     * The skin that should be displayed to the user for this entity.
+     *
+     * @return Skin to be displayed.
+     */
+    public Sprite getSkin() {
+        return this.texture;
+    }
+
+    /**
+     * Current location of the entity.
+     *
+     * @return X
+     */
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    /**
+     * Current health of the entity, where <= 0 represents a dead entity.
+     *
+     * @return Current Health.
+     */
+    public double getHealth() {
+        return this.health;
+    }
+
+    /**
+     * Maximum health of the entity when it spawns. If this is infinite, it will be -1.
+     *
+     * @return Defined maximum health.
+     */
+    public double getMaximumHealth() {
+        return this.maxHealth;
+    }
+
+    /**
+     * Creates the main body of the object by setting it
+     *
+     * @param body : Sets the object body
+     */
+    public void setBody(Body body){
+        this.body = body;
+    }
+
+    /**
      * @return null
      */
     @Override
@@ -532,5 +609,31 @@ public class EntityAi implements Steerable<Vector2> {
     public void setOrientation(float orientation) {
 
     }
+
+    /**
+     * Controls the colour of the health bar when alive
+     * Changes between "GREEN" "ORANGE" "RED"
+     */
+    public Color healthBarColor(){
+        // Determines the colour of the health bar
+        if(this.getHealth() > (this.getMaximumHealth() * 0.51)){
+            return Color.GREEN;
+        } else if(this.getHealth() > (this.getMaximumHealth() * 0.25)){
+            return Color.ORANGE;
+        } else{
+            return Color.RED;
+        }
+    }
+
+    /**
+     * Controls the width of the health bar when alive
+     * Based on percentage of remaining health
+     */
+    public float healthBarWidth(){
+        float value = (float) (this.getSkin().getWidth() * 2 * (this.getHealth() /this.getMaximumHealth()));
+        return value;
+    }
+
+
 }
 

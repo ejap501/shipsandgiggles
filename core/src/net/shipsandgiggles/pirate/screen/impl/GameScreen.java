@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
 
 
 		// Enemy creation "bob" and Entity AI controller
-		bob = new EntityAi(bobBody, 300f, bobsSprite,(int)bobsSprite.getWidth(),(int)bobsSprite.getHeight() );
+		bob = new EnemyShip(bobsSprite, 300f, new Location(2000f, 1800f), 100, world);
 		bob.setTarget(playerShips.getEntityBody());
 
 		player = new EntityAi(playerShips.getEntityBody(), 3);
@@ -292,15 +292,17 @@ public class GameScreen implements Screen {
 
 			}
 		}
-
+/*
 		for (EnemyShip hostileShip : hostileShips) {
-			hostileShip.draw(batch);
-			hostileShip.shootPlayer(playerShips);
+			//hostileShip.draw(batch);
+			//hostileShip.shootPlayer(playerShips);
 		}
 
 		for (Duck duck : ducks) {
 			duck.draw(batch);
 		}
+
+ */
 
 		for (powerUp powerUpDatum : powerUpData) {
 			//System.out.println(powerUpDatum.getPowerUpType());
@@ -714,7 +716,7 @@ public class GameScreen implements Screen {
 		for (int i = 0; i < maxDucks; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			ducks.add(new Duck(duckModel, new Location(randX,randY), 5, world));
+			ducks.add(new Duck(duckModel, 300f, new Location(randX,randY), 5, world));
 		}
 
 		// Power-ups
@@ -758,7 +760,20 @@ public class GameScreen implements Screen {
 				model = enemyModelC;
 				randHealth = 200 + rn.nextInt(50);
 			}
-			hostileShips.add(new EnemyShip(model, new Location(randX,randY), randHealth, world, playerShips));
+			EnemyShip newEnemy = new EnemyShip(model, 300f, new Location(randX,randY), randHealth, world);
+			newEnemy.setTarget(playerShips.getEntityBody());
+
+			player = new EntityAi(playerShips.getEntityBody(), 3);
+			Steerable<Vector2> pp = player;
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newEnemy, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newEnemy.setBehavior(arrives);
+
+			hostileShips.add(newEnemy);
 		}
 
 		// Stones

@@ -97,6 +97,7 @@ public class GameScreen implements Screen {
 	public static Sprite enemyModelB;
 	public static Sprite enemyModelC;
 	public static Sprite duckModel;
+	public static Sprite bigDuckModel;
 	public static Sprite alcuinCollegeSprite;
 	public static Sprite constantineCollegeSprite;
 	public static Sprite goodrickeCollegeSprite;
@@ -195,6 +196,7 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
+		bigDuckModel = new Sprite(new Texture(Gdx.files.internal("models/long_boi_v1.png")));
 		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
@@ -738,6 +740,24 @@ public class GameScreen implements Screen {
 				}
 			}
 			coinData.add(add);
+		}
+
+		if (ducks.size() == 0){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
+			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
+
+			newDuck.setTarget(playerShips.getEntityBody());
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
 		}
 
 		// Ducks

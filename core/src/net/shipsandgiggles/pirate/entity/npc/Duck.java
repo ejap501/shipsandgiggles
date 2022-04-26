@@ -1,12 +1,15 @@
 package net.shipsandgiggles.pirate.entity.npc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import java.util.Random;
 import java.util.UUID;
 
 import net.shipsandgiggles.pirate.entity.EntityAi;
@@ -38,7 +41,7 @@ public class Duck extends EntityAi {
      * @param world : World data
      * */
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(body,boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
+        super(body, boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
         this.shooting = false;
     }
 }

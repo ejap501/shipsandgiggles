@@ -54,14 +54,15 @@ public class Weather extends Sprite {
     public void draw(Batch batch){
         batch.begin();
         int c = 32 * size;
+        int x = 0;
 
-        for (int i = size - 1; i > 0; i--){
-            batch.draw(weather, this.body.getPosition().x - c, this.body.getPosition().y - c, weather.getWidth() * 2f, weather.getHeight() * 2f);
-            batch.draw(weather, this.body.getPosition().x - c, this.body.getPosition().y - c + 64, weather.getWidth() * 2f, weather.getHeight() * 2f);
-            batch.draw(weather, this.body.getPosition().x - c + 64, this.body.getPosition().y - c, weather.getWidth() * 2f, weather.getHeight() * 2f);
-            batch.draw(weather, this.body.getPosition().x - c + 64, this.body.getPosition().y - c + 64, weather.getWidth() * 2f, weather.getHeight() * 2f);
-            c = c - 64 * 2;
-
+        for (int i = size; i > 0; i--){
+            for (int j = size; j > 0; j--) {
+                batch.draw(weather, this.body.getPosition().x - 32 * size + x, this.body.getPosition().y - c, weather.getWidth() * 2f, weather.getHeight() * 2f);
+                c = c - 64;
+            }
+            c = 32*size;
+            x = x + 64;
         }
         batch.end();
     }

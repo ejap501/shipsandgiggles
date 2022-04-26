@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import net.shipsandgiggles.pirate.entity.impl.collectible.powerUp;
 import net.shipsandgiggles.pirate.screen.impl.DifficultyScreen;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class GameScreenTests {
 
         GameScreen.createSprites();
         GameScreen.createEntities(bobBody,world,camera);
-        assertEquals(347,world.getBodyCount());
+        assertEquals(317,world.getBodyCount());
     }
     @Test
     public void testEntityCreationMedium(){
@@ -48,7 +49,7 @@ public class GameScreenTests {
 
         GameScreen.createSprites();
         GameScreen.createEntities(bobBody,world,camera);
-        assertEquals(302,world.getBodyCount());
+        assertEquals(262,world.getBodyCount());
     }
     @Test
     public void testEntityCreationHard(){
@@ -59,7 +60,9 @@ public class GameScreenTests {
 
         GameScreen.createSprites();
         GameScreen.createEntities(bobBody,world,camera);
-        assertEquals(257,world.getBodyCount());
+        assertEquals(207,world.getBodyCount());
     }
 
-}
+
+    }
+

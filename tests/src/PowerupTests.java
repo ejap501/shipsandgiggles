@@ -105,4 +105,21 @@ public class PowerupTests {
         Assert.assertEquals("Invincible",test.getPowerUpType());
     }
 
+    @Test
+    public void invincibilityTest(){
+
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(1, 1), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+        ship.createBody();
+
+        ship.setInvincible(true);
+        ship.takeDamage(10);
+        assertEquals(200f, Ship.health);
+    }
+
+
 }

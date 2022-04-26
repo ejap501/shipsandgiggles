@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
 	private static ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private static ArrayList<Stone> stoneData = new ArrayList<>();
 	private static ArrayList<EnemyShip> hostileShips = new ArrayList<>();
-	private static ArrayList<Duck> ducks = new ArrayList<>();
+	public static ArrayList<Duck> ducks = new ArrayList<>();
 
 	// Camera work
 	private static OrthographicCamera camera;
@@ -259,14 +259,13 @@ public class GameScreen implements Screen {
 		BallsManager.updateBalls(batch);
 
 		// Setting ship position for the sprite of the player ship
-		//System.out.println(playerShips.getPosition());
-		//System.out.println("//////////////////////////////////");
+
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 
-		//System.out.println(playerShips.getPosition());
+
 
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
@@ -293,7 +292,7 @@ public class GameScreen implements Screen {
 		}
 
 		for (powerUp powerUpDatum : powerUpData) {
-			//System.out.println(powerUpDatum.getPowerUpType());
+
 			powerUpDatum.draw(batch);
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -667,22 +666,22 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 0;
-			maxDucks = 40;
+			maxShips = 10;
+			maxDucks = 20;
 			maxStones = 30;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
 			maxPowerups = 75;
 			maxShips = 10;
-			maxDucks = 50;
+			maxDucks = 30;
 			maxStones = 40;
 		}
 		else{
 			maxCoins = 50;
 			maxPowerups = 50;
 			maxShips = 15;
-			maxDucks = 60;
+			maxDucks = 35;
 			maxStones = 50;
 		}
 		// Initializing
@@ -691,11 +690,12 @@ public class GameScreen implements Screen {
 		String randType;
 		Sprite model;
 
+
 		// Coins
 		for (int i = 0; i < maxCoins; i++){
 			Boolean loop = true;
-			Coin add = new Coin(coinModel, new Location(0, 0), world);
-			while (loop == true){
+			Coin add = null;
+			while (loop){
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
 				randY = 50 + rn.nextInt(3950);
@@ -708,18 +708,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 
@@ -755,8 +758,8 @@ public class GameScreen implements Screen {
 		// Power-ups
 		for (int i = 0; i < maxPowerups; i++) {
 			Boolean loop = true;
-			powerUp add = new powerUp(speedUpModel, new Location(0, 0), "Speed Up", world);
-			while (loop == true){
+			powerUp add = null;
+			while (loop){
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
 				randY = 50 + rn.nextInt(3950);
@@ -785,18 +788,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 
@@ -842,7 +848,7 @@ public class GameScreen implements Screen {
 		// Stones
 		for (int i = 0; i < maxStones; i++){
 			Boolean loop = true;
-			Stone add = new Stone(stoneModelA, new Location(0, 0), world);
+			Stone add = null;
 			while (loop == true) {
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
@@ -863,18 +869,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 

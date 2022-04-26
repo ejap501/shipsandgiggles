@@ -71,6 +71,7 @@ public class EntityAi implements Steerable<Vector2> {
      * @param height : Height of the enemy
      */
     public EntityAi(Body body, float boundingRadius, Sprite texture, int maxHealth, Location location, int width, int height){
+
         // Constructor
         this.body = body;
         this.boundingRadius = boundingRadius;

@@ -29,7 +29,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * Edited from original
  *
  * @author Team 23
- * @author Team 22 : Edward Poulter
+ * @author Team 22 : Sam Pearson, Edward Poulter
  * @version 2.0
  */
 public class EntityAi implements Steerable<Vector2> {

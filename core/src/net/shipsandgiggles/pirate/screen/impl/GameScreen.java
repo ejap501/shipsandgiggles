@@ -670,12 +670,14 @@ public class GameScreen implements Screen {
 	 *
 	 */
 	public static void spawn(World world, Steerable<Vector2> pp){
+		int longBoi = 0;
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
 			maxShips = 10;
 			maxDucks = 20;
 			maxStones = 30;
+			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
@@ -683,13 +685,22 @@ public class GameScreen implements Screen {
 			maxShips = 10;
 			maxDucks = 30;
 			maxStones = 40;
+			longBoi = 1;
 		}
-		else{
+		else if(DifficultyScreen.difficulty == 3){
 			maxCoins = 50;
 			maxPowerups = 50;
 			maxShips = 15;
 			maxDucks = 35;
 			maxStones = 50;
+			longBoi = 1;
+		}else{
+			maxCoins = 50;
+			maxPowerups = 25;
+			maxShips = 0;
+			maxDucks = 0;
+			maxStones = 50;
+			longBoi = 35;
 		}
 		// Initializing
 		Random rn = new Random();
@@ -742,9 +753,10 @@ public class GameScreen implements Screen {
 			coinData.add(add);
 		}
 
-		if (ducks.size() == 0){
-			randX = 1500;//50 + rn.nextInt(3950);
-			randY = 1500;//50 + rn.nextInt(3950);
+		// Giant Ducks
+		for (int i = 0; i < longBoi; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
 			Body body = createEnemy(false, new Vector2(randX, randY),world);
 			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
 

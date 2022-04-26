@@ -27,7 +27,7 @@ import net.shipsandgiggles.pirate.task.ChangeScreenTask;
  * New based on existing layout from other class
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
- * @author Team 22 : Sam Pearson
+ * @author Team 22 : Sam Pearson, Edward Poulter
  * @version 1.0
  */
 public class DifficultyScreen implements Screen {
@@ -96,6 +96,17 @@ public class DifficultyScreen implements Screen {
 						}
 					});
 
+		TextButton nightmareButton = new TextButton("Nightmare", Configuration.SKIN);
+		nightmareButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						difficulty = 4;
+						PirateGame.get().changeScreen(ScreenType.INFORMATION);
+					}
+				});
+
 
 
 		// Creates a uniform X/Y table.
@@ -105,6 +116,8 @@ public class DifficultyScreen implements Screen {
 		this.table.add(normalButton);
 		this.table.row().pad(10, 0, 10, 0);
 		this.table.add(hardButton);
+		this.table.row().pad(10, 0, 10, 0);
+		this.table.add(nightmareButton);
 		this.table.row().pad(10, 0, 10, 0);
 
 		Back.add(backButton);

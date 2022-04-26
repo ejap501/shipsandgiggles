@@ -67,6 +67,8 @@ public class HUDmanager {
     Table abalities = new Table();
     Table bottomLeftTable = new Table();
     Table topRightTable =  new Table();
+    Table topLeftTable = new Table();
+    Table timerLabels = new Table();
 
 
     /**
@@ -84,12 +86,15 @@ public class HUDmanager {
         stage = new Stage(viewport, batch);
 
         // Creation of the top left bit of the screen
-        Table topLeftTable = new Table();
+
         topLeftTable.setSize(200,Gdx.graphics.getHeight());
         topLeftTable.top().left();
 
         topRightTable.setSize(400,Gdx.graphics.getHeight());
-        topRightTable.pad(0,3000,900,0);
+        topRightTable.pad(0,3300,900,0);
+
+        timerLabels.setSize(400,Gdx.graphics.getHeight());
+        timerLabels.pad(0,2800,900,0);
 
         scoreLabelCounter = new Label(String.format("%06d", score), Configuration.SKIN, "big");
         goldLabel = new Label(String.format("%06d", gold), Configuration.SKIN, "big");
@@ -116,25 +121,30 @@ public class HUDmanager {
         topLeftTable.add(scoreLabel);
         topLeftTable.add(scoreLabelCounter);
 
-        topRightTable.add(invLabel);
         topRightTable.add(invTimer);
         topRightTable.row();
-        topRightTable.add(coinLabel);
         topRightTable.add(coinTimer);
         topRightTable.row();
-        topRightTable.add(pointLabel);
         topRightTable.add(pointTimer);
         topRightTable.row();
-        topRightTable.add(speedLabel);
         topRightTable.add(speedTimer);
         topRightTable.row();
-        topRightTable.add(damLabel);
         topRightTable.add(damTimer);
         topRightTable.row();
 
+        timerLabels.add(invLabel);
+        timerLabels.row();
+        timerLabels.add(coinLabel);
+        timerLabels.row();
+        timerLabels.add(pointLabel);
+        timerLabels.row();
+        timerLabels.add(speedLabel);
+        timerLabels.row();
+        timerLabels.add(damLabel);
 
         stage.addActor(topLeftTable);
         stage.addActor(topRightTable);
+        stage.addActor(timerLabels);
 
         // Creation of bottom left of the screen
         abalities.setSize(Gdx.graphics.getWidth(),200);
@@ -214,8 +224,7 @@ public class HUDmanager {
 
         if(GameScreen.coinTimer > 0){
             String coinText = "" + GameScreen.coinTimer;
-            coinTimer.setText("" + coinText.substring(0,3));
-            coinTimer.setFontScale(1.2f);
+            coinTimer.setText("" + coinText.substring(0,2));
         }
         else{
             coinTimer.setText(0);
@@ -223,8 +232,7 @@ public class HUDmanager {
 
         if(GameScreen.pointTimer > 0){
             String pointText = "" + GameScreen.pointTimer;
-            pointTimer.setText("" + pointText.substring(0,3));
-            pointTimer.setFontScale(1.2f);
+            pointTimer.setText("" + pointText.substring(0,2));
         }
         else {
             pointTimer.setText(0);
@@ -232,8 +240,7 @@ public class HUDmanager {
 
         if(GameScreen.damageTimer > 0){
             String damageText = "" + GameScreen.damageTimer;
-            damTimer.setText("" + damageText.substring(0,3));
-            damTimer.setFontScale(1.2f);
+            damTimer.setText("" + damageText.substring(0,2));
         }
         else {
             damTimer.setText(0);
@@ -241,8 +248,7 @@ public class HUDmanager {
 
         if(GameScreen.speedTimer > 0){
             String speedText = "" + GameScreen.speedTimer;
-            speedTimer.setText("" + speedText.substring(0,3));
-            speedTimer.setFontScale(1.2f);
+            speedTimer.setText("" + speedText.substring(0,2));
         }
         else {
             speedTimer.setText(0);
@@ -250,8 +256,7 @@ public class HUDmanager {
 
         if(GameScreen.invincibilityTimer > 0){
             String invText = "" + GameScreen.invincibilityTimer;
-            invTimer.setText("" + invText.substring(0,3));
-            invTimer.setFontScale(1.2f);
+            invTimer.setText("" + invText.substring(0,2));
         }
         else {
             invTimer.setText(0);

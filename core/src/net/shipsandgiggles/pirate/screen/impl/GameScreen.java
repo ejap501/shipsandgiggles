@@ -120,9 +120,6 @@ public class GameScreen implements Screen {
 	float maxSpeed = 100000f;
 	static float speedMul = 40f;
 	int damageMul = 2;
-	int coinMulBefore = 1;
-	int coinMul = 2;
-	int pointMul = 2;
 	public static float speedTimer = -1f;
 	public static float damageTimer = -1f;
 	public static float invincibilityTimer = -1f;
@@ -245,7 +242,6 @@ public class GameScreen implements Screen {
 	 */
 	@Override
 	public void render(float deltaTime) {
-		System.out.println(coinTimer);
 		// Zoom controller for the intro
 		if(!intro){
 			camera.zoom -= 0.02f;
@@ -304,28 +300,24 @@ public class GameScreen implements Screen {
 			//System.out.println(powerUpDatum.getPowerUpType());
 			powerUpDatum.draw(batch);
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
-
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
-					speedTimer = 6;
-					currentSpeed = maxSpeed * speedMul;
-				} else {
-					currentSpeed = maxSpeed;
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+					speedTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					invincibilityTimer = 3;
+					invincibilityTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					damageTimer = 9;
+					damageTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					coinTimer = 900;
+					coinTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					pointTimer = 9;
+					pointTimer = 10;
 				}
 			}
 			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -403,9 +395,13 @@ public class GameScreen implements Screen {
 		world.step(1 / 60f, 6, 2);
 
 		// Updates power-up timers
-		if (speedTimer > 0) {
+		if (speedTimer >= 0) {
 			speedTimer -= 1f;
+			currentSpeed = maxSpeed * speedMul;
+		} else {
+			currentSpeed = maxSpeed;
 		}
+
 		if (invincibilityTimer >= 0) {
 			invincibilityTimer -= 1f;
 			playerShips.setInvincible(true);
@@ -413,33 +409,34 @@ public class GameScreen implements Screen {
 			playerShips.setInvincible(false);
 		}
 		if (damageTimer >= 0){
-			damageTimer -= 1f;
+			damageTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setDamageMulti(damageMul);
 
 		}else{
 			playerShips.setDamageMulti(1);
 		}
 
-		if (coinTimer == 900){
+		if (coinTimer == 10){
 			coinTimer -= Gdx.graphics.getDeltaTime();
-			playerShips.setCoinMulti(playerShips.getCoinMulti() * 3, true);
-		}else if (coinTimer <= 0 && coinTimer != -1){
-			coinTimer -= Gdx.graphics.getDeltaTime();;
+			playerShips.setCoinMulti(1, true);
+		}else if (coinTimer <= 0f && coinTimer != -1f){
+			coinTimer = -1f;
 			playerShips.setCoinMulti(-1, false);
 		}
-		else if (coinTimer >= 0){
-			coinTimer -= 1f;
+		else if (coinTimer >= 0f){
+			coinTimer -= Gdx.graphics.getDeltaTime();
 		}
 
-		if (pointTimer == 9){
+
+		if (pointTimer == 10){
 			pointTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
-		}else if (pointTimer == 0){
-			pointTimer -=Gdx.graphics.getDeltaTime();;
+		}else if (pointTimer <= 0 && pointTimer !=-1){
+			pointTimer = -1f;
 			playerShips.setPointMulti(-1, false);
 		}
-		else if (pointTimer >= 0){
-			pointTimer -= 1f;
+		else if (pointTimer >= 0f){
+			pointTimer -= Gdx.graphics.getDeltaTime();
 		}
 
 		updateCamera();
@@ -669,7 +666,7 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 5;
+			maxShips = 0;
 			maxDucks = 40;
 			maxStones = 30;
 		}

@@ -534,7 +534,7 @@ public class EntityAi implements Steerable<Vector2> {
 
         // Gives instant money if collected
         Currency.get().give(Currency.Type.GOLD, 10);
-
+        Currency.get().give(Currency.Type.POINTS, 10);
         // Kills enemy
         world.destroyBody(body);
         this.dead = true;

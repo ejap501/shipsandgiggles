@@ -430,6 +430,7 @@ public class GameScreen implements Screen {
 		}
 
 
+
 		if (pointTimer == 10){
 			pointTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
@@ -905,13 +906,22 @@ public class GameScreen implements Screen {
 
 		Json playerSaveFile = new Json();
 
-		String test = playerSaveFile.toJson(playerShips.getCoinMulti() + "\n");
-		test += playerSaveFile.toJson(playerShips.getEntityBody().getPosition());
+		String playerInfo = playerSaveFile.toJson(playerShips.shootingTimer + "\n"); //Shoot timer
+		playerInfo += playerSaveFile.toJson(Ship.burstTimer + "\n"); //Burst timer
+		playerInfo += playerSaveFile.toJson(Ship.health + "\n"); //Health
+		playerInfo += playerSaveFile.toJson(
+				playerShips.getEntityBody().getPosition().x 	//Location
+				+ "\n" +
+				playerShips.getEntityBody().getPosition().y + "\n");
 
-
+		playerInfo += playerSaveFile.toJson(playerShips.getCoinMulti() + "\n"); //Coin Multiplier
+		playerInfo += playerSaveFile.toJson(playerShips.getPointMulti() + "\n"); //Point Multiplier
+		playerInfo += playerSaveFile.toJson(playerShips.priorCoinMulti + "\n"); //Prior coin Multiplier
 
 		FileHandle playerFile = Gdx.files.local("playerSaveFile.json");
-		playerFile.writeString(test,false);
+		playerFile.writeString(playerInfo,false);
+
+
 		Gdx.app.exit();
 
 

@@ -214,7 +214,6 @@ public class Ship extends MovableEntity {
 			this.timeBetweenRapidShots = this.rapidShotCoolDown;
 			this.numberOfShotsLeft--;
 		}
-		System.out.println(this.numberOfShotsLeft);
 
 		// Cooldown
 		if(this.numberOfShotsLeft <= 0){

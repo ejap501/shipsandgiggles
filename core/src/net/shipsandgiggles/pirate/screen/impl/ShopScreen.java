@@ -32,15 +32,15 @@ public class ShopScreen implements Screen {
 	private Table table;
 
 	// Costs
-	public int speedCost = 25;
-	public int multiCost = 35;
-	public int healthCost = 55;
-	public int cooldownCost = 45;
+	public static int speedCost = 25;
+	public static int multiCost = 35;
+	public static int healthCost = 55;
+	public static int cooldownCost = 45;
 
-	public int speedTier = 1;
-	public int multiTier = 1;
-	public int healthTier = 1;
-	public int cooldownTier = 1;
+	public static int speedTier = 1;
+	public static int multiTier = 1;
+	public static int healthTier = 1;
+	public static int cooldownTier = 1;
 
 	/** Displays the shop screen */
 	@Override

@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.shipsandgiggles.pirate.*;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
@@ -404,17 +405,19 @@ public class GameScreen implements Screen {
 
 		// Updates power-up timers
 		if (speedTimer >= 0) {
-			speedTimer -= 1f;
+			speedTimer -= Gdx.graphics.getDeltaTime();
 			currentSpeed = maxSpeed * speedMul;
 		} else {
 			currentSpeed = maxSpeed;
+			speedTimer = -1f;
 		}
 
 		if (invincibilityTimer >= 0) {
-			invincibilityTimer -= 1f;
+			invincibilityTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setInvincible(true);
 		}else{
 			playerShips.setInvincible(false);
+			invincibilityTimer = -1f;
 		}
 		if (damageTimer >= 0){
 			damageTimer -= Gdx.graphics.getDeltaTime();
@@ -949,22 +952,178 @@ public class GameScreen implements Screen {
 
 	public void closeAndSave(){
 
+		Json currencySaveFile = new Json();
+
+		String currencyInfo = currencySaveFile.toJson( Currency.get().balance(Currency.Type.GOLD)+ "\n"); //Coins amount
+		currencyInfo += currencySaveFile.toJson( Currency.get().balance(Currency.Type.POINTS)); //Points amount
+
+		FileHandle currencyFile = Gdx.files.local("saves/currencySaveFile.json");
+		currencyFile.writeString(currencyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json coinSaveFile = new Json();
+
+		String coinInfo = "";
+
+		for (Coin coinDatum : coinData) {
+			coinInfo += coinSaveFile.toJson(
+					coinDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							coinDatum.body.getPosition().y + "\n"); //Location y
+			coinInfo += coinSaveFile.toJson(coinDatum.type+ "\n");
+		}
+
+		FileHandle coinFile = Gdx.files.local("saves/coinSaveFile.json");
+		coinFile.writeString(coinInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json powerSaveFile = new Json();
+
+		String powerInfo = "";
+
+		for (powerUp powerUpDatum : powerUpData) {
+			powerInfo += powerSaveFile.toJson(
+					powerUpDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							powerUpDatum.body.getPosition().y + "\n"); //Location y
+			powerInfo += powerSaveFile.toJson(powerUpDatum.powerUpType+ "\n"); //Type
+		}
+
+		FileHandle powerFile = Gdx.files.local("saves/powerSaveFile.json");
+		powerFile.writeString(powerInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json stoneSaveFile = new Json();
+
+		String stoneInfo = "";
+
+		for (Stone stoneDatum : stoneData) {
+			stoneInfo += stoneSaveFile.toJson(
+					stoneDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							stoneDatum.body.getPosition().y + "\n"); //Location y
+		}
+
+		FileHandle stoneFile = Gdx.files.local("saves/stoneSaveFile.json");
+		stoneFile.writeString(stoneInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json collegeSaveFile = new Json();
+
+		String collegeInfo = "";
+		collegeInfo += collegeSaveFile.toJson(alcuin.health + "\n"); 		//Health alcuin
+		collegeInfo += collegeSaveFile.toJson(langwith.health + "\n");		//Health langwith
+		collegeInfo += collegeSaveFile.toJson(goodricke.health + "\n");		//Health goodricke
+		collegeInfo += collegeSaveFile.toJson(constantine.health + "\n");	//Health constantine
+
+
+		FileHandle collegeFile = Gdx.files.local("saves/collegeSaveFile.json");
+		collegeFile.writeString(collegeInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json duckSaveFile = new Json();
+
+		String duckInfo = "";
+
+		for (Duck duckDatum : ducks) {
+			duckInfo += duckSaveFile.toJson(
+					duckDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							duckDatum.body.getPosition().y + "\n"); //Location y
+			duckInfo += duckSaveFile.toJson(duckDatum.getHealth()+ "\n"); //Health
+		}
+
+		FileHandle duckFile = Gdx.files.local("saves/duckSaveFile.json");
+		duckFile.writeString(duckInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json enemySaveFile = new Json();
+
+		String enemyInfo = "";
+
+		for (EnemyShip ship : hostileShips) {
+			enemyInfo += enemySaveFile.toJson(
+					ship.body.getPosition().x 	//Location x
+							+ "\n" +
+							ship.body.getPosition().y + "\n"); //Location y
+			enemyInfo += enemySaveFile.toJson(ship.getHealth()+ "\n"); //Health
+			enemyInfo += enemySaveFile.toJson(ship.timer+ "\n"); 	//Next shot timer
+		}
+
+		FileHandle enemyFile = Gdx.files.local("saves/enemySaveFile.json");
+		enemyFile.writeString(enemyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		Json playerSaveFile = new Json();
 
 		String playerInfo = playerSaveFile.toJson(playerShips.shootingTimer + "\n"); //Shoot timer
 		playerInfo += playerSaveFile.toJson(Ship.burstTimer + "\n"); //Burst timer
 		playerInfo += playerSaveFile.toJson(Ship.health + "\n"); //Health
 		playerInfo += playerSaveFile.toJson(
-				playerShips.getEntityBody().getPosition().x 	//Location
+				playerShips.getEntityBody().getPosition().x 	//Location x
 				+ "\n" +
-				playerShips.getEntityBody().getPosition().y + "\n");
+				playerShips.getEntityBody().getPosition().y + "\n"); //Location y
 
 		playerInfo += playerSaveFile.toJson(playerShips.getCoinMulti() + "\n"); //Coin Multiplier
 		playerInfo += playerSaveFile.toJson(playerShips.getPointMulti() + "\n"); //Point Multiplier
 		playerInfo += playerSaveFile.toJson(playerShips.priorCoinMulti + "\n"); //Prior coin Multiplier
 
-		FileHandle playerFile = Gdx.files.local("playerSaveFile.json");
+		FileHandle playerFile = Gdx.files.local("saves/playerSaveFile.json");
 		playerFile.writeString(playerInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json difficulttySaveFile = new Json();
+
+		String difficultyInfo = "";
+		difficultyInfo += difficulttySaveFile.toJson(DifficultyScreen.difficulty + "\n");	//Difficulty
+
+
+		FileHandle diffFile = Gdx.files.local("saves/difficultySaveFile.json");
+		diffFile.writeString(difficultyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json gameScreenSaveFile = new Json();
+
+		String gameInfo = "";
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.collegesKilled + "\n");	//Colleges killed
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.speedTimer + "\n");		//Speed timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.damageTimer + "\n");	//Damage timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.invincibilityTimer + "\n");	//Invincibility timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.coinTimer + "\n");	//Coin timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.pointTimer + "\n"); //Point timer
+
+
+		FileHandle gameFile = Gdx.files.local("saves/gameScreenSaveFile.json");
+		gameFile.writeString(gameInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json shopSaveFile = new Json();
+
+		String shopInfo = "";
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedCost+ "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownTier + "\n");
+
+		FileHandle shopFile = Gdx.files.local("saves/shopSaveFile.json");
+		shopFile.writeString(shopInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 		Gdx.app.exit();

@@ -4,6 +4,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Pirate Game
  * Creation of an instance of the game

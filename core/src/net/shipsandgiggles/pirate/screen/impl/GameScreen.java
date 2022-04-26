@@ -20,8 +20,9 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.shipsandgiggles.pirate.*;
-import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
@@ -60,6 +61,7 @@ public class GameScreen implements Screen {
 	public static float collegesKilled = 0;
 
 	public static HUDmanager hud;
+	private final ScreenViewport viewport;
 	public DeathScreen deathScreen;
 
 	public static ArrayList<ExplosionController> Explosions = new ArrayList<>();
@@ -98,6 +100,7 @@ public class GameScreen implements Screen {
 	public static Sprite goodrickeCollegeSprite;
 	public static Sprite langwithCollegeSprite;
 	public static Sprite bobsSprite;
+	public static Sprite shopSprite;
 
 	private final Box2DDebugRenderer renderer;
 	private final TiledMap map;
@@ -118,14 +121,11 @@ public class GameScreen implements Screen {
 	float maxSpeed = 100000f;
 	static float speedMul = 40f;
 	int damageMul = 2;
-	int coinMulBefore = 1;
-	int coinMul = 2;
-	int pointMul = 2;
-	int speedTimer = -1;
-	int damageTimer = -1;
-	int invincibilityTimer = -1;
-	public static int coinTimer = -1;
-	int pointTimer = -1;
+	public static float speedTimer = -1f;
+	public static float damageTimer = -1f;
+	public static float invincibilityTimer = -1f;
+	public static float coinTimer = -1f;
+	public static float pointTimer = -1f;
 
 	// Max Spawning
 	static int maxCoins;
@@ -145,9 +145,11 @@ public class GameScreen implements Screen {
 		renderer = new Box2DDebugRenderer();
 		world = new World(new Vector2(0, 0), true);
 		camera = new OrthographicCamera();
+		viewport = new ScreenViewport(camera);
 		int _height = Gdx.graphics.getHeight();
 		int _width = Gdx.graphics.getWidth();
-		camera.setToOrtho(false, _width / Scale, _height / Scale);
+		camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
+		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 		weather = new Weather(this, 2000, 1600, 1);
 
@@ -192,6 +194,7 @@ public class GameScreen implements Screen {
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
 		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
+		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
 	}
 
@@ -205,7 +208,7 @@ public class GameScreen implements Screen {
 		playerShips.setMaxSpeed(currentSpeed, speedMul);
 
 		// Enemy creation "bob" and Entity AI controller
-		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1800f), 100, world);
+		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1600f), 100, world);
 		bob.setTarget(playerShips.getEntityBody());
 
 
@@ -221,16 +224,12 @@ public class GameScreen implements Screen {
 
 		// Set up spawning
 		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
-		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
+		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(150f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
-		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
+		langwith = new LangwithCollege(langwithCollegeSprite, new Location(3950f,151f), 200f, world);
 
-		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
+		shop = new shop1(shopSprite, new Location(2050f,2050f),-1,world);
 		spawn(world,  pp);
-
-
-
-
 	}
 
 	/**
@@ -290,47 +289,31 @@ public class GameScreen implements Screen {
 			coinDatum.draw(batch);
 			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
 				coinDatum.death();
-
 			}
 		}
-/*
-		for (EnemyShip hostileShip : hostileShips) {
-			//hostileShip.draw(batch);
-			//hostileShip.shootPlayer(playerShips);
-		}
-
-		for (Duck duck : ducks) {
-			duck.draw(batch);
-		}
-
- */
 
 		for (powerUp powerUpDatum : powerUpData) {
 			//System.out.println(powerUpDatum.getPowerUpType());
 			powerUpDatum.draw(batch);
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
-
-				if (powerUpDatum.rangeCheck(playerShips) && powerUpDatum.dead) {
-					speedTimer = 600;
-					currentSpeed = maxSpeed * speedMul;
-				} else {
-					currentSpeed = maxSpeed;
+				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+					speedTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					invincibilityTimer = 300;
+					invincibilityTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					damageTimer = 900;
+					damageTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					coinTimer = 900;
+					coinTimer = 10;
 				}
 			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					pointTimer = 900;
+					pointTimer = 10;
 				}
 			}
 			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -340,15 +323,26 @@ public class GameScreen implements Screen {
 		}
 
 		for (Stone stoneDatum : stoneData) {
-			stoneDatum.draw(batch);
+			if (!stoneDatum.dead) {
+				stoneDatum.draw(batch);
+			}
 		}
 
 		if(!bob.dead) {
 			bob.update(deltaTime, batch, playerShips, world);
 		}
 		for (EnemyShip hostileShip : hostileShips) {
-			hostileShip.update(deltaTime, batch, playerShips, world);
+			if (!hostileShip.dead) {
+				hostileShip.update(deltaTime, batch, playerShips, world);
+			}
 		}
+
+		for (Duck duck : ducks) {
+			if (!duck.dead) {
+				duck.update(deltaTime, batch, playerShips, world);
+			}
+		}
+
 
 
 
@@ -402,9 +396,13 @@ public class GameScreen implements Screen {
 		world.step(1 / 60f, 6, 2);
 
 		// Updates power-up timers
-		if (speedTimer > 0) {
+		if (speedTimer >= 0) {
 			speedTimer -= 1f;
+			currentSpeed = maxSpeed * speedMul;
+		} else {
+			currentSpeed = maxSpeed;
 		}
+
 		if (invincibilityTimer >= 0) {
 			invincibilityTimer -= 1f;
 			playerShips.setInvincible(true);
@@ -412,33 +410,34 @@ public class GameScreen implements Screen {
 			playerShips.setInvincible(false);
 		}
 		if (damageTimer >= 0){
-			damageTimer -= 1f;
+			damageTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setDamageMulti(damageMul);
 
 		}else{
 			playerShips.setDamageMulti(1);
 		}
 
-		if (coinTimer == 900){
-			coinTimer -= 1f;
-			playerShips.setCoinMulti(playerShips.getCoinMulti() * 3, true);
-		}else if (coinTimer == 0){
-			coinTimer -= 1f;
+		if (coinTimer == 10){
+			coinTimer -= Gdx.graphics.getDeltaTime();
+			playerShips.setCoinMulti(1, true);
+		}else if (coinTimer <= 0f && coinTimer != -1f){
+			coinTimer = -1f;
 			playerShips.setCoinMulti(-1, false);
 		}
-		else if (coinTimer >= 0){
-			coinTimer -= 1f;
+		else if (coinTimer >= 0f){
+			coinTimer -= Gdx.graphics.getDeltaTime();
 		}
 
-		if (pointTimer == 900){
-			pointTimer -= 1f;
+
+		if (pointTimer == 10){
+			pointTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
-		}else if (pointTimer == 0){
-			pointTimer -= 1f;
+		}else if (pointTimer <= 0 && pointTimer !=-1){
+			pointTimer = -1f;
 			playerShips.setPointMulti(-1, false);
 		}
-		else if (pointTimer >= 0){
-			pointTimer -= 1f;
+		else if (pointTimer >= 0f){
+			pointTimer -= Gdx.graphics.getDeltaTime();
 		}
 
 		updateCamera();
@@ -488,27 +487,9 @@ public class GameScreen implements Screen {
 			System.out.println(playerShips.getEntityBody().getPosition());
 		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
-			if (cameraState == 0) cameraState = 1;
-			else if (cameraState == 1) cameraState = 0;
-			else if (cameraState == -1) cameraState = 1;
-		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-			if (cameraState == 0) cameraState = -1;
-			else if (cameraState == 1) cameraState = -1;
-			else if (cameraState == -1) cameraState = 0;
-		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-			if(cameraState == 5){
-				cameraState = 0;
-			}
-			else{
-				cameraState = 5;
-			}
 
-		}
 		// creating zooming
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
@@ -614,14 +595,12 @@ public class GameScreen implements Screen {
 			return;
 		}
 		if (cameraState == 0) {
-			CameraManager.lerpOn(camera, playerShips.getEntityBody().getPosition(), 0.1f);
+			camera.position.x = player.body.getPosition().x;
+			camera.position.y = player.body.getPosition().y;
+			camera.update();
+			maprender.setView(camera);
 		}
-		if (cameraState == -1) {
-			CameraManager.lockOn(camera, playerShips.getEntityBody().getPosition());
-		}
-		if (cameraState == 5) {
-			CameraManager.lerpOn(camera, bob.getBody().getPosition(), 0.1f);
-		}
+
 	}
 
 	/**
@@ -688,21 +667,21 @@ public class GameScreen implements Screen {
 		if (DifficultyScreen.difficulty == 1){
 			maxCoins = 150;
 			maxPowerups = 100;
-			maxShips = 15;
+			maxShips = 0;
 			maxDucks = 40;
 			maxStones = 30;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
 			maxPowerups = 75;
-			maxShips = 20;
+			maxShips = 10;
 			maxDucks = 50;
 			maxStones = 40;
 		}
 		else{
 			maxCoins = 50;
 			maxPowerups = 50;
-			maxShips = 30;
+			maxShips = 15;
 			maxDucks = 60;
 			maxStones = 50;
 		}
@@ -714,42 +693,120 @@ public class GameScreen implements Screen {
 
 		// Coins
 		for (int i = 0; i < maxCoins; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			coinData.add(new Coin(coinModel, new Location(randX,randY), world));
+			Boolean loop = true;
+			Coin add = new Coin(coinModel, new Location(0, 0), world);
+			while (loop == true){
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				add = new Coin(coinModel, new Location(randX,randY), world);
+
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}else{
+					add.kill();
+				}
+			}
+			coinData.add(add);
 		}
 
 		// Ducks
 		for (int i = 0; i < maxDucks; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
-			ducks.add(new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world));
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
+			Duck newDuck = new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world);
+
+			newDuck.setTarget(playerShips.getEntityBody());
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
 		}
 
 
 		// Power-ups
-		for (int i = 0; i < maxPowerups; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			randModel = rn.nextInt(5);
-			if (randModel == 0){
-				model = speedUpModel;
-				randType = "Speed Up";
-			}else if (randModel == 1){
-				model = incDamageModel;
-				randType = "Damage Increase";
-			}else if (randModel == 2){
-				model = invincibilityModel;
-				randType = "Invincible";
-			}else if (randModel == 3){
-				model = coinMulModel;
-				randType = "Coin Multiplier";
-			}else {
-				model = pointMulModel;
-				randType = "Point Multiplier";
+		for (int i = 0; i < maxPowerups; i++) {
+			Boolean loop = true;
+			powerUp add = new powerUp(speedUpModel, new Location(0, 0), "Speed Up", world);
+			while (loop == true){
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				randModel = rn.nextInt(5);
+				if (randModel == 0) {
+					model = speedUpModel;
+					randType = "Speed Up";
+				} else if (randModel == 1) {
+					model = incDamageModel;
+					randType = "Damage Increase";
+				} else if (randModel == 2) {
+					model = invincibilityModel;
+					randType = "Invincible";
+				} else if (randModel == 3) {
+					model = coinMulModel;
+					randType = "Coin Multiplier";
+				} else {
+					model = pointMulModel;
+					randType = "Point Multiplier";
+				}
+				add = new powerUp(model, new Location(randX, randY), randType, world);
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}else{
+					add.death();
+				}
 			}
-			powerUpData.add(new powerUp(model, new Location(randX,randY), randType, world));
+			powerUpData.add(add);
 		}
 
 		// Ships
@@ -767,7 +824,7 @@ public class GameScreen implements Screen {
 				model = enemyModelC;
 				randHealth = 200 + rn.nextInt(50);
 			}
-			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
 			EnemyShip newEnemy = new EnemyShip(body,model, 300f, new Location(randX,randY), randHealth, world);
 			newEnemy.setTarget(playerShips.getEntityBody());
 
@@ -784,20 +841,52 @@ public class GameScreen implements Screen {
 
 		// Stones
 		for (int i = 0; i < maxStones; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			randModel = rn.nextInt(3);
-			if (randModel == 0){
-				model = stoneModelA;
-			}else if (randModel == 1){
-				model = stoneModelB;
-			}else {
-				model = stoneModelC;
+			Boolean loop = true;
+			Stone add = new Stone(stoneModelA, new Location(0, 0), world);
+			while (loop == true) {
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				randModel = rn.nextInt(3);
+				if (randModel == 0) {
+					model = stoneModelA;
+				} else if (randModel == 1) {
+					model = stoneModelB;
+				} else {
+					model = stoneModelC;
+				}
+				add = new Stone(model, new Location(randX, randY), world);
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}else{
+					add.death();
+				}
 			}
-			stoneData.add(new Stone(model, new Location(randX,randY), world));
+			stoneData.add(add);
 		}
 	}
-
 
 	@Override
 	public void show() {
@@ -808,6 +897,7 @@ public class GameScreen implements Screen {
 	public void pause() {
 
 	}
+
 
 	@Override
 	public void resume() {

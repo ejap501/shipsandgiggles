@@ -423,18 +423,19 @@ public class Ship extends MovableEntity {
 		if (multiplier == -1){ //Reset after boost
 			coinMulti = priorCoinMulti;
 			priorCoinMulti = -1;
-			return;
 		}
 
-		if (!fromBoost && priorCoinMulti != -1){  //Increase while in a boost to return to
+		else if (!fromBoost && priorCoinMulti != -1){  //Increase while in a boost to return to
 			priorCoinMulti += multiplier;
-			return;
 
 		}
-		if (fromBoost && priorCoinMulti == -1){ // From a boost, store previous value to return to
+		else if (fromBoost && priorCoinMulti == -1){ // From a boost, store previous value to return to
 			priorCoinMulti = getCoinMulti();
+			coinMulti += multiplier;
 		}
-		coinMulti += multiplier;
+		else{
+			coinMulti += multiplier;
+		}
 	}
 
 	public int getCoinMulti(){
@@ -451,19 +452,19 @@ public class Ship extends MovableEntity {
 		if (multiplier == -1){ //Reset after boost
 			pointMulti = priorPointMulti;
 			priorPointMulti = -1;
-			return;
 		}
 
-		if (!fromBoost && priorPointMulti != -1){  //Increase while in a boost to return to
+		else if (!fromBoost && priorPointMulti != -1){  //Increase while in a boost to return to
 			priorPointMulti += multiplier;
-			return;
 
 		}
-		if (fromBoost && priorPointMulti == -1){ // From a boost, store previous value to return to
-			priorPointMulti = getCoinMulti();
+		else if (fromBoost && priorPointMulti == -1){ // From a boost, store previous value to return to
+			priorPointMulti = getPointMulti();
+			pointMulti += multiplier;
 		}
-		pointMulti += multiplier;
-	}
+		else{
+			pointMulti += multiplier;
+	}}
 
 	public int getPointMulti(){
 		return pointMulti;

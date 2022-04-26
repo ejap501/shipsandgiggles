@@ -3,6 +3,10 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,6 +36,8 @@ public class DifficultyScreen implements Screen {
 	private Table table;
 
 	public static int difficulty = 0;
+	public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
+	private final SpriteBatch batch = new SpriteBatch();
 
 	/** Displays the shop screen */
 	@Override
@@ -63,7 +69,7 @@ public class DifficultyScreen implements Screen {
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
 						difficulty = 1;
-						PirateGame.get().changeScreen(ScreenType.GAME);
+						PirateGame.get().changeScreen(ScreenType.INFORMATION);
 
 					}});
 
@@ -74,7 +80,7 @@ public class DifficultyScreen implements Screen {
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
 						difficulty = 2;
-						PirateGame.get().changeScreen(ScreenType.GAME);
+						PirateGame.get().changeScreen(ScreenType.INFORMATION);
 
 					}});
 
@@ -85,7 +91,7 @@ public class DifficultyScreen implements Screen {
 					public void changed(ChangeEvent event, Actor actor) {
 						LoadingScreen.soundController.playButtonPress();
 						difficulty = 3;
-						PirateGame.get().changeScreen(ScreenType.GAME);
+						PirateGame.get().changeScreen(ScreenType.INFORMATION);
 
 						}
 					});
@@ -114,6 +120,9 @@ public class DifficultyScreen implements Screen {
 	public void render(float deltaTime) {
 		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}

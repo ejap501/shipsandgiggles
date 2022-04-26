@@ -14,6 +14,12 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
+import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
+import net.shipsandgiggles.pirate.entity.shop.Shop;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -33,6 +39,7 @@ public class EntityAi implements Steerable<Vector2> {
     // Main data store
     public Body body;
     boolean tagged;
+    public Boolean shooting = true;
     public Texture healthBar = new Texture("models/bar.png");
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
     Sprite texture;
@@ -41,12 +48,13 @@ public class EntityAi implements Steerable<Vector2> {
     float amountOfRotations = 0;
     private boolean independentFacing = false; // Defines if the entity can move in a direction other than the way it faces)
     float angleToTarget = 0;
+    public Rectangle hitBox;
     int health;
     int maxHealth;
-    public boolean dead;
+    public boolean dead = false;
     public float counter = 0;
     public float timer = 0f;
-    private Rectangle hitBox;
+
     public Sprite cannonBallSprite =  new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
     SteeringBehavior<Vector2> behavior;
@@ -80,7 +88,6 @@ public class EntityAi implements Steerable<Vector2> {
         this.zeroLinearSpeedThreshold = 0.1f;
         this.speedMultiplier = 60f;
         this.turnMultiplier = 0.01f;
-        System.out.println("dsada");
         this.tagged = false;
         this.body.setFixedRotation(false);
         MassData MassData = new MassData();
@@ -98,11 +105,11 @@ public class EntityAi implements Steerable<Vector2> {
         this.dead = false;
 
         // Constructs hitbox detector
-        this.hitBox =  new Rectangle(this.body.getPosition().x, this.body.getPosition().y, texture.getWidth() + 350, texture.getHeight() + 350);
+        this.hitBox =  new Rectangle(this.body.getPosition().x - 300, this.body.getPosition().y - 300, texture.getWidth() + 600, texture.getHeight() + 600);
 
         // Constructs fixture
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height / 2f) / PIXEL_PER_METER);
+        shape.setAsBox((width / 2f) / PIXEL_PER_METER , (height / 2f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
@@ -148,17 +155,20 @@ public class EntityAi implements Steerable<Vector2> {
      * @param world : World data
      */
     public void update(float deltaTime, Batch batch,Ship player, World world){
-        if(isPlayer){
+        if(isPlayer || dead){
             return;
         }
-        if (health == 0 && !dead){
+        if (health <= 0 && !dead){
             death(world);
         }
+
         else if(behavior != null){
             // Calculates if needs steering
             this.steeringOutput = behavior.calculateSteering(steeringOutput);
             applySteering(this.steeringOutput, deltaTime);
-            shootPlayer(player, world);
+            if (shooting) {
+                shootPlayer(player, world);
+            }
         }
         drawEntity(batch);
     }
@@ -176,13 +186,12 @@ public class EntityAi implements Steerable<Vector2> {
             this.getSprite().draw(batch);
             batch.end();
         }
+        draw(batch);
+    }
 
+    public void draw(Batch batch){
         // Terminates if dead
         if(dead){return;}
-
-        // Draws ship
-        this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); // Sets position of the ship
-        this.getSkin().setRotation((float) Math.toDegrees(this.getBody().getAngle()));
 
         // Draws health bar and ship
         batch.setColor(healthBarColor());
@@ -534,11 +543,24 @@ public class EntityAi implements Steerable<Vector2> {
 
         // Gives instant money if collected
         Currency.get().give(Currency.Type.GOLD, 10);
-
+        Currency.get().give(Currency.Type.POINTS, 10);
         // Kills enemy
         world.destroyBody(body);
         this.dead = true;
-        }
+    }
+
+    /**
+     * Oversees the death of the enemy body
+     * Prevent increment of coins
+     * */
+    public void kill(World world){
+        // Does nothing if already dead
+        if(this.dead) return;
+
+        // Kills off the body
+        world.destroyBody(body);
+        this.dead = true;
+    }
 
     /**
      * Applies damage to enemy
@@ -632,6 +654,58 @@ public class EntityAi implements Steerable<Vector2> {
         return value;
     }
 
+    /**
+     * Checks for contact with the alcuin body
+     *
+     * @param alcuin : The alcuin college body
+     * */
+    public boolean alcuinCheck(AlcuinCollege alcuin){
+        return alcuin.hitBox.overlaps(this.hitBox) || alcuin.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the constantine body
+     *
+     * @param constantine : The constantine college body
+     * */
+    public boolean constantineCheck(ConstantineCollege constantine){
+        return constantine.hitBox.overlaps(this.hitBox) || constantine.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the goodricke body
+     *
+     * @param goodricke : The goodricke college body
+     * */
+    public boolean goodrickeCheck(GoodrickeCollege goodricke){
+        return goodricke.hitBox.overlaps(this.hitBox) || goodricke.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the langwith body
+     *
+     * @param langwith : The langwith college body
+     * */
+    public boolean langwithCheck(LangwithCollege langwith){
+        return langwith.hitBox.overlaps(this.hitBox) || langwith.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the stone body
+     *
+     * @param stone : The stone body
+     * */
+    public boolean stoneCheck(Stone stone){
+        return stone.hitBox.overlaps(this.hitBox) || stone.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the shop body
+     *
+     * @param shop : The shop body
+     * */
+    public boolean shopCheck(Shop shop){
+        return shop.hitBox.overlaps(this.hitBox) || shop.hitBox.contains(this.hitBox);
+    }
 
 }
-

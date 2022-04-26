@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.conf.Configuration;
@@ -23,7 +24,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @author Team 22 : Edward Poulter
  * @version 1.0
  */
-public class Duck extends NPC{
+public class Duck extends EntityAi {
     // World data
     public World world;
 
@@ -37,35 +38,7 @@ public class Duck extends NPC{
      * @param world : World data
      * */
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(body,boundingRadius, texture, location, maximumHealth, (int) texture.getHeight(), (int) texture.getWidth());
-
-        // Instantiating a body
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(location.getX(), location.getY());
-
-        // Creation of the body
-        def.fixedRotation = true;
-        body = world.createBody(def);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox((texture.getWidth() / 2f) / PIXEL_PER_METER, (texture.getHeight() / 2f) / PIXEL_PER_METER);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef. density = 1f;
-        fixtureDef.filter.categoryBits = Configuration.Cat_Enemy; // Telling it what category it is
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
-        this.body = body;
-        this.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
-        this.world = world;
-    }
-
-    /** Kills the duck body */
-    public void removeFromWorld(){
-        // Kills off the body
-        if(dead && !removed){
-            world.destroyBody(this.body);
-            removed = true;
-        }
+        super(body,boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
+        this.shooting = false;
     }
 }

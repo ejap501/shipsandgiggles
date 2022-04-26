@@ -88,13 +88,13 @@ public class InformationScreen implements Screen {
         warning.setAlignment(Align.center);
         warning.setColor(1, 0, 0, 1);
 
-        Label gold = new Label("Gold Coin", Configuration.SKIN);
+        Label gold = new Label("Gold Coin + 10 plunder", Configuration.SKIN);
         gold.setAlignment(Align.left);
 
-        Label silver = new Label("Silver Coin", Configuration.SKIN);
+        Label silver = new Label("Silver Coin + 5 plunder", Configuration.SKIN);
         silver.setAlignment(Align.center);
 
-        Label copper = new Label("Copper Coin", Configuration.SKIN);
+        Label copper = new Label("Copper Coin + 1 plunder", Configuration.SKIN);
         copper.setAlignment(Align.center);
 
         Label speed = new Label("Increased Speed", Configuration.SKIN);

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.util.Random;
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -30,6 +31,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class Duck extends EntityAi {
     // World data
     public World world;
+    public int deadDuck = 0;
 
     /**
      * This is the class to control the ducks
@@ -43,5 +45,27 @@ public class Duck extends EntityAi {
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
         super(body, boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
         this.shooting = false;
+    }
+
+    /**
+     * Kills the enemy
+     *
+     * @param world : World data
+     */
+    @Override
+    public void death(World world){
+        // Checks if dead
+        if(this.dead) return;
+
+        // Gives instant money if collected
+        Currency.get().give(Currency.Type.GOLD, 0);
+        Currency.get().give(Currency.Type.POINTS, 25);
+        if (!shooting){
+            deadDuck = 1;
+        }
+
+        // Kills enemy
+        world.destroyBody(body);
+        this.dead = true;
     }
 }

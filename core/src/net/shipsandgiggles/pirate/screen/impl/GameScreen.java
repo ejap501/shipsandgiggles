@@ -29,6 +29,7 @@ import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
+import net.shipsandgiggles.pirate.pref.GamePreferences;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
@@ -1124,7 +1125,8 @@ public class GameScreen implements Screen {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+		GamePreferences gamePreferences = GamePreferences.get();
+		gamePreferences.setHasSave(true);
 
 		Gdx.app.exit();
 

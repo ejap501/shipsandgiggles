@@ -149,7 +149,7 @@ public class GameScreen implements Screen {
 		int _width = Gdx.graphics.getWidth();
 		camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
-		weather = new Weather(this);
+		weather = new Weather(this, 2000, 1600, 1);
 
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
@@ -273,10 +273,9 @@ public class GameScreen implements Screen {
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
-
+		renderer.render(world, camera.combined);
 		// Update all the colleges and entities
 		playerShips.draw(batch);
-		weather.draw(batch);
 		langwith.draw(batch);
 		langwith.shootPlayer(playerShips);
 		constantine.draw(batch);
@@ -375,6 +374,7 @@ public class GameScreen implements Screen {
 			deathScreen.stage.draw();
 			return;
 		}
+		weather.draw(batch);
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		hud.stage.draw();
 		hud.updateLabels(batch);

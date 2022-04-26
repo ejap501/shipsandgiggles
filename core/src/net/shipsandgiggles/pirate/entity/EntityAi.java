@@ -101,8 +101,8 @@ public class EntityAi implements Steerable<Vector2> {
         this.body.setLinearDamping(1f);
 
         // Sets health
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = maxHealth;
+        this.maxHealth = maxHealth;
         this.dead = false;
 
         // Constructs hitbox detector

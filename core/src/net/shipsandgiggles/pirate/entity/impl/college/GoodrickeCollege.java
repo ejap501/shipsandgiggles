@@ -166,4 +166,12 @@ public class GoodrickeCollege extends College {
         Float value = ((float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())));
         return value;
     }
+
+    /**
+     * @return Location of the college
+     */
+    @Override
+    public Location getLocation() {
+        return super.getLocation();
+    }
 }

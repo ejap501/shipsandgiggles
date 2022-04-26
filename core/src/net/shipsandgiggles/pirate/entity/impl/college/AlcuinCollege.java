@@ -1,6 +1,7 @@
 package net.shipsandgiggles.pirate.entity.impl.college;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.physics.box2d.*;
@@ -31,6 +32,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class AlcuinCollege extends College {
     // World data
     public World world;
+    public Rectangle hitBox;
 
     /**
      * This is the class to control the construction of Alcuin college
@@ -165,5 +167,13 @@ public class AlcuinCollege extends College {
     public float healthBarWidth(){
         Float value = ((float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())));
         return value;
+    }
+
+    /**
+     * @return Location of the college
+     */
+    @Override
+    public Location getLocation() {
+        return super.getLocation();
     }
 }

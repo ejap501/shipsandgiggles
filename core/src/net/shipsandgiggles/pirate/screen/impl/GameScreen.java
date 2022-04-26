@@ -21,8 +21,8 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.shipsandgiggles.pirate.*;
-import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
@@ -692,9 +692,41 @@ public class GameScreen implements Screen {
 
 		// Coins
 		for (int i = 0; i < maxCoins; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			coinData.add(new Coin(coinModel, new Location(randX,randY), world));
+			Boolean loop = true;
+			Coin add = new Coin(coinModel, new Location(0, 0), world);
+			while (loop == true){
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				add = new Coin(coinModel, new Location(randX,randY), world);
+
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}
+			}
+			coinData.add(add);
 		}
 
 		// Ducks
@@ -707,27 +739,58 @@ public class GameScreen implements Screen {
 
 
 		// Power-ups
-		for (int i = 0; i < maxPowerups; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			randModel = rn.nextInt(5);
-			if (randModel == 0){
-				model = speedUpModel;
-				randType = "Speed Up";
-			}else if (randModel == 1){
-				model = incDamageModel;
-				randType = "Damage Increase";
-			}else if (randModel == 2){
-				model = invincibilityModel;
-				randType = "Invincible";
-			}else if (randModel == 3){
-				model = coinMulModel;
-				randType = "Coin Multiplier";
-			}else {
-				model = pointMulModel;
-				randType = "Point Multiplier";
+		for (int i = 0; i < maxPowerups; i++) {
+			Boolean loop = true;
+			powerUp add = new powerUp(speedUpModel, new Location(0, 0), "Speed Up", world);
+			while (loop == true){
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				randModel = rn.nextInt(5);
+				if (randModel == 0) {
+					model = speedUpModel;
+					randType = "Speed Up";
+				} else if (randModel == 1) {
+					model = incDamageModel;
+					randType = "Damage Increase";
+				} else if (randModel == 2) {
+					model = invincibilityModel;
+					randType = "Invincible";
+				} else if (randModel == 3) {
+					model = coinMulModel;
+					randType = "Coin Multiplier";
+				} else {
+					model = pointMulModel;
+					randType = "Point Multiplier";
+				}
+				add = new powerUp(model, new Location(randX, randY), randType, world);
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}
 			}
-			powerUpData.add(new powerUp(model, new Location(randX,randY), randType, world));
+			powerUpData.add(add);
 		}
 
 		// Ships
@@ -775,7 +838,6 @@ public class GameScreen implements Screen {
 			stoneData.add(new Stone(model, new Location(randX,randY), world));
 		}
 	}
-
 
 	@Override
 	public void show() {

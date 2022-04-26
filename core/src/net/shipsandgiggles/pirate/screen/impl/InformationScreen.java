@@ -63,8 +63,14 @@ public class InformationScreen implements Screen {
         Label informationLabel = new Label("INFORMATION!", Configuration.SKIN, "title");
         informationLabel.setAlignment(Align.center);
 
-        Label keysInformation = new Label("Use your arrow keys or WASD to move around, ESC to save and exit.", Configuration.SKIN, "big");
-        keysInformation.setAlignment(Align.center);
+        Label keysInformation1 = new Label("Use your arrow keys or WASD to move around.", Configuration.SKIN, "big");
+        keysInformation1.setAlignment(Align.center);
+
+        Label keysInformation2 = new Label("1 and 2 to zoom.", Configuration.SKIN, "big");
+        keysInformation2.setAlignment(Align.center);
+
+        Label keysInformation3 = new Label("ESC to save and exit.", Configuration.SKIN, "big");
+        keysInformation3.setAlignment(Align.center);
 
         Label shootingInformation = new Label("There are two methods of shooting, burst and singular.", Configuration.SKIN, "big");
         shootingInformation.setAlignment(Align.center);
@@ -121,7 +127,11 @@ public class InformationScreen implements Screen {
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
         this.table.row();
-        this.table.add(keysInformation);
+        this.table.add(keysInformation1);
+        this.table.row();
+        this.table.add(keysInformation2);
+        this.table.row();
+        this.table.add(keysInformation3);
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
         this.table.row();
@@ -166,9 +176,6 @@ public class InformationScreen implements Screen {
         this.table.add(collegeInfo4);
         this.table.row();
         this.table.row();
-        this.table.add(spaceToSkip);
-        this.table.row();
-        this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
         this.table.row();
         this.table.add(Configuration.SPACER_LABEL);
@@ -196,6 +203,9 @@ public class InformationScreen implements Screen {
         this.table.row();
         this.table.add(warning);
         this.table.row();
+        this.table.row();
+        this.table.row();
+        this.table.add(spaceToSkip);
 
         this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);
     }

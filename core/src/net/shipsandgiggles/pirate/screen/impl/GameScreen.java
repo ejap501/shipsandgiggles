@@ -3,6 +3,7 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.shipsandgiggles.pirate.*;
@@ -450,7 +452,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Checks for input and performs an action
-	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "C" "X" "NUM_1" "NUM_2"
+	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "ESCAPE"  "NUM_1" "NUM_2"
 	 */
 	public void inputUpdate() {
 		/*
@@ -487,14 +489,16 @@ public class GameScreen implements Screen {
 		}
 
 
-
-
 		// creating zooming
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
 			if(camera.zoom > 1)camera.zoom -= 0.02f;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			closeAndSave();
 		}
 
 	}
@@ -895,6 +899,22 @@ public class GameScreen implements Screen {
 			}
 			stoneData.add(add);
 		}
+	}
+
+	public void closeAndSave(){
+
+		Json playerSaveFile = new Json();
+
+		String test = playerSaveFile.toJson(playerShips.getCoinMulti() + "\n");
+		test += playerSaveFile.toJson(playerShips.getEntityBody().getPosition());
+
+
+
+		FileHandle playerFile = Gdx.files.local("playerSaveFile.json");
+		playerFile.writeString(test,false);
+		Gdx.app.exit();
+
+
 	}
 
 	@Override

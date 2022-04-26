@@ -152,7 +152,6 @@ public class CannonBall {
     public float getDamageDelt() {
         if (this.maskBits == Configuration.Cat_Player){
             if(DifficultyScreen.difficulty == 1){
-                System.out.println("dswadsadada");
                 return this.damageDelt / 4;
             }
             else if (DifficultyScreen.difficulty == 2) {

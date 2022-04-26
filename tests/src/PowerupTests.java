@@ -121,5 +121,7 @@ public class PowerupTests {
         assertEquals(200f, Ship.health);
     }
 
+    // All other power up mechanics are tested elsewhere
+
 
 }

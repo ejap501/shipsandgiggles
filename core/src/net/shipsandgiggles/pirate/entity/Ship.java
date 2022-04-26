@@ -214,6 +214,7 @@ public class Ship extends MovableEntity {
 			this.timeBetweenRapidShots = this.rapidShotCoolDown;
 			this.numberOfShotsLeft--;
 		}
+		System.out.println(this.numberOfShotsLeft);
 
 		// Cooldown
 		if(this.numberOfShotsLeft <= 0){
@@ -398,7 +399,6 @@ public class Ship extends MovableEntity {
 		timeToRegen = 5f;
 		if (!invincible) {
 			health -= damage * 0.8;
-			System.out.println(health);
 			if (health <= 0) {
 				this.death();
 			}

@@ -79,7 +79,9 @@ public class powerUp extends Plunder {
     @Override
     public void draw(Batch batch) {
         // Terminates if dead
-        if(dead){return;}
+        if(dead){
+            return;
+        }
 
         // Draws power-up
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */

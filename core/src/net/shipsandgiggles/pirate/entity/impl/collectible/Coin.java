@@ -84,7 +84,9 @@ public class Coin extends Plunder {
     @Override
     public void draw(Batch batch) {
         // Terminates if dead
-        if(dead){return;}
+        if(dead){
+            return;
+        }
 
         // Draws coin
         this.getSkin().setPosition(this.getBody().getPosition().x * PIXEL_PER_METER - (this.getSkin().getWidth() / 2f), this.getBody().getPosition().y * PIXEL_PER_METER - (this.getSkin().getHeight() / 2f)); /**sets position of the college */
@@ -102,6 +104,19 @@ public class Coin extends Plunder {
 
         // Gives money if collected
         Currency.get().give(Currency.Type.GOLD, (10));
+
+        // Kills off the body
+        world.destroyBody(body);
+        this.dead = true;
+    }
+
+    /**
+     * Oversees the death of the coin body
+     * Prevent increment of coins
+     * */
+    public void kill(){
+        // Does nothing if already dead
+        if(this.dead) return;
 
         // Kills off the body
         world.destroyBody(body);

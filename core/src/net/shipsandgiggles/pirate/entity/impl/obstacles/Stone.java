@@ -161,13 +161,20 @@ public class Stone extends Solid{
         return shop.hitBox.overlaps(this.hitBox) || shop.hitBox.contains(this.hitBox);
     }
 
+    /** Oversees the death of the stone body */
+    @Override
+    public void death(){
+        // Does nothing if already dead
+        if(this.dead) return;
+
+        // Kills off the body
+        world.destroyBody(body);
+        this.dead = true;
+    }
+
     @Override
     public void shootPlayer(Ship player) {
 
     }
 
-    @Override
-    public void death(){
-
-    }
 }

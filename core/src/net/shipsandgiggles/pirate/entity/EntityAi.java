@@ -14,6 +14,12 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.ConstantineCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
+import net.shipsandgiggles.pirate.entity.impl.college.LangwithCollege;
+import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
+import net.shipsandgiggles.pirate.entity.shop.Shop;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -541,6 +547,19 @@ public class EntityAi implements Steerable<Vector2> {
     }
 
     /**
+     * Oversees the death of the enemy body
+     * Prevent increment of coins
+     * */
+    public void kill(World world){
+        // Does nothing if already dead
+        if(this.dead) return;
+
+        // Kills off the body
+        world.destroyBody(body);
+        this.dead = true;
+    }
+
+    /**
      * Applies damage to enemy
      *
      * @param damageValue : Amount of damage taken by enemy
@@ -632,5 +651,58 @@ public class EntityAi implements Steerable<Vector2> {
         return value;
     }
 
+    /**
+     * Checks for contact with the alcuin body
+     *
+     * @param alcuin : The alcuin college body
+     * */
+    public boolean alcuinCheck(AlcuinCollege alcuin){
+        return alcuin.hitBox.overlaps(this.hitBox) || alcuin.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the constantine body
+     *
+     * @param constantine : The constantine college body
+     * */
+    public boolean constantineCheck(ConstantineCollege constantine){
+        return constantine.hitBox.overlaps(this.hitBox) || constantine.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the goodricke body
+     *
+     * @param goodricke : The goodricke college body
+     * */
+    public boolean goodrickeCheck(GoodrickeCollege goodricke){
+        return goodricke.hitBox.overlaps(this.hitBox) || goodricke.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the langwith body
+     *
+     * @param langwith : The langwith college body
+     * */
+    public boolean langwithCheck(LangwithCollege langwith){
+        return langwith.hitBox.overlaps(this.hitBox) || langwith.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the stone body
+     *
+     * @param stone : The stone body
+     * */
+    public boolean stoneCheck(Stone stone){
+        return stone.hitBox.overlaps(this.hitBox) || stone.hitBox.contains(this.hitBox);
+    }
+
+    /**
+     * Checks for contact with the shop body
+     *
+     * @param shop : The shop body
+     * */
+    public boolean shopCheck(Shop shop){
+        return shop.hitBox.overlaps(this.hitBox) || shop.hitBox.contains(this.hitBox);
+    }
 
 }

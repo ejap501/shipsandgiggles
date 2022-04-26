@@ -100,6 +100,7 @@ public class GameScreen implements Screen {
 	public static Sprite goodrickeCollegeSprite;
 	public static Sprite langwithCollegeSprite;
 	public static Sprite bobsSprite;
+	public static Sprite shopSprite;
 
 	private final Box2DDebugRenderer renderer;
 	private final TiledMap map;
@@ -193,6 +194,7 @@ public class GameScreen implements Screen {
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
 		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
+		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
 	}
 
@@ -222,16 +224,12 @@ public class GameScreen implements Screen {
 
 		// Set up spawning
 		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
-		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(1750f,151f), 200f, world);
+		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(150f,151f), 200f, world);
 		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
-		langwith = new LangwithCollege(langwithCollegeSprite, new Location(150f,151f), 200f, world);
+		langwith = new LangwithCollege(langwithCollegeSprite, new Location(3950f,151f), 200f, world);
 
-		shop = new shop1(langwithCollegeSprite, new Location(2000f,2000f),-1,world);
+		shop = new shop1(shopSprite, new Location(2050f,2050f),-1,world);
 		spawn(world,  pp);
-
-
-
-
 	}
 
 	/**
@@ -292,7 +290,6 @@ public class GameScreen implements Screen {
 			coinDatum.draw(batch);
 			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
 				coinDatum.death();
-
 			}
 		}
 
@@ -327,19 +324,24 @@ public class GameScreen implements Screen {
 		}
 
 		for (Stone stoneDatum : stoneData) {
-			stoneDatum.draw(batch);
+			if (!stoneDatum.dead) {
+				stoneDatum.draw(batch);
+			}
 		}
 
 		if(!bob.dead) {
 			bob.update(deltaTime, batch, playerShips, world);
 		}
 		for (EnemyShip hostileShip : hostileShips) {
-			hostileShip.update(deltaTime, batch, playerShips, world);
-
+			if (!hostileShip.dead) {
+				hostileShip.update(deltaTime, batch, playerShips, world);
+			}
 		}
 
 		for (Duck duck : ducks) {
-			duck.update(deltaTime, batch, playerShips, world);
+			if (!duck.dead) {
+				duck.update(deltaTime, batch, playerShips, world);
+			}
 		}
 
 
@@ -724,6 +726,8 @@ public class GameScreen implements Screen {
 
 				if (!nextloop){
 					loop = false;
+				}else{
+					add.kill();
 				}
 			}
 			coinData.add(add);
@@ -733,7 +737,7 @@ public class GameScreen implements Screen {
 		for (int i = 0; i < maxDucks; i++){
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
-			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
 			ducks.add(new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world));
 		}
 
@@ -788,6 +792,8 @@ public class GameScreen implements Screen {
 
 				if (!nextloop){
 					loop = false;
+				}else{
+					add.death();
 				}
 			}
 			powerUpData.add(add);
@@ -808,7 +814,7 @@ public class GameScreen implements Screen {
 				model = enemyModelC;
 				randHealth = 200 + rn.nextInt(50);
 			}
-			Body body = createEnemy(false, new Vector2(Gdx.graphics.getWidth() / 3f, Gdx.graphics.getWidth() / 6f),world);
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
 			EnemyShip newEnemy = new EnemyShip(body,model, 300f, new Location(randX,randY), randHealth, world);
 			newEnemy.setTarget(playerShips.getEntityBody());
 
@@ -864,6 +870,8 @@ public class GameScreen implements Screen {
 
 				if (!nextloop){
 					loop = false;
+				}else{
+					add.death();
 				}
 			}
 			stoneData.add(add);
@@ -879,6 +887,7 @@ public class GameScreen implements Screen {
 	public void pause() {
 
 	}
+
 
 	@Override
 	public void resume() {

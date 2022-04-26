@@ -39,6 +39,7 @@ public class EntityAi implements Steerable<Vector2> {
     // Main data store
     public Body body;
     boolean tagged;
+    public Boolean shooting = true;
     public Texture healthBar = new Texture("models/bar.png");
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
     Sprite texture;
@@ -165,7 +166,9 @@ public class EntityAi implements Steerable<Vector2> {
             // Calculates if needs steering
             this.steeringOutput = behavior.calculateSteering(steeringOutput);
             applySteering(this.steeringOutput, deltaTime);
-            shootPlayer(player, world);
+            if (shooting) {
+                shootPlayer(player, world);
+            }
         }
         drawEntity(batch);
     }

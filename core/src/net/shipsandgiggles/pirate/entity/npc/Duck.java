@@ -39,6 +39,6 @@ public class Duck extends EntityAi {
      * */
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
         super(body,boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
-
+        this.shooting = false;
     }
 }

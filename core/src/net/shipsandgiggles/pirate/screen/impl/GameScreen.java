@@ -738,7 +738,18 @@ public class GameScreen implements Screen {
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			Body body = createEnemy(false, new Vector2(randX, randY),world);
-			ducks.add(new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world));
+			Duck newDuck = new Duck(body,duckModel, 300f, new Location(randX,randY), 5, world);
+
+			newDuck.setTarget(playerShips.getEntityBody());
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
 		}
 
 

@@ -142,6 +142,7 @@ public class GameScreen implements Screen {
 	static int maxStones;
 	static int maxDuckKills;
 	public int currentDuckKills = 0;
+	private GamePreferences gamePreferences = GamePreferences.get();
 
 	/**
 	 * Initialises the Game Screen,
@@ -351,9 +352,6 @@ public class GameScreen implements Screen {
 		for (Duck duck : ducks) {
 			if (!duck.dead) {
 				duck.update(deltaTime, batch, playerShips, world);
-			}else{
-				currentDuckKills += duck.deadDuck;
-				duck.deadDuck = 0;
 			}
 		}
 
@@ -368,18 +366,21 @@ public class GameScreen implements Screen {
 			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 		if(collegesCaptured == 4){
 			deathScreen.update(hud, 1);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 		if(collegesKilled == 4){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 		weather.draw(batch);
@@ -464,31 +465,6 @@ public class GameScreen implements Screen {
 		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
-
-
-		if (currentDuckKills >= maxDuckKills){
-			Random rn = new Random();
-			int randX = 50 + rn.nextInt(3950);
-			int randY = 50 + rn.nextInt(3950);
-			Body body = createEnemy(false, new Vector2(randX, randY),world);
-			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
-
-			newDuck.setTarget(playerShips.getEntityBody());
-			newDuck.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
-			newDuck.shooting = true;
-
-
-			// Status of entity AI
-			Arrive<Vector2> arrives = new Arrive<>(newDuck, player)
-					.setTimeToTarget(0.01f)
-					.setArrivalTolerance(175f)
-					.setDecelerationRadius(50);
-			newDuck.setBehavior(arrives);
-			ducks.add(newDuck);
-			currentDuckKills = 0;
-		}
-
-
 	}
 
 	/**
@@ -715,7 +691,7 @@ public class GameScreen implements Screen {
 			maxShips = 10;
 			maxDucks = 20;
 			maxStones = 30;
-			longBoi = 0;
+			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 100;
@@ -723,7 +699,7 @@ public class GameScreen implements Screen {
 			maxShips = 10;
 			maxDucks = 30;
 			maxStones = 40;
-			longBoi = 0;
+			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 3){
 			maxCoins = 50;
@@ -731,7 +707,7 @@ public class GameScreen implements Screen {
 			maxShips = 15;
 			maxDucks = 35;
 			maxStones = 50;
-			longBoi = 0;
+			longBoi = 1;
 		}else{
 			maxCoins = 50;
 			maxPowerups = 25;
@@ -745,7 +721,6 @@ public class GameScreen implements Screen {
 		int randX, randY, randModel, randHealth;
 		String randType;
 		Sprite model;
-		maxDuckKills = 5 + rn.nextInt(5);
 
 
 		// Coins
@@ -1156,7 +1131,6 @@ public class GameScreen implements Screen {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		GamePreferences gamePreferences = GamePreferences.get();
 		gamePreferences.setHasSave(true);
 
 		Gdx.app.exit();

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import net.shipsandgiggles.pirate.PirateGame;
 import net.shipsandgiggles.pirate.SoundController;
+import net.shipsandgiggles.pirate.pref.GamePreferences;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.conf.Configuration;
 
@@ -32,6 +33,7 @@ public class LoadingScreen implements Screen {
 	public static SoundController soundController;
 	private final SpriteBatch batch = new SpriteBatch();
 	public Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
+	public boolean loadedGame = false;
 
 	/** Displays the loading screen */
 	@Override
@@ -45,6 +47,7 @@ public class LoadingScreen implements Screen {
 		Gdx.input.setInputProcessor(this.stage);
 		this.stage.addActor(this.table);
 
+		GamePreferences gamePreferences = GamePreferences.get();
 		/*
 		Initialise Buttons
 		 */
@@ -56,6 +59,21 @@ public class LoadingScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				LoadingScreen.soundController.playButtonPress();
 				PirateGame.get().changeScreen(ScreenType.DIFFICULTY);
+			}
+		});
+
+		TextButton loadGame = new TextButton("Load Game", Configuration.SKIN);
+
+		if (!gamePreferences.getHasSave()){
+			loadGame.setDisabled(true);
+		}
+
+		loadGame.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				LoadingScreen.soundController.playButtonPress();
+				loadedGame = true;
+				PirateGame.get().changeScreen(ScreenType.GAME);
 			}
 		});
 
@@ -86,6 +104,8 @@ public class LoadingScreen implements Screen {
 
 		// Creates a uniform X/Y table.
 		table.add(newGame).fillX().uniformX();
+		table.row().pad(10, 0, 10, 0);
+		table.add(loadGame).fillX().uniformX();
 
 		// Sets default gap between.
 		table.row().pad(10, 0, 10, 0);

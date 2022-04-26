@@ -743,12 +743,14 @@ public class GameScreen implements Screen {
 		}
 
 		if (ducks.size() == 0){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
+			randX = 1500;//50 + rn.nextInt(3950);
+			randY = 1500;//50 + rn.nextInt(3950);
 			Body body = createEnemy(false, new Vector2(randX, randY),world);
 			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
 
 			newDuck.setTarget(playerShips.getEntityBody());
+			newDuck.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
+			newDuck.shooting = true;
 
 
 			// Status of entity AI

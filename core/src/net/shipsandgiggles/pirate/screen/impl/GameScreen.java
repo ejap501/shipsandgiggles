@@ -825,17 +825,48 @@ public class GameScreen implements Screen {
 
 		// Stones
 		for (int i = 0; i < maxStones; i++){
-			randX = 50 + rn.nextInt(3950);
-			randY = 50 + rn.nextInt(3950);
-			randModel = rn.nextInt(3);
-			if (randModel == 0){
-				model = stoneModelA;
-			}else if (randModel == 1){
-				model = stoneModelB;
-			}else {
-				model = stoneModelC;
+			Boolean loop = true;
+			Stone add = new Stone(stoneModelA, new Location(0, 0), world);
+			while (loop == true) {
+				Boolean nextloop = false;
+				randX = 50 + rn.nextInt(3950);
+				randY = 50 + rn.nextInt(3950);
+				randModel = rn.nextInt(3);
+				if (randModel == 0) {
+					model = stoneModelA;
+				} else if (randModel == 1) {
+					model = stoneModelB;
+				} else {
+					model = stoneModelC;
+				}
+				add = new Stone(model, new Location(randX, randY), world);
+				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
+					nextloop = true;
+				}
+
+				for (powerUp powerUpDatum : powerUpData) {
+					if (add.powerUpCheck(powerUpDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Coin coinDatum : coinData){
+					if (add.coinCheck(coinDatum)){
+						nextloop = true;
+					}
+				}
+
+				for (Stone stoneDatum : stoneData){
+					if (add.stoneCheck(stoneDatum)){
+						nextloop  = true;
+					}
+				}
+
+				if (!nextloop){
+					loop = false;
+				}
 			}
-			stoneData.add(new Stone(model, new Location(randX,randY), world));
+			stoneData.add(add);
 		}
 	}
 

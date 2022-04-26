@@ -84,7 +84,9 @@ public class GameScreen implements Screen {
 	// Graphics
 	private final SpriteBatch batch; // Batch of images "objects"
 	public static Sprite playerModel;
-	public static Sprite coinModel;
+	public static Sprite copperCoinModel;
+	public static Sprite silverCoinModel;
+	public static Sprite goldCoinModel;
 	public static Sprite speedUpModel;
 	public static Sprite invincibilityModel;
 	public static Sprite incDamageModel;
@@ -183,7 +185,9 @@ public class GameScreen implements Screen {
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
-		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		copperCoinModel = new Sprite(new Texture(Gdx.files.internal("models/copper_coin.png")));
+		silverCoinModel = new Sprite(new Texture(Gdx.files.internal("models/silver_coin.png")));
+		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
 		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
 		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
@@ -717,7 +721,14 @@ public class GameScreen implements Screen {
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
 				randY = 50 + rn.nextInt(3950);
-				add = new Coin(coinModel, new Location(randX,randY), world);
+				randModel = rn.nextInt(3);
+				if (randModel == 0) {
+					add = new Coin(copperCoinModel, new Location(randX, randY), "Copper", world);
+				}else if (randModel == 1) {
+					add = new Coin(silverCoinModel, new Location(randX, randY), "Silver", world);
+				}else{
+					add = new Coin(goldCoinModel, new Location(randX, randY), "Gold", world);
+				}
 
 				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
 					nextloop = true;

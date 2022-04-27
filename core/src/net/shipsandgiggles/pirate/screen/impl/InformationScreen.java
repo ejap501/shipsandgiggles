@@ -49,12 +49,12 @@ public class InformationScreen implements Screen {
         this.stage.addActor(this.table);
 
         // Creating all the textures
-        Texture goldCoinTexture = new Texture(Gdx.files.internal("models/gold_coin.png"));
-        Texture silverCoinTexture = new Texture(Gdx.files.internal("models/silver_coin.png"));
-        Texture copperCoinTexture = new Texture(Gdx.files.internal("models/copper_coin.png"));
+        Texture goldCoinTexture = new Texture(Gdx.files.internal("models/gold_1.png"));
+        Texture silverCoinTexture = new Texture(Gdx.files.internal("models/silver_1.png"));
+        Texture copperCoinTexture = new Texture(Gdx.files.internal("models/bronze_1.png"));
 
         Texture speedTexture = new Texture(Gdx.files.internal("models/speed_up.png"));
-        Texture invincibilityTexture = new Texture(Gdx.files.internal("models/Shield.png"));
+        Texture invincibilityTexture = new Texture(Gdx.files.internal("models/invincshield2.png"));
         Texture damageIncreaseTexture = new Texture(Gdx.files.internal("models/damage_increase.png"));
         Texture coinMultiplierTexture = new Texture(Gdx.files.internal("models/coin_multiplier.png"));
         Texture pointMultiplierTexture = new Texture(Gdx.files.internal("models/point_multiplier.png"));

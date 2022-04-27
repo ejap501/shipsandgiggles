@@ -192,12 +192,12 @@ public class GameScreen implements Screen {
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
-		copperCoinModel = new Sprite(new Texture(Gdx.files.internal("models/copper_coin.png")));
-		silverCoinModel = new Sprite(new Texture(Gdx.files.internal("models/silver_coin.png")));
-		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		copperCoinModel = new Sprite(new Texture(Gdx.files.internal("models/bronze_1.png")));
+		silverCoinModel = new Sprite(new Texture(Gdx.files.internal("models/silver_1.png")));
+		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_1.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
 		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
-		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/Shield.png")));
+		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincshield2.png")));
 		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/coin_multiplier.png")));
 		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/point_multiplier.png")));
 		stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));

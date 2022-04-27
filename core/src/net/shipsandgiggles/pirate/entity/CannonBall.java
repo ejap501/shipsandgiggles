@@ -73,14 +73,16 @@ public class CannonBall {
 
         // Creation of the body
         body = world.createBody(def);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
+        //PolygonShape shape = new PolygonShape();
+        //shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
-        fixtureDef.filter.groupIndex = groupIndex;
+
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
@@ -111,21 +113,25 @@ public class CannonBall {
         this.categoryBits = categoryBits;
         this.maskBits = maskBit;
 
+
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(position.x, position.y);
 
         // Creation of the body
         body = world.createBody(def);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
+        //PolygonShape shape = new PolygonShape();
+        //shape.setAsBox((width / 2f) / PIXEL_PER_METER, (height * 1.5f) / PIXEL_PER_METER);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2f);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef. density = 1f;
-        fixtureDef.isSensor = true;
+
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
-        fixtureDef.filter.groupIndex = groupIndex;
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1f;
+        fixtureDef.isSensor = true;
+
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;
@@ -222,7 +228,7 @@ public class CannonBall {
         }
 
         // Applies force to the ball
-        this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 200079f)), true);
+        this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 20f)), true);
 
         // Gets the direction the ball is going towards
         Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight())));

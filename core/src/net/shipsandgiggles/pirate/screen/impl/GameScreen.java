@@ -686,7 +686,7 @@ public class GameScreen implements Screen {
 	public static void spawn(World world, Steerable<Vector2> pp){
 		int longBoi = 0;
 		if (DifficultyScreen.difficulty == 1){
-			maxCoins = 150;
+			maxCoins = 250;
 			maxPowerups = 100;
 			maxShips = 10;
 			maxDucks = 20;
@@ -694,7 +694,7 @@ public class GameScreen implements Screen {
 			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 2){
-			maxCoins = 100;
+			maxCoins = 200;
 			maxPowerups = 75;
 			maxShips = 10;
 			maxDucks = 30;
@@ -702,14 +702,14 @@ public class GameScreen implements Screen {
 			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 3){
-			maxCoins = 50;
+			maxCoins = 150;
 			maxPowerups = 50;
 			maxShips = 15;
 			maxDucks = 35;
 			maxStones = 50;
 			longBoi = 1;
 		}else{
-			maxCoins = 50;
+			maxCoins = 150;
 			maxPowerups = 25;
 			maxShips = 0;
 			maxDucks = 0;

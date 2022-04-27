@@ -91,10 +91,10 @@ public class HUDmanager {
         topLeftTable.top().left();
 
         topRightTable.setSize(400,Gdx.graphics.getHeight());
-        topRightTable.pad(0,3300,900,0);
+        topRightTable.pad(0,2750,750,0);
 
         timerLabels.setSize(400,Gdx.graphics.getHeight());
-        timerLabels.pad(0,2800,900,0);
+        timerLabels.pad(0,2250,750,0);
 
         scoreLabelCounter = new Label(String.format("%06d", score), Configuration.SKIN, "big");
         goldLabel = new Label(String.format("%06d", gold), Configuration.SKIN, "big");

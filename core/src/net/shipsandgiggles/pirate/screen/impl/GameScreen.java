@@ -102,6 +102,8 @@ public class GameScreen implements Screen {
 	public static Sprite enemyModelB;
 	public static Sprite enemyModelC;
 	public static Sprite duckModel;
+	public static Sprite angryDuckModel;
+	public static Sprite angryDuckAttack;
 	public static Sprite bigDuckModel;
 	public static Sprite alcuinCollegeSprite;
 	public static Sprite constantineCollegeSprite;
@@ -209,6 +211,8 @@ public class GameScreen implements Screen {
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
 		bigDuckModel = new Sprite(new Texture(Gdx.files.internal("models/long_boi_v1.png")));
+		angryDuckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
+		angryDuckAttack = new Sprite(new Texture(Gdx.files.internal("models/lasers.png")));
 		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
@@ -461,22 +465,41 @@ public class GameScreen implements Screen {
 		else if (pointTimer >= 0f){
 			pointTimer -= Gdx.graphics.getDeltaTime();
 		}
-
-		for (Duck duck : ducks){
-			if (duck.deadDuck == 1){
-				currentDuckKills += duck.deadDuck;
-				if (currentDuckKills >= maxDuckKills){
-					duck.deadDuck = 3;
-					duck.shooting = true;
-					duck.maxHealth = 50000;
-					duck.health = 50000;
-					duck.texture = bigDuckModel;
-					duck.hitBox =  new Rectangle(duck.body.getPosition().x - 300, duck.body.getPosition().y - 300, duck.texture.getWidth() + 600, duck.texture.getHeight() + 600);
-
-					currentDuckKills = 0;
-				}else{
+		if (currentDuckKills >= 0){
+			for (Duck duck : ducks){
+				if (duck.deadDuck == 1){
+					currentDuckKills += duck.deadDuck;
 					duck.deadDuck = 2;
 					duck.death(world);
+				}
+			}
+		}
+
+		if (currentDuckKills >= maxDuckKills){
+			currentDuckKills = -1;
+			Body body = createEnemy(false, new Vector2(2000, 2000),world);
+			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(2000,2000), 50000, world);
+
+			newDuck.setTarget(playerShips.getEntityBody());
+			newDuck.cannonBallSprite = angryDuckModel;
+			newDuck.shooting = true;
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, player)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
+			for (Duck duck : ducks){
+				if (!duck.shooting && !duck.dead){
+					duck.shooting = true;
+					duck.health = 333 * DifficultyScreen.difficulty;
+					duck.maxHealth = duck.health;
+					duck.texture = angryDuckModel;
+					duck.cannonBallSprite = angryDuckAttack;
+					duck.hitBox =  new Rectangle(duck.body.getPosition().x - 300, duck.body.getPosition().y - 300, duck.texture.getWidth() + 600, duck.texture.getHeight() + 600);
 				}
 			}
 		}
@@ -808,7 +831,7 @@ public class GameScreen implements Screen {
 			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(randX,randY), 50000, world);
 
 			newDuck.setTarget(playerShips.getEntityBody());
-			newDuck.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
+			newDuck.cannonBallSprite = angryDuckModel;
 			newDuck.shooting = true;
 
 

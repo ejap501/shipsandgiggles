@@ -45,6 +45,7 @@ public class Duck extends EntityAi {
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
         super(body, boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
         this.shooting = false;
+
     }
 
     /**
@@ -57,23 +58,24 @@ public class Duck extends EntityAi {
         // Checks if dead
         if(this.dead) return;
 
+        // Gives instant money if collected
+        Currency.get().give(Currency.Type.GOLD, 0);
+        if (!shooting){
+            Currency.get().give(Currency.Type.POINTS, 25);
+            deadDuck = 1;
+        }else if (deadDuck == 3) {
+            Currency.get().give(Currency.Type.POINTS, 10000);
+            deadDuck = 2;
+        }else{
+            Currency.get().give(Currency.Type.POINTS, 250);
+            deadDuck = 2;
+        }
+
         if (deadDuck == 2){
             // Kills enemy
             world.destroyBody(body);
             this.dead = true;
             return;
         }
-
-        // Gives instant money if collected
-        Currency.get().give(Currency.Type.GOLD, 0);
-        if (!shooting){
-            deadDuck = 1;
-            Currency.get().give(Currency.Type.POINTS, 25);
-        }else{
-            deadDuck = 2;
-            Currency.get().give(Currency.Type.POINTS, 10000);
-        }
-
-
     }
 }

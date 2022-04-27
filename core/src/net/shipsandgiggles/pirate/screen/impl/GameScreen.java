@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.*;
@@ -461,6 +462,25 @@ public class GameScreen implements Screen {
 			pointTimer -= Gdx.graphics.getDeltaTime();
 		}
 
+		for (Duck duck : ducks){
+			if (duck.deadDuck == 1){
+				currentDuckKills += duck.deadDuck;
+				if (currentDuckKills >= maxDuckKills){
+					duck.deadDuck = 3;
+					duck.shooting = true;
+					duck.maxHealth = 50000;
+					duck.health = 50000;
+					duck.texture = bigDuckModel;
+					duck.hitBox =  new Rectangle(duck.body.getPosition().x - 300, duck.body.getPosition().y - 300, duck.texture.getWidth() + 600, duck.texture.getHeight() + 600);
+
+					currentDuckKills = 0;
+				}else{
+					duck.deadDuck = 2;
+					duck.death(world);
+				}
+			}
+		}
+
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);
@@ -693,6 +713,7 @@ public class GameScreen implements Screen {
 			maxPowerups = 100;
 			maxShips = 10;
 			maxDucks = 20;
+			maxDuckKills = 15;
 			maxStones = 30;
 			longBoi = 0;
 		}
@@ -701,6 +722,7 @@ public class GameScreen implements Screen {
 			maxPowerups = 75;
 			maxShips = 10;
 			maxDucks = 30;
+			maxDuckKills = 10;
 			maxStones = 40;
 			longBoi = 0;
 		}
@@ -709,6 +731,7 @@ public class GameScreen implements Screen {
 			maxPowerups = 50;
 			maxShips = 15;
 			maxDucks = 35;
+			maxDuckKills = 5;
 			maxStones = 50;
 			longBoi = 0;
 		}else{

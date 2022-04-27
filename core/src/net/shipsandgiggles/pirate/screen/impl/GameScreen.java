@@ -134,6 +134,8 @@ public class GameScreen implements Screen {
 	static int maxDucks;
 	static int maxStones;
 
+	private Rain rain;
+
 	/**
 	 * Initialises the Game Screen,
 	 * generates the world data and data for entities that exist upon it,
@@ -151,8 +153,9 @@ public class GameScreen implements Screen {
 		camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
-		weather = new Weather(this, 2000, 1600, 5);
 
+		weather = new Weather(this, 2000, 1600, 8);
+		rain = new Rain();
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
 
@@ -368,8 +371,10 @@ public class GameScreen implements Screen {
 			deathScreen.stage.draw();
 			return;
 		}
+
 		weather.draw(batch);
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
+		rain.draw(batch, deltaTime);
 		hud.stage.draw();
 		hud.updateLabels(batch);
 	}

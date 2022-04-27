@@ -66,16 +66,15 @@ public class Duck extends EntityAi {
         }else if (deadDuck == 3) {
             Currency.get().give(Currency.Type.POINTS, 10000);
             deadDuck = 2;
-        }else{
+        }
+        else{
             Currency.get().give(Currency.Type.POINTS, 250);
             deadDuck = 2;
         }
 
-        if (deadDuck == 2){
-            // Kills enemy
-            world.destroyBody(body);
-            this.dead = true;
-            return;
-        }
+        // Kills enemy
+        world.destroyBody(body);
+        this.dead = true;
+        return;
     }
 }

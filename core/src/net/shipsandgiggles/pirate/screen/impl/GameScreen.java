@@ -292,7 +292,16 @@ public class GameScreen implements Screen {
 		//enemyShips.draw(batch);
 		renderer.render(world, camera.combined);
 		// Update all the colleges and entities
+
+
 		playerShips.draw(batch);
+
+		for (Coin coinDatum : coinData) {
+			coinDatum.draw(batch);
+			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
+				coinDatum.death();
+			}
+		}
 		langwith.draw(batch);
 		langwith.shootPlayer(playerShips);
 		constantine.draw(batch);
@@ -303,12 +312,7 @@ public class GameScreen implements Screen {
 		alcuin.shootPlayer(playerShips);
 		shop.draw(batch);
 		shop.rangeCheck(playerShips);
-		for (Coin coinDatum : coinData) {
-			coinDatum.draw(batch);
-			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
-				coinDatum.death();
-			}
-		}
+
 
 		for (powerUp powerUpDatum : powerUpData) {
 
@@ -468,15 +472,15 @@ public class GameScreen implements Screen {
 		if (currentDuckKills >= 0){
 			for (Duck duck : ducks){
 				if (duck.deadDuck == 1){
-					currentDuckKills += duck.deadDuck;
 					duck.deadDuck = 2;
+					currentDuckKills += 1;
 					duck.death(world);
 				}
 			}
 		}
 
-		if (currentDuckKills >= maxDuckKills){
-			currentDuckKills = -1;
+		if (currentDuckKills == maxDuckKills){
+			currentDuckKills = -maxDuckKills;
 			Body body = createEnemy(false, new Vector2(2000, 2000),world);
 			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(2000,2000), 50000, world);
 

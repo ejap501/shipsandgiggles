@@ -766,6 +766,7 @@ public class GameScreen implements Screen {
 			maxPowerups = 25;
 			maxShips = 0;
 			maxDucks = 0;
+			maxDuckKills = -1;
 			maxStones = 50;
 			longBoi = 35;
 		}

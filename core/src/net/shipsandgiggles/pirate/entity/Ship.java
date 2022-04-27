@@ -260,7 +260,7 @@ public class Ship extends MovableEntity {
 
 		// If player is shooting then shoot
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
-			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short) (Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 

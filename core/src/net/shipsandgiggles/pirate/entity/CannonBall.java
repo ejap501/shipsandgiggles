@@ -122,6 +122,7 @@ public class CannonBall {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef. density = 1f;
+        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.filter.groupIndex = groupIndex;

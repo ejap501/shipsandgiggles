@@ -178,7 +178,6 @@ public class GameScreen implements Screen {
 		maprender = new OrthogonalTiledMapRenderer(map, 1f);
 		new WorldCreator(this);
 
-
 		// Set up hud
 		hud = new HUDmanager(batch);
 		deathScreen = new DeathScreen(batch);
@@ -227,8 +226,7 @@ public class GameScreen implements Screen {
 		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1600f), 100, world);
 		bob.setTarget(playerShips.getEntityBody());
 
-
-		player = new EntityAi(playerShips.getEntityBody(), 3);
+		player = new EntityAi(playerShips.getEntityBody(), 30f);
 		Steerable<Vector2> pp = player;
 
 		// Status of entity AI
@@ -784,7 +782,7 @@ public class GameScreen implements Screen {
 			randX = 50 + rn.nextInt(3950);
 			randY = 50 + rn.nextInt(3950);
 			Body body = createEnemy(false, new Vector2(randX, randY),world);
-			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
+			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(randX,randY), 50000, world);
 
 			newDuck.setTarget(playerShips.getEntityBody());
 			newDuck.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
@@ -812,9 +810,9 @@ public class GameScreen implements Screen {
 
 			// Status of entity AI
 			Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
-					.setTimeToTarget(0.01f)
-					.setArrivalTolerance(175f)
-					.setDecelerationRadius(50);
+					.setTimeToTarget(10f)
+					.setArrivalTolerance(300f)
+					.setDecelerationRadius(500);
 			newDuck.setBehavior(arrives);
 			ducks.add(newDuck);
 		}
@@ -902,9 +900,9 @@ public class GameScreen implements Screen {
 
 			// Status of entity AI
 			Arrive<Vector2> arrives = new Arrive<>(newEnemy, pp)
-					.setTimeToTarget(0.01f)
-					.setArrivalTolerance(175f)
-					.setDecelerationRadius(50);
+					.setTimeToTarget(5f)
+					.setArrivalTolerance(300f)
+					.setDecelerationRadius(500);
 			newEnemy.setBehavior(arrives);
 
 			hostileShips.add(newEnemy);

@@ -198,7 +198,7 @@ public class GameScreen implements Screen {
 		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
 		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
-		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
+		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/Shield.png")));
 		coinMulModel = new Sprite(new Texture(Gdx.files.internal("models/coin_multiplier.png")));
 		pointMulModel = new Sprite(new Texture(Gdx.files.internal("models/point_multiplier.png")));
 		stoneModelA = new Sprite(new Texture(Gdx.files.internal("models/stone_1.png")));
@@ -696,7 +696,7 @@ public class GameScreen implements Screen {
 			maxShips = 10;
 			maxDucks = 20;
 			maxStones = 30;
-			longBoi = 1;
+			longBoi = 0;
 		}
 		else if(DifficultyScreen.difficulty == 2){
 			maxCoins = 200;
@@ -704,7 +704,7 @@ public class GameScreen implements Screen {
 			maxShips = 10;
 			maxDucks = 30;
 			maxStones = 40;
-			longBoi = 1;
+			longBoi = 0;
 		}
 		else if(DifficultyScreen.difficulty == 3){
 			maxCoins = 150;
@@ -712,7 +712,7 @@ public class GameScreen implements Screen {
 			maxShips = 15;
 			maxDucks = 35;
 			maxStones = 50;
-			longBoi = 1;
+			longBoi = 0;
 		}else{
 			maxCoins = 150;
 			maxPowerups = 25;

@@ -18,6 +18,7 @@ import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
@@ -144,8 +145,8 @@ public class GameScreen implements Screen {
 	static int maxDucks;
 	static int maxStones;
 	static int maxDuckKills;
-	public int currentDuckKills = 0;
-	private GamePreferences gamePreferences = GamePreferences.get();
+	public static int currentDuckKills = 0;
+	private static GamePreferences gamePreferences = GamePreferences.get();
 
 	private Rain rain;
 
@@ -220,35 +221,328 @@ public class GameScreen implements Screen {
 
 	public static void createEntities(Body bobBody,World world,OrthographicCamera camera){
 
-		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera,world);
-		playerShips.createBody();
-
-		// Creates damping to player
-		playerShips.getEntityBody().setLinearDamping(0.5f);
-		playerShips.setMaxSpeed(currentSpeed, speedMul);
-
-		// Enemy creation "bob" and Entity AI controller
-		bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1600f), 100, world);
-		bob.setTarget(playerShips.getEntityBody());
-
-		player = new EntityAi(playerShips.getEntityBody(), 30f);
-		Steerable<Vector2> pp = player;
-
-		// Status of entity AI
-		Arrive<Vector2> arrives = new Arrive<>(bob, pp)
-				.setTimeToTarget(0.01f)
-				.setArrivalTolerance(175f)
-				.setDecelerationRadius(50);
-		bob.setBehavior(arrives);
-
 		// Set up spawning
-		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f,4000f), 200f, world);
-		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(150f,151f), 200f, world);
-		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f,4000f), 200f, world);
-		langwith = new LangwithCollege(langwithCollegeSprite, new Location(3950f,151f), 200f, world);
+		goodricke = new GoodrickeCollege(goodrickeCollegeSprite, new Location(150f, 4000f), 200f, world);
+		alcuin = new AlcuinCollege(alcuinCollegeSprite, new Location(150f, 151f), 200f, world);
+		constantine = new ConstantineCollege(constantineCollegeSprite, new Location(3950f, 4000f), 200f, world);
+		langwith = new LangwithCollege(langwithCollegeSprite, new Location(3950f, 151f), 200f, world);
 
-		shop = new shop1(shopSprite, new Location(2050f,2050f),-1,world);
-		spawn(world,  pp);
+		shop = new shop1(shopSprite, new Location(2050f, 2050f), -1, world);
+
+		if (LoadingScreen.loadedGame){
+
+			//DIFFICULTY
+
+			FileHandle difficultyFile = Gdx.files.local("saves/difficultySaveFile.json");
+			String diffText = difficultyFile.readString();
+
+			DifficultyScreen.difficulty = Integer.parseInt(diffText);
+			if (DifficultyScreen.difficulty == 1){
+				maxDuckKills = 15;
+			}
+			else if (DifficultyScreen.difficulty == 2){
+				maxDuckKills = 10;
+			}
+			else if (DifficultyScreen.difficulty == 3){
+				maxDuckKills = 5;
+			}
+			else{
+				maxDuckKills = -1;
+			}
+
+			//PLAYER
+
+			FileHandle playerFile = Gdx.files.local("saves/playerSaveFile.json");
+			String playerText = playerFile.readString();
+			String[] playerList = playerText.split(",");
+
+			playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f,
+					new Location(Float.parseFloat((playerList[0].substring(1,playerList[0].length() - 1))), Float.parseFloat((playerList[1].substring(1,playerList[1].length() - 1)))),
+					playerModel.getHeight(), playerModel.getWidth(), camera, world);
+			playerShips.createBody();
+
+			// Creates damping to player
+			playerShips.getEntityBody().setLinearDamping(0.5f);
+			playerShips.setMaxSpeed(currentSpeed, speedMul);
+
+			player = new EntityAi(playerShips.getEntityBody(), 30f);
+			Steerable<Vector2> pp = player;
+
+			playerShips.shootingTimer = Float.parseFloat((playerList[2].substring(1,playerList[2].length() - 1)));
+			playerShips.burstTimer = Float.parseFloat((playerList[3].substring(1,playerList[3].length() - 1)));
+			playerShips.health = Float.parseFloat((playerList[4].substring(1,playerList[4].length() - 1)));
+			playerShips.coinMulti = Integer.parseInt((playerList[5].substring(1,playerList[5].length() - 1)));
+			playerShips.pointMulti = Integer.parseInt((playerList[6].substring(1,playerList[6].length() - 1)));
+			playerShips.priorCoinMulti = Integer.parseInt((playerList[7].substring(1,playerList[7].length() - 1)));
+			playerShips.timeToRegen = Integer.parseInt((playerList[8].substring(1,playerList[8].length() - 1)));
+
+
+			//CURRENCY
+
+			FileHandle currencyFile = Gdx.files.local("saves/currencySaveFile.json");
+			String currencyText = currencyFile.readString();
+			String[] currencyList = currencyText.split(",");
+			Currency.get().give(Currency.Type.GOLD,Integer.parseInt(currencyList[0].substring(1,currencyList[0].length() - 1)));
+			Currency.get().give(Currency.Type.POINTS,Integer.parseInt(currencyList[1].substring(1,currencyList[1].length() - 1)));
+
+
+			//COINS
+
+			FileHandle coinFile = Gdx.files.local("saves/coinSaveFile.json");
+			String coinText = coinFile.readString();
+			String[] coinList = coinText.split(",");
+
+			for(int i = 0; i < coinList.length - 1; i = i + 3) {
+
+				if (coinList[i + 2].equals("\"Copper\"")) {
+					coinData.add(new Coin(copperCoinModel, new Location(Integer.parseInt((coinList[i].substring(1,coinList[i].length() - 1))), Integer.parseInt((coinList[i + 1].substring(1,coinList[i + 1].length() - 1)))), "Copper", world));
+				} else if (coinList[i + 2].equals("\"Silver\"")) {
+					coinData.add(new Coin(silverCoinModel, new Location(Integer.parseInt((coinList[i].substring(1,coinList[i].length() - 1))), Integer.parseInt((coinList[i + 1].substring(1,coinList[i + 1].length() - 1)))), "Silver", world));
+				} else {
+					coinData.add(new Coin(goldCoinModel, new Location(Integer.parseInt((coinList[i].substring(1,coinList[i].length() - 1))), Integer.parseInt((coinList[i + 1].substring(1,coinList[i + 1].length() - 1)))), "Gold", world));
+				}
+
+			}
+			//POWERUPS
+
+			FileHandle powerUpFile = Gdx.files.local("saves/powerSaveFile.json");
+			String powerText = powerUpFile.readString();
+			String[] powerList = powerText.split(",");
+
+			System.out.println(Arrays.toString(powerList));
+
+
+			for(int i = 0; i < powerList.length - 1; i = i + 3) {
+				if (powerList[i + 2].equals("\"Speed Up\"")) {
+					powerUpData.add(new powerUp(speedUpModel, new Location(Float.parseFloat(powerList[i].substring(1,powerList[i].length()-1)), Float.parseFloat(powerList[i + 1].substring(1,powerList[i + 1].length()-1))), "Speed Up", world));
+				} else if (powerList[i + 2].equals("\"Damage Increase\"")) {
+					powerUpData.add(new powerUp(incDamageModel, new Location(Float.parseFloat(powerList[i].substring(1,powerList[i].length()-1)), Float.parseFloat(powerList[i + 1].substring(1,powerList[i + 1].length()-1))), "Damage Increase", world));
+				}
+				else if (powerList[i + 2].equals("\"Invincible\"")) {
+					powerUpData.add(new powerUp(invincibilityModel, new Location(Float.parseFloat(powerList[i].substring(1,powerList[i].length()-1)), Float.parseFloat(powerList[i + 1].substring(1,powerList[i + 1].length()-1))), "Invincible", world));
+				}
+				else if (powerList[i + 2].equals("\"Coin Multiplier\"")) {
+					powerUpData.add(new powerUp(coinMulModel, new Location(Float.parseFloat(powerList[i].substring(1,powerList[i].length()-1)), Float.parseFloat(powerList[i + 1].substring(1,powerList[i + 1].length()-1))), "Coin Multiplier", world));
+				}else {
+					powerUpData.add(new powerUp(pointMulModel, new Location(Float.parseFloat(powerList[i].substring(1,powerList[i].length()-1)), Float.parseFloat(powerList[i + 1].substring(1,powerList[i + 1].length()-1))), "Point Multiplier", world));
+				}
+
+			}
+			//STONE
+
+			FileHandle stoneFile = Gdx.files.local("saves/stoneSaveFile.json");
+			String stoneText = stoneFile.readString();
+			String[] stoneList = stoneText.split(",");
+
+
+
+
+			for(int i = 0; i < stoneList.length - 1; i = i + 3) {
+				if (stoneList[i + 2].equals("\"A\"")) {
+					stoneData.add(new Stone(stoneModelA, new Location(Float.parseFloat(stoneList[i].substring(1,stoneList[i].length()-1)), Float.parseFloat(stoneList[i + 1].substring(1,stoneList[i + 1].length()-1))),  world));
+				} else if (stoneList[i + 2].equals("\"B\"")) {
+					stoneData.add(new Stone(stoneModelB, new Location(Float.parseFloat(stoneList[i].substring(1,stoneList[i].length()-1)), Float.parseFloat(stoneList[i + 1].substring(1,stoneList[i + 1].length()-1))),  world));
+				}
+				else {
+					stoneData.add(new Stone(stoneModelC, new Location(Float.parseFloat(stoneList[i].substring(1,stoneList[i].length()-1)), Float.parseFloat(stoneList[i + 1].substring(1,stoneList[i + 1].length()-1))),  world));
+				}
+			}
+
+			//COLLEGE
+
+			FileHandle collegeFile = Gdx.files.local("saves/collegeSaveFile.json");
+			String collegeText = collegeFile.readString();
+			String[] collegeList = collegeText.split(",");
+
+
+			alcuin.health =Float.parseFloat(collegeList[0].substring(1,collegeList[0].length()-1));
+			if (alcuin.health == 0 ){
+				alcuin.dead = true;
+			}
+			langwith.health =  Float.parseFloat(collegeList[1].substring(1,collegeList[1].length()-1));
+			if (langwith.health == 0 ){
+				langwith.dead = true;
+			}
+			goodricke.health =  Float.parseFloat(collegeList[2].substring(1,collegeList[2].length()-1));
+			if (goodricke.health == 0 ){
+				goodricke.dead = true;
+			}
+			constantine.health =  Float.parseFloat(collegeList[3].substring(1,collegeList[3].length()-1));
+			if (constantine.health == 0 ){
+				constantine.dead = true;
+			}
+			//DUCKS
+
+			FileHandle duckFile = Gdx.files.local("saves/duckSaveFile.json");
+			String duckText = duckFile.readString();
+			String[] duckList = duckText.split(",");
+			Sprite duckTexture;
+			int duckMaxHealth;
+			boolean shooting = false;
+			Sprite ballSprite = new Sprite();
+
+
+			for(int i = 0; i < duckList.length - 1; i = i + 4) {
+				if (duckList[i + 3].equals("\"A\"")) {
+					duckTexture = angryDuckModel;
+					duckMaxHealth = 333 * DifficultyScreen.difficulty;
+					shooting = true;
+					ballSprite = angryDuckAttack;
+				} else if (duckList[i + 3].equals("\"B\"")) {
+					duckTexture = bigDuckModel;
+					duckMaxHealth = 50000;
+					shooting = true;
+					ballSprite = angryDuckModel;
+				}
+				else {
+					duckTexture = duckModel;
+					duckMaxHealth = 5;
+				}
+
+				Body body = createEnemy(false, new Vector2(Float.parseFloat((duckList[i].substring(1,duckList[i].length() - 1))), Float.parseFloat((duckList[i + 1].substring(1,duckList[i + 1].length() - 1)))),world);
+				Duck newDuck = new Duck(body,duckTexture, 300f, new Location(Float.parseFloat((duckList[i].substring(1,duckList[i].length() - 1))),Float.parseFloat((duckList[i + 1].substring(1,duckList[i + 1].length() - 1)))), duckMaxHealth, world);
+
+				newDuck.setTarget(playerShips.getEntityBody());
+
+				newDuck.health = Integer.parseInt((duckList[i + 2].substring(1,duckList[i + 2].length() - 1)));
+
+
+				if (duckList[i + 3].equals("\"A\"")) {
+					newDuck.hitBox =  new Rectangle(newDuck.body.getPosition().x - 300, newDuck.body.getPosition().y - 300, newDuck.texture.getWidth() + 600, newDuck.texture.getHeight() + 600);
+
+				}
+
+				newDuck.shooting = shooting;
+				newDuck.cannonBallSprite = ballSprite;
+
+				// Status of entity AI
+				Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
+						.setTimeToTarget(10f)
+						.setArrivalTolerance(300f)
+						.setDecelerationRadius(500);
+				newDuck.setBehavior(arrives);
+				ducks.add(newDuck);
+			}
+
+			//ENEMY SHIP
+
+			FileHandle enemyFile = Gdx.files.local("saves/enemySaveFile.json");
+			String enemyText = enemyFile.readString();
+			String[] enemyList = enemyText.split(",");
+
+
+			Sprite shipTexture;
+
+			for(int i = 0; i < enemyList.length - 1; i = i + 6) {
+
+				if (enemyList[i + 4].equals("\"A\"")) {
+					shipTexture = enemyModelA;
+
+				} else if (enemyList[i + 4].equals("\"B\"")) {
+					shipTexture = enemyModelB;
+				}
+				else {
+					shipTexture = enemyModelC;
+				}
+
+
+				Body body = createEnemy(false, new Vector2(Float.parseFloat((enemyList[i].substring(1,enemyList[i].length() - 1))), Float.parseFloat((enemyList[i + 1].substring(1,enemyList[i + 1].length() - 1)))), world);
+				EnemyShip newEnemy = new EnemyShip(body, shipTexture, 300f,
+						new Location(Float.parseFloat((enemyList[i].substring(1,enemyList[i].length() - 1))), Float.parseFloat((enemyList[i + 1].substring(1,enemyList[i + 1].length() - 1)))),
+						Integer.parseInt((enemyList[i + 5].substring(1,enemyList[i + 5].length() - 1))), world);
+				newEnemy.setTarget(playerShips.getEntityBody());
+
+				newEnemy.health = Integer.parseInt((enemyList[i + 2].substring(1,enemyList[i + 2].length() - 1)));
+				newEnemy.timer = Float.parseFloat((enemyList[i + 3].substring(1,enemyList[i + 3].length() - 1)));
+
+
+				// Status of entity AI
+				Arrive<Vector2> arrives = new Arrive<>(newEnemy, pp)
+						.setTimeToTarget(5f)
+						.setArrivalTolerance(300f)
+						.setDecelerationRadius(500);
+				newEnemy.setBehavior(arrives);
+
+				hostileShips.add(newEnemy);
+			}
+
+			//GAMESCREEN
+
+			FileHandle gameFile = Gdx.files.local("saves/gameScreenSaveFile.json");
+			String gameText = gameFile.readString();
+			String[] gameList = gameText.split(",");
+
+
+
+			collegesKilled = Integer.parseInt((gameList[0].substring(1,gameList[0].length() - 1)));
+			speedTimer =Float.parseFloat((gameList[1].substring(1,gameList[1].length() - 1)));
+			damageTimer = Float.parseFloat((gameList[2].substring(1,gameList[2].length() - 1)));
+			invincibilityTimer = Float.parseFloat((gameList[3].substring(1,gameList[3].length() - 1)));
+			coinTimer = Float.parseFloat((gameList[4].substring(1,gameList[4].length() - 1)));
+			pointTimer = Float.parseFloat((gameList[5].substring(1,gameList[5].length() - 1)));
+			currentDuckKills = Integer.parseInt((gameList[6].substring(1,gameList[6].length() - 1)));
+
+			//SHOPSCREEN
+
+			FileHandle shopFile = Gdx.files.local("saves/shopSaveFile.json");
+			String shopText = shopFile.readString();
+			String[] shopList = shopText.split(",");
+
+			ShopScreen.speedCost = Integer.parseInt((shopList[0].substring(1,shopList[0].length() - 1)));
+			ShopScreen.multiCost = Integer.parseInt((shopList[1].substring(1,shopList[1].length() - 1)));
+			ShopScreen.healthCost = Integer.parseInt((shopList[2].substring(1,shopList[2].length() - 1)));
+			ShopScreen.cooldownCost = Integer.parseInt((shopList[3].substring(1,shopList[3].length() - 1)));
+			ShopScreen.speedTier = Integer.parseInt((shopList[4].substring(1,shopList[4].length() - 1)));
+			ShopScreen.multiTier = Integer.parseInt((shopList[5].substring(1,shopList[5].length() - 1)));
+			ShopScreen.healthTier = Integer.parseInt((shopList[6].substring(1,shopList[6].length() - 1)));
+			ShopScreen.cooldownTier = Integer.parseInt((shopList[7].substring(1,shopList[7].length() - 1)));
+
+			//BOB
+
+			FileHandle bobFile = Gdx.files.local("saves/bobSaveFile.json");
+			String bobText = bobFile.readString();
+			String[] bobList = bobText.split(",");
+
+			// Enemy creation "bob" and Entity AI controller
+			bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(Float.parseFloat((bobList[0].substring(1,bobList[0].length() - 1))), Float.parseFloat((bobList[1].substring(1,bobList[1].length() - 1)))), 100, world);
+			bob.setTarget(playerShips.getEntityBody());
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(bob, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			bob.setBehavior(arrives);
+
+			bob.health = Integer.parseInt((bobList[2].substring(1,bobList[2].length() - 1)));
+			bob.timer = Float.parseFloat((bobList[3].substring(1,bobList[3].length() - 1)));
+		}
+		else {
+
+			playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+			playerShips.createBody();
+
+			// Creates damping to player
+			playerShips.getEntityBody().setLinearDamping(0.5f);
+			playerShips.setMaxSpeed(currentSpeed, speedMul);
+
+			// Enemy creation "bob" and Entity AI controller
+			bob = new EnemyShip(bobBody, bobsSprite, 300f, new Location(2000f, 1600f), 100, world);
+			bob.setTarget(playerShips.getEntityBody());
+
+			player = new EntityAi(playerShips.getEntityBody(), 30f);
+			Steerable<Vector2> pp = player;
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(bob, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			bob.setBehavior(arrives);
+
+
+			spawn(world, pp);
+		}
 	}
 
 	/**
@@ -1015,8 +1309,11 @@ public class GameScreen implements Screen {
 
 		Json currencySaveFile = new Json();
 
-		String currencyInfo = currencySaveFile.toJson( Currency.get().balance(Currency.Type.GOLD)+ "\n"); //Coins amount
+		String currencyInfo = "\"";
+		currencyInfo +=	currencySaveFile.toJson( Currency.get().balance(Currency.Type.GOLD)); //Coins amount
+		currencyInfo += currencySaveFile.toJson( "," );
 		currencyInfo += currencySaveFile.toJson( Currency.get().balance(Currency.Type.POINTS)); //Points amount
+		currencyInfo += currencySaveFile.toJson( "," );
 
 		FileHandle currencyFile = Gdx.files.local("saves/currencySaveFile.json");
 		currencyFile.writeString(currencyInfo,false);
@@ -1025,14 +1322,18 @@ public class GameScreen implements Screen {
 
 		Json coinSaveFile = new Json();
 
-		String coinInfo = "";
+		String coinInfo = "\"";
 
 		for (Coin coinDatum : coinData) {
-			coinInfo += coinSaveFile.toJson(
-					coinDatum.body.getPosition().x 	//Location x
-							+ "\n" +
-							coinDatum.body.getPosition().y + "\n"); //Location y
-			coinInfo += coinSaveFile.toJson(coinDatum.type+ "\n");
+
+			if (!coinDatum.dead) {
+				coinInfo += coinSaveFile.toJson(coinDatum.body.getPosition().x) ;   //Location x
+				coinInfo += coinSaveFile.toJson( "," );
+				coinInfo += coinSaveFile.toJson(coinDatum.body.getPosition().y);  //location y
+				coinInfo += coinSaveFile.toJson( "," );
+				coinInfo += coinSaveFile.toJson(coinDatum.type);
+				coinInfo += coinSaveFile.toJson( "," );//Coin type
+			}
 		}
 
 		FileHandle coinFile = Gdx.files.local("saves/coinSaveFile.json");
@@ -1042,14 +1343,18 @@ public class GameScreen implements Screen {
 
 		Json powerSaveFile = new Json();
 
-		String powerInfo = "";
+		String powerInfo = "\"";
 
 		for (powerUp powerUpDatum : powerUpData) {
-			powerInfo += powerSaveFile.toJson(
-					powerUpDatum.body.getPosition().x 	//Location x
-							+ "\n" +
-							powerUpDatum.body.getPosition().y + "\n"); //Location y
-			powerInfo += powerSaveFile.toJson(powerUpDatum.powerUpType+ "\n"); //Type
+
+			if (!powerUpDatum.dead) {
+				powerInfo += powerSaveFile.toJson(powerUpDatum.body.getPosition().x ); //Location x
+				powerInfo += powerSaveFile.toJson("," );
+				powerInfo += powerSaveFile.toJson(powerUpDatum.body.getPosition().y); //Location y
+				powerInfo += powerSaveFile.toJson("," );
+				powerInfo += powerSaveFile.toJson(powerUpDatum.powerUpType); //Type
+				powerInfo += powerSaveFile.toJson("," );
+			}
 		}
 
 		FileHandle powerFile = Gdx.files.local("saves/powerSaveFile.json");
@@ -1059,13 +1364,28 @@ public class GameScreen implements Screen {
 
 		Json stoneSaveFile = new Json();
 
-		String stoneInfo = "";
+		String stoneInfo = "\"";
 
 		for (Stone stoneDatum : stoneData) {
-			stoneInfo += stoneSaveFile.toJson(
-					stoneDatum.body.getPosition().x 	//Location x
-							+ "\n" +
-							stoneDatum.body.getPosition().y + "\n"); //Location y
+			stoneInfo += stoneSaveFile.toJson(stoneDatum.body.getPosition().x); //Location x
+			stoneInfo += stoneSaveFile.toJson(",");
+			stoneInfo += stoneSaveFile.toJson(stoneDatum.body.getPosition().y); //Location y
+			stoneInfo += stoneSaveFile.toJson(",");
+
+			if (stoneDatum.texture == stoneModelA){
+				stoneInfo += stoneSaveFile.toJson("A");
+				stoneInfo += stoneSaveFile.toJson(",");
+			}
+			else if (stoneDatum.texture == stoneModelB){
+				stoneInfo += stoneSaveFile.toJson("B");
+				stoneInfo += stoneSaveFile.toJson(",");
+			}
+			else if (stoneDatum.texture == stoneModelC){
+				stoneInfo += stoneSaveFile.toJson("C");
+				stoneInfo += stoneSaveFile.toJson(",");
+
+			}
+
 		}
 
 		FileHandle stoneFile = Gdx.files.local("saves/stoneSaveFile.json");
@@ -1075,11 +1395,15 @@ public class GameScreen implements Screen {
 
 		Json collegeSaveFile = new Json();
 
-		String collegeInfo = "";
-		collegeInfo += collegeSaveFile.toJson(alcuin.health + "\n"); 		//Health alcuin
-		collegeInfo += collegeSaveFile.toJson(langwith.health + "\n");		//Health langwith
-		collegeInfo += collegeSaveFile.toJson(goodricke.health + "\n");		//Health goodricke
-		collegeInfo += collegeSaveFile.toJson(constantine.health + "\n");	//Health constantine
+		String collegeInfo = "\"";
+		collegeInfo += collegeSaveFile.toJson(alcuin.health ); 		//Health alcuin
+		collegeInfo += collegeSaveFile.toJson("," );
+		collegeInfo += collegeSaveFile.toJson(langwith.health);		//Health langwith
+		collegeInfo += collegeSaveFile.toJson("," );
+		collegeInfo += collegeSaveFile.toJson(goodricke.health);		//Health goodricke
+		collegeInfo += collegeSaveFile.toJson("," );
+		collegeInfo += collegeSaveFile.toJson(constantine.health);	//Health constantine
+		collegeInfo += collegeSaveFile.toJson("," );
 
 
 		FileHandle collegeFile = Gdx.files.local("saves/collegeSaveFile.json");
@@ -1089,14 +1413,28 @@ public class GameScreen implements Screen {
 
 		Json duckSaveFile = new Json();
 
-		String duckInfo = "";
+		String duckInfo = "\"";
 
 		for (Duck duckDatum : ducks) {
-			duckInfo += duckSaveFile.toJson(
-					duckDatum.body.getPosition().x 	//Location x
-							+ "\n" +
-							duckDatum.body.getPosition().y + "\n"); //Location y
-			duckInfo += duckSaveFile.toJson(duckDatum.getHealth()+ "\n"); //Health
+			duckInfo += duckSaveFile.toJson(duckDatum.body.getPosition().x); 	//Location x
+			duckInfo += duckSaveFile.toJson("," );
+			duckInfo += duckSaveFile.toJson(duckDatum.body.getPosition().y); //Location y
+			duckInfo += duckSaveFile.toJson("," );
+			duckInfo += duckSaveFile.toJson(duckDatum.getHealth()); //Health
+			duckInfo += duckSaveFile.toJson("," );
+			if (duckDatum.texture == angryDuckModel) {
+				duckInfo += duckSaveFile.toJson("A"); //Type
+				duckInfo += duckSaveFile.toJson(",");
+			}
+			else if (duckDatum.texture == bigDuckModel) {
+				duckInfo += duckSaveFile.toJson("B"); //Type
+				duckInfo += duckSaveFile.toJson(",");
+			}
+			else {
+				duckInfo += duckSaveFile.toJson("C"); //Type
+				duckInfo += duckSaveFile.toJson(",");
+
+			}
 		}
 
 		FileHandle duckFile = Gdx.files.local("saves/duckSaveFile.json");
@@ -1106,15 +1444,32 @@ public class GameScreen implements Screen {
 
 		Json enemySaveFile = new Json();
 
-		String enemyInfo = "";
+		String enemyInfo = "\"";
 
 		for (EnemyShip ship : hostileShips) {
-			enemyInfo += enemySaveFile.toJson(
-					ship.body.getPosition().x 	//Location x
-							+ "\n" +
-							ship.body.getPosition().y + "\n"); //Location y
-			enemyInfo += enemySaveFile.toJson(ship.getHealth()+ "\n"); //Health
-			enemyInfo += enemySaveFile.toJson(ship.timer+ "\n"); 	//Next shot timer
+			enemyInfo += enemySaveFile.toJson(ship.body.getPosition().x);	//Location x
+			enemyInfo += enemySaveFile.toJson("," );
+			enemyInfo += enemySaveFile.toJson(ship.body.getPosition().y); //Location y
+			enemyInfo += enemySaveFile.toJson("," );
+			enemyInfo += enemySaveFile.toJson(ship.getHealth()); //Health
+			enemyInfo += enemySaveFile.toJson("," );
+			enemyInfo += enemySaveFile.toJson(ship.timer); 	//Next shot timer
+			enemyInfo += enemySaveFile.toJson("," );
+			if (ship.texture == enemyModelA) {
+				enemyInfo += enemySaveFile.toJson("A"); //Type
+				enemyInfo += enemySaveFile.toJson(",");
+			}
+			else if (ship.texture == enemyModelB) {
+				enemyInfo += enemySaveFile.toJson("B"); //Type
+				enemyInfo += enemySaveFile.toJson(",");
+			}
+			else {
+				enemyInfo += enemySaveFile.toJson("C"); //Type
+				enemyInfo += enemySaveFile.toJson(",");
+
+			}
+			enemyInfo += enemySaveFile.toJson(ship.maxHealth); 	// max health
+			enemyInfo += enemySaveFile.toJson("," );
 		}
 
 		FileHandle enemyFile = Gdx.files.local("saves/enemySaveFile.json");
@@ -1124,28 +1479,36 @@ public class GameScreen implements Screen {
 
 		Json playerSaveFile = new Json();
 
-		String playerInfo = playerSaveFile.toJson(playerShips.shootingTimer + "\n"); //Shoot timer
-		playerInfo += playerSaveFile.toJson(Ship.burstTimer + "\n"); //Burst timer
-		playerInfo += playerSaveFile.toJson(Ship.health + "\n"); //Health
-		playerInfo += playerSaveFile.toJson(
-				playerShips.getEntityBody().getPosition().x 	//Location x
-				+ "\n" +
-				playerShips.getEntityBody().getPosition().y + "\n"); //Location y
+		String playerInfo = "\"";
+		playerInfo += playerSaveFile.toJson(playerShips.getEntityBody().getPosition().x); 	//Location x
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(playerShips.getEntityBody().getPosition().y); //Location y
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(playerShips.shootingTimer); //Shoot timer
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(Ship.burstTimer); //Burst timer
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(Ship.health); //Health
+		playerInfo += playerSaveFile.toJson("," );
 
-		playerInfo += playerSaveFile.toJson(playerShips.getCoinMulti() + "\n"); //Coin Multiplier
-		playerInfo += playerSaveFile.toJson(playerShips.getPointMulti() + "\n"); //Point Multiplier
-		playerInfo += playerSaveFile.toJson(playerShips.priorCoinMulti + "\n"); //Prior coin Multiplier
+		playerInfo += playerSaveFile.toJson(playerShips.getCoinMulti()); //Coin Multiplier
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(playerShips.getPointMulti()); //Point Multiplier
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(playerShips.priorCoinMulti); //Prior coin Multiplier
+		playerInfo += playerSaveFile.toJson("," );
+		playerInfo += playerSaveFile.toJson(playerShips.timeToRegen); //Regen timer
+		playerInfo += playerSaveFile.toJson("," );
+
 
 		FileHandle playerFile = Gdx.files.local("saves/playerSaveFile.json");
 		playerFile.writeString(playerInfo,false);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		Json difficulttySaveFile = new Json();
+		Json difficultySaveFile = new Json();
 
-		String difficultyInfo = "";
-		difficultyInfo += difficulttySaveFile.toJson(DifficultyScreen.difficulty + "\n");	//Difficulty
-
+		String difficultyInfo = difficultySaveFile.toJson(DifficultyScreen.difficulty);	//Difficulty
 
 		FileHandle diffFile = Gdx.files.local("saves/difficultySaveFile.json");
 		diffFile.writeString(difficultyInfo,false);
@@ -1154,13 +1517,22 @@ public class GameScreen implements Screen {
 
 		Json gameScreenSaveFile = new Json();
 
-		String gameInfo = "";
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.collegesKilled + "\n");	//Colleges killed
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.speedTimer + "\n");		//Speed timer
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.damageTimer + "\n");	//Damage timer
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.invincibilityTimer + "\n");	//Invincibility timer
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.coinTimer + "\n");	//Coin timer
-		gameInfo += gameScreenSaveFile.toJson(GameScreen.pointTimer + "\n"); //Point timer
+		String gameInfo = "\"";
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.collegesKilled);	//Colleges killed
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.speedTimer);		//Speed timer
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.damageTimer);	//Damage timer
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.invincibilityTimer);	//Invincibility timer
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.coinTimer);	//Coin timer
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.pointTimer); //Point timer
+		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.currentDuckKills); //Duck kills
+		gameInfo += gameScreenSaveFile.toJson("," );
+
 
 
 		FileHandle gameFile = Gdx.files.local("saves/gameScreenSaveFile.json");
@@ -1170,18 +1542,46 @@ public class GameScreen implements Screen {
 
 		Json shopSaveFile = new Json();
 
-		String shopInfo = "";
-		shopInfo += shopSaveFile.toJson(ShopScreen.speedCost+ "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.multiCost + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.healthCost + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownCost + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.speedTier + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.multiTier + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.healthTier + "\n");
-		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownTier + "\n");
+		String shopInfo = "\"";
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedCost);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiCost);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthCost);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownCost);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedTier);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiTier);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthTier);
+		shopInfo += shopSaveFile.toJson("," );
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownTier);
+		shopInfo += shopSaveFile.toJson("," );
 
 		FileHandle shopFile = Gdx.files.local("saves/shopSaveFile.json");
 		shopFile.writeString(shopInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json bobSaveFile = new Json();
+
+		String bobInfo = "\"";
+
+		bobInfo += bobSaveFile.toJson(bob.body.getPosition().x);	//Location x
+		bobInfo += bobSaveFile.toJson("," );
+		bobInfo += bobSaveFile.toJson(bob.body.getPosition().y); //Location y
+		bobInfo += bobSaveFile.toJson("," );
+		bobInfo += bobSaveFile.toJson(bob.getHealth()); //Health
+		bobInfo += bobSaveFile.toJson("," );
+		bobInfo += bobSaveFile.toJson(bob.timer); 	//Next shot timer
+		bobInfo += bobSaveFile.toJson("," );
+
+		FileHandle bobFile = Gdx.files.local("saves/bobSaveFile.json");
+		bobFile.writeString(bobInfo,false);
+
+
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 

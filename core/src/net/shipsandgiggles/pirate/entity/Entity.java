@@ -17,7 +17,7 @@ import java.util.UUID;
 public abstract class Entity {
 	// Main data store
 	private final UUID uuid;
-	private final Sprite texture;
+	public final Sprite texture;
 	private final Location location;
 	private final EntityType entityType;
 	private final float maximumHealth;

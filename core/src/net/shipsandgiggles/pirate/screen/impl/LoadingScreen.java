@@ -33,7 +33,7 @@ public class LoadingScreen implements Screen {
 	public static SoundController soundController;
 	private final SpriteBatch batch = new SpriteBatch();
 	public Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
-	public boolean loadedGame = false;
+	public static boolean loadedGame = false;
 
 	/** Displays the loading screen */
 	@Override
@@ -73,7 +73,7 @@ public class LoadingScreen implements Screen {
 			public void changed(ChangeEvent event, Actor actor) {
 				LoadingScreen.soundController.playButtonPress();
 				loadedGame = true;
-				PirateGame.get().changeScreen(ScreenType.GAME);
+				PirateGame.get().changeScreen(ScreenType.INFORMATION);
 			}
 		});
 

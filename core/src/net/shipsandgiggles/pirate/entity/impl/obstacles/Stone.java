@@ -49,6 +49,7 @@ public class Stone extends Solid{
         def.type = BodyDef.BodyType.StaticBody;
         def.position.set(location.getX(), location.getY());
 
+
         // Creation of the body
         def.fixedRotation = true;
         body = world.createBody(def);

@@ -1,14 +1,18 @@
 package net.shipsandgiggles.pirate.entity.npc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import java.util.Random;
 import java.util.UUID;
 
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.Location;
@@ -27,6 +31,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class Duck extends EntityAi {
     // World data
     public World world;
+    public int deadDuck = 0;
 
     /**
      * This is the class to control the ducks
@@ -38,7 +43,31 @@ public class Duck extends EntityAi {
      * @param world : World data
      * */
     public Duck(Body body ,Sprite texture, float boundingRadius, Location location, int maximumHealth, World world) {
-        super(body,boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
+        super(body, boundingRadius, texture, maximumHealth, location,(int) texture.getWidth(), (int) texture.getHeight());
         this.shooting = false;
+    }
+
+    /**
+     * Kills the enemy
+     *
+     * @param world : World data
+     */
+    @Override
+    public void death(World world){
+        // Checks if dead
+        if(this.dead) return;
+
+        // Gives instant money if collected
+        Currency.get().give(Currency.Type.GOLD, 0);
+        if (!shooting){
+            deadDuck = 1;
+            Currency.get().give(Currency.Type.POINTS, 25);
+        }else{
+            Currency.get().give(Currency.Type.POINTS, 10000);
+        }
+
+        // Kills enemy
+        world.destroyBody(body);
+        this.dead = true;
     }
 }

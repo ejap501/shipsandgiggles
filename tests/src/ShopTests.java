@@ -33,7 +33,7 @@ public class ShopTests {
         assertEquals(1, world.getBodyCount());
     }
     @Test
-    public void rangeShop(){
+    public void rangeShopOn(){
         Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
         World world = new World(new Vector2(0, 0), false);
         Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
@@ -42,6 +42,75 @@ public class ShopTests {
         new shop1(langwithCollegeSprite, new Location(1,1),1f, world);
 
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(1,1), playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        shop1.rangeCheck(ship);
+
+
+        assertTrue(Ship.buyMenuRange);
+    }
+    @Test
+    public void rangeShopAbove(){
+        Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+        World world = new World(new Vector2(0, 0), false);
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+
+        new shop1(langwithCollegeSprite, new Location(1,1),1f, world);
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(1,100), playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        shop1.rangeCheck(ship);
+
+
+        assertTrue(Ship.buyMenuRange);
+    }
+    @Test
+    public void rangeShopBelow(){
+        Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+        World world = new World(new Vector2(0, 0), false);
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+
+        new shop1(langwithCollegeSprite, new Location(1,200),1f, world);
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(1,100), playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        shop1.rangeCheck(ship);
+
+
+        assertTrue(Ship.buyMenuRange);
+    }
+
+    @Test
+    public void rangeShopLeft(){
+        Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+        World world = new World(new Vector2(0, 0), false);
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+
+        new shop1(langwithCollegeSprite, new Location(1,1),1f, world);
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(100,1), playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        shop1.rangeCheck(ship);
+
+
+        assertTrue(Ship.buyMenuRange);
+    }
+    @Test
+    public void rangeShopRight(){
+        Sprite langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+        World world = new World(new Vector2(0, 0), false);
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+
+        new shop1(langwithCollegeSprite, new Location(200,1),1f, world);
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(100,1), playerModel.getHeight(), playerModel.getWidth(), camera,world);
         ship.createBody();
 
         shop1.rangeCheck(ship);

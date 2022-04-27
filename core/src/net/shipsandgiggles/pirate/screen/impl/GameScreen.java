@@ -3,6 +3,7 @@ package net.shipsandgiggles.pirate.screen.impl;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,12 +21,15 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.shipsandgiggles.pirate.*;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.entity.*;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
+import net.shipsandgiggles.pirate.pref.GamePreferences;
 import net.shipsandgiggles.pirate.screen.ScreenType;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
@@ -73,7 +77,7 @@ public class GameScreen implements Screen {
 	private static ArrayList<powerUp> powerUpData = new ArrayList<>();
 	private static ArrayList<Stone> stoneData = new ArrayList<>();
 	private static ArrayList<EnemyShip> hostileShips = new ArrayList<>();
-	private static ArrayList<Duck> ducks = new ArrayList<>();
+	public static ArrayList<Duck> ducks = new ArrayList<>();
 
 	// Camera work
 	private static OrthographicCamera camera;
@@ -82,7 +86,9 @@ public class GameScreen implements Screen {
 	// Graphics
 	private final SpriteBatch batch; // Batch of images "objects"
 	public static Sprite playerModel;
-	public static Sprite coinModel;
+	public static Sprite copperCoinModel;
+	public static Sprite silverCoinModel;
+	public static Sprite goldCoinModel;
 	public static Sprite speedUpModel;
 	public static Sprite invincibilityModel;
 	public static Sprite incDamageModel;
@@ -95,6 +101,7 @@ public class GameScreen implements Screen {
 	public static Sprite enemyModelB;
 	public static Sprite enemyModelC;
 	public static Sprite duckModel;
+	public static Sprite bigDuckModel;
 	public static Sprite alcuinCollegeSprite;
 	public static Sprite constantineCollegeSprite;
 	public static Sprite goodrickeCollegeSprite;
@@ -133,6 +140,9 @@ public class GameScreen implements Screen {
 	static int maxShips;
 	static int maxDucks;
 	static int maxStones;
+	static int maxDuckKills;
+	public int currentDuckKills = 0;
+	private GamePreferences gamePreferences = GamePreferences.get();
 
 	private Rain rain;
 
@@ -183,7 +193,9 @@ public class GameScreen implements Screen {
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
-		coinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
+		copperCoinModel = new Sprite(new Texture(Gdx.files.internal("models/copper_coin.png")));
+		silverCoinModel = new Sprite(new Texture(Gdx.files.internal("models/silver_coin.png")));
+		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_coin.png")));
 		speedUpModel = new Sprite(new Texture(Gdx.files.internal("models/speed_up.png")));
 		incDamageModel = new Sprite(new Texture(Gdx.files.internal("models/damage_increase.png")));
 		invincibilityModel = new Sprite(new Texture(Gdx.files.internal("models/invincibility.png")));
@@ -196,6 +208,7 @@ public class GameScreen implements Screen {
 		enemyModelB = new Sprite(new Texture(Gdx.files.internal("models/ship1.png")));
 		enemyModelC = new Sprite(new Texture(Gdx.files.internal("models/dd.png")));
 		duckModel = new Sprite(new Texture(Gdx.files.internal("models/duck_v1.png")));
+		bigDuckModel = new Sprite(new Texture(Gdx.files.internal("models/long_boi_v1.png")));
 		bobsSprite = new Sprite(new Texture(Gdx.files.internal("models/ship2.png")));
 		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
@@ -262,14 +275,13 @@ public class GameScreen implements Screen {
 		BallsManager.updateBalls(batch);
 
 		// Setting ship position for the sprite of the player ship
-		//System.out.println(playerShips.getPosition());
-		//System.out.println("//////////////////////////////////");
+
 
 		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 
-		//System.out.println(playerShips.getPosition());
+
 
 		//player
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
@@ -296,7 +308,7 @@ public class GameScreen implements Screen {
 		}
 
 		for (powerUp powerUpDatum : powerUpData) {
-			//System.out.println(powerUpDatum.getPowerUpType());
+
 			powerUpDatum.draw(batch);
 			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
 				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
@@ -357,18 +369,21 @@ public class GameScreen implements Screen {
 			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 		if(collegesCaptured == 4){
 			deathScreen.update(hud, 1);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 		if(collegesKilled == 4){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
 			return;
 		}
 
@@ -402,17 +417,19 @@ public class GameScreen implements Screen {
 
 		// Updates power-up timers
 		if (speedTimer >= 0) {
-			speedTimer -= 1f;
+			speedTimer -= Gdx.graphics.getDeltaTime();
 			currentSpeed = maxSpeed * speedMul;
 		} else {
 			currentSpeed = maxSpeed;
+			speedTimer = -1f;
 		}
 
 		if (invincibilityTimer >= 0) {
-			invincibilityTimer -= 1f;
+			invincibilityTimer -= Gdx.graphics.getDeltaTime();
 			playerShips.setInvincible(true);
 		}else{
 			playerShips.setInvincible(false);
+			invincibilityTimer = -1f;
 		}
 		if (damageTimer >= 0){
 			damageTimer -= Gdx.graphics.getDeltaTime();
@@ -432,6 +449,7 @@ public class GameScreen implements Screen {
 		else if (coinTimer >= 0f){
 			coinTimer -= Gdx.graphics.getDeltaTime();
 		}
+
 
 
 		if (pointTimer == 10){
@@ -456,7 +474,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Checks for input and performs an action
-	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "C" "X" "NUM_1" "NUM_2"
+	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "ESCAPE"  "NUM_1" "NUM_2"
 	 */
 	public void inputUpdate() {
 		/*
@@ -493,14 +511,16 @@ public class GameScreen implements Screen {
 		}
 
 
-
-
 		// creating zooming
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			if(camera.zoom < 2)camera.zoom += 0.02f;
 		}
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
 			if(camera.zoom > 1)camera.zoom -= 0.02f;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			closeAndSave();
 		}
 
 	}
@@ -669,26 +689,37 @@ public class GameScreen implements Screen {
 	 *
 	 */
 	public static void spawn(World world, Steerable<Vector2> pp){
+		int longBoi = 0;
 		if (DifficultyScreen.difficulty == 1){
-			maxCoins = 150;
+			maxCoins = 250;
 			maxPowerups = 100;
-			maxShips = 0;
-			maxDucks = 40;
+			maxShips = 10;
+			maxDucks = 20;
 			maxStones = 30;
+			longBoi = 1;
 		}
 		else if(DifficultyScreen.difficulty == 2){
-			maxCoins = 100;
+			maxCoins = 200;
 			maxPowerups = 75;
 			maxShips = 10;
-			maxDucks = 50;
+			maxDucks = 30;
 			maxStones = 40;
+			longBoi = 1;
 		}
-		else{
-			maxCoins = 50;
+		else if(DifficultyScreen.difficulty == 3){
+			maxCoins = 150;
 			maxPowerups = 50;
 			maxShips = 15;
-			maxDucks = 60;
+			maxDucks = 35;
 			maxStones = 50;
+			longBoi = 1;
+		}else{
+			maxCoins = 150;
+			maxPowerups = 25;
+			maxShips = 0;
+			maxDucks = 0;
+			maxStones = 50;
+			longBoi = 35;
 		}
 		// Initializing
 		Random rn = new Random();
@@ -696,15 +727,23 @@ public class GameScreen implements Screen {
 		String randType;
 		Sprite model;
 
+
 		// Coins
 		for (int i = 0; i < maxCoins; i++){
 			Boolean loop = true;
-			Coin add = new Coin(coinModel, new Location(0, 0), world);
-			while (loop == true){
+			Coin add = null;
+			while (loop){
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
 				randY = 50 + rn.nextInt(3950);
-				add = new Coin(coinModel, new Location(randX,randY), world);
+				randModel = rn.nextInt(3);
+				if (randModel == 0) {
+					add = new Coin(copperCoinModel, new Location(randX, randY), "Copper", world);
+				}else if (randModel == 1) {
+					add = new Coin(silverCoinModel, new Location(randX, randY), "Silver", world);
+				}else{
+					add = new Coin(goldCoinModel, new Location(randX, randY), "Gold", world);
+				}
 
 				if (add.alcuinCheck(alcuin) || add.constantineCheck(constantine) || add.goodrickeCheck(goodricke) || add.langwithCheck(langwith) || add.shopCheck(shop)){
 					nextloop = true;
@@ -713,18 +752,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 
@@ -735,6 +777,27 @@ public class GameScreen implements Screen {
 				}
 			}
 			coinData.add(add);
+		}
+
+		// Giant Ducks
+		for (int i = 0; i < longBoi; i++){
+			randX = 50 + rn.nextInt(3950);
+			randY = 50 + rn.nextInt(3950);
+			Body body = createEnemy(false, new Vector2(randX, randY),world);
+			Duck newDuck = new Duck(body, bigDuckModel, 300f, new Location(randX,randY), 50000, world);
+
+			newDuck.setTarget(playerShips.getEntityBody());
+			newDuck.cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/duck_v4.png")));
+			newDuck.shooting = true;
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, pp)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
 		}
 
 		// Ducks
@@ -760,8 +823,8 @@ public class GameScreen implements Screen {
 		// Power-ups
 		for (int i = 0; i < maxPowerups; i++) {
 			Boolean loop = true;
-			powerUp add = new powerUp(speedUpModel, new Location(0, 0), "Speed Up", world);
-			while (loop == true){
+			powerUp add = null;
+			while (loop){
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
 				randY = 50 + rn.nextInt(3950);
@@ -790,18 +853,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 
@@ -847,7 +913,7 @@ public class GameScreen implements Screen {
 		// Stones
 		for (int i = 0; i < maxStones; i++){
 			Boolean loop = true;
-			Stone add = new Stone(stoneModelA, new Location(0, 0), world);
+			Stone add = null;
 			while (loop == true) {
 				Boolean nextloop = false;
 				randX = 50 + rn.nextInt(3950);
@@ -868,18 +934,21 @@ public class GameScreen implements Screen {
 				for (powerUp powerUpDatum : powerUpData) {
 					if (add.powerUpCheck(powerUpDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Coin coinDatum : coinData){
 					if (add.coinCheck(coinDatum)){
 						nextloop = true;
+						break;
 					}
 				}
 
 				for (Stone stoneDatum : stoneData){
 					if (add.stoneCheck(stoneDatum)){
 						nextloop  = true;
+						break;
 					}
 				}
 
@@ -891,6 +960,187 @@ public class GameScreen implements Screen {
 			}
 			stoneData.add(add);
 		}
+	}
+
+	public void closeAndSave(){
+
+		Json currencySaveFile = new Json();
+
+		String currencyInfo = currencySaveFile.toJson( Currency.get().balance(Currency.Type.GOLD)+ "\n"); //Coins amount
+		currencyInfo += currencySaveFile.toJson( Currency.get().balance(Currency.Type.POINTS)); //Points amount
+
+		FileHandle currencyFile = Gdx.files.local("saves/currencySaveFile.json");
+		currencyFile.writeString(currencyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json coinSaveFile = new Json();
+
+		String coinInfo = "";
+
+		for (Coin coinDatum : coinData) {
+			coinInfo += coinSaveFile.toJson(
+					coinDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							coinDatum.body.getPosition().y + "\n"); //Location y
+			coinInfo += coinSaveFile.toJson(coinDatum.type+ "\n");
+		}
+
+		FileHandle coinFile = Gdx.files.local("saves/coinSaveFile.json");
+		coinFile.writeString(coinInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json powerSaveFile = new Json();
+
+		String powerInfo = "";
+
+		for (powerUp powerUpDatum : powerUpData) {
+			powerInfo += powerSaveFile.toJson(
+					powerUpDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							powerUpDatum.body.getPosition().y + "\n"); //Location y
+			powerInfo += powerSaveFile.toJson(powerUpDatum.powerUpType+ "\n"); //Type
+		}
+
+		FileHandle powerFile = Gdx.files.local("saves/powerSaveFile.json");
+		powerFile.writeString(powerInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json stoneSaveFile = new Json();
+
+		String stoneInfo = "";
+
+		for (Stone stoneDatum : stoneData) {
+			stoneInfo += stoneSaveFile.toJson(
+					stoneDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							stoneDatum.body.getPosition().y + "\n"); //Location y
+		}
+
+		FileHandle stoneFile = Gdx.files.local("saves/stoneSaveFile.json");
+		stoneFile.writeString(stoneInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json collegeSaveFile = new Json();
+
+		String collegeInfo = "";
+		collegeInfo += collegeSaveFile.toJson(alcuin.health + "\n"); 		//Health alcuin
+		collegeInfo += collegeSaveFile.toJson(langwith.health + "\n");		//Health langwith
+		collegeInfo += collegeSaveFile.toJson(goodricke.health + "\n");		//Health goodricke
+		collegeInfo += collegeSaveFile.toJson(constantine.health + "\n");	//Health constantine
+
+
+		FileHandle collegeFile = Gdx.files.local("saves/collegeSaveFile.json");
+		collegeFile.writeString(collegeInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json duckSaveFile = new Json();
+
+		String duckInfo = "";
+
+		for (Duck duckDatum : ducks) {
+			duckInfo += duckSaveFile.toJson(
+					duckDatum.body.getPosition().x 	//Location x
+							+ "\n" +
+							duckDatum.body.getPosition().y + "\n"); //Location y
+			duckInfo += duckSaveFile.toJson(duckDatum.getHealth()+ "\n"); //Health
+		}
+
+		FileHandle duckFile = Gdx.files.local("saves/duckSaveFile.json");
+		duckFile.writeString(duckInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json enemySaveFile = new Json();
+
+		String enemyInfo = "";
+
+		for (EnemyShip ship : hostileShips) {
+			enemyInfo += enemySaveFile.toJson(
+					ship.body.getPosition().x 	//Location x
+							+ "\n" +
+							ship.body.getPosition().y + "\n"); //Location y
+			enemyInfo += enemySaveFile.toJson(ship.getHealth()+ "\n"); //Health
+			enemyInfo += enemySaveFile.toJson(ship.timer+ "\n"); 	//Next shot timer
+		}
+
+		FileHandle enemyFile = Gdx.files.local("saves/enemySaveFile.json");
+		enemyFile.writeString(enemyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json playerSaveFile = new Json();
+
+		String playerInfo = playerSaveFile.toJson(playerShips.shootingTimer + "\n"); //Shoot timer
+		playerInfo += playerSaveFile.toJson(Ship.burstTimer + "\n"); //Burst timer
+		playerInfo += playerSaveFile.toJson(Ship.health + "\n"); //Health
+		playerInfo += playerSaveFile.toJson(
+				playerShips.getEntityBody().getPosition().x 	//Location x
+				+ "\n" +
+				playerShips.getEntityBody().getPosition().y + "\n"); //Location y
+
+		playerInfo += playerSaveFile.toJson(playerShips.getCoinMulti() + "\n"); //Coin Multiplier
+		playerInfo += playerSaveFile.toJson(playerShips.getPointMulti() + "\n"); //Point Multiplier
+		playerInfo += playerSaveFile.toJson(playerShips.priorCoinMulti + "\n"); //Prior coin Multiplier
+
+		FileHandle playerFile = Gdx.files.local("saves/playerSaveFile.json");
+		playerFile.writeString(playerInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json difficulttySaveFile = new Json();
+
+		String difficultyInfo = "";
+		difficultyInfo += difficulttySaveFile.toJson(DifficultyScreen.difficulty + "\n");	//Difficulty
+
+
+		FileHandle diffFile = Gdx.files.local("saves/difficultySaveFile.json");
+		diffFile.writeString(difficultyInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json gameScreenSaveFile = new Json();
+
+		String gameInfo = "";
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.collegesKilled + "\n");	//Colleges killed
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.speedTimer + "\n");		//Speed timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.damageTimer + "\n");	//Damage timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.invincibilityTimer + "\n");	//Invincibility timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.coinTimer + "\n");	//Coin timer
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.pointTimer + "\n"); //Point timer
+
+
+		FileHandle gameFile = Gdx.files.local("saves/gameScreenSaveFile.json");
+		gameFile.writeString(gameInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		Json shopSaveFile = new Json();
+
+		String shopInfo = "";
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedCost+ "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownCost + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.speedTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.multiTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.healthTier + "\n");
+		shopInfo += shopSaveFile.toJson(ShopScreen.cooldownTier + "\n");
+
+		FileHandle shopFile = Gdx.files.local("saves/shopSaveFile.json");
+		shopFile.writeString(shopInfo,false);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		gamePreferences.setHasSave(true);
+
+		Gdx.app.exit();
+
+
 	}
 
 	@Override

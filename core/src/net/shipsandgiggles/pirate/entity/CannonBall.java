@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.screen.impl.DifficultyScreen;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 
@@ -20,6 +21,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * @version 1.0
  */
 public class CannonBall {
+    public short maskBits;
     public short categoryBits;
     // Main data store
     public float timer = 0.8f;
@@ -62,6 +64,8 @@ public class CannonBall {
         this.cannonBall = cannonBall;
         this.multiplier = multiplier;
         this.categoryBits = categoryBits;
+        this.maskBits = maskBit;
+
 
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
@@ -105,6 +109,7 @@ public class CannonBall {
         this.angle = target;
         this.cannonBall = cannonBall;
         this.categoryBits = categoryBits;
+        this.maskBits = maskBit;
 
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
@@ -145,7 +150,14 @@ public class CannonBall {
      * @return Damage dealt
      */
     public float getDamageDelt() {
-        if (this.categoryBits == Configuration.Cat_Player){
+        if (this.maskBits == Configuration.Cat_Player){
+            if(DifficultyScreen.difficulty == 1){
+                return this.damageDelt / 4;
+            }
+            else if (DifficultyScreen.difficulty == 2) {
+                return this.damageDelt / 2;
+            }
+
             return this.damageDelt;
         }
         return (this.damageDelt * this.multiplier);

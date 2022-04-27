@@ -71,6 +71,7 @@ public class EntityAi implements Steerable<Vector2> {
      * @param height : Height of the enemy
      */
     public EntityAi(Body body, float boundingRadius, Sprite texture, int maxHealth, Location location, int width, int height){
+
         // Constructor
         this.body = body;
         this.boundingRadius = boundingRadius;
@@ -100,8 +101,8 @@ public class EntityAi implements Steerable<Vector2> {
         this.body.setLinearDamping(1f);
 
         // Sets health
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = maxHealth;
+        this.maxHealth = maxHealth;
         this.dead = false;
 
         // Constructs hitbox detector

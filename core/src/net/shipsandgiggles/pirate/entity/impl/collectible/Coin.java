@@ -33,6 +33,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class Coin extends Plunder {
     // World data
     public World world;
+    public String type;
 
     /**
      * This is the class to control the coin
@@ -42,13 +43,14 @@ public class Coin extends Plunder {
      * @param location : Coordinate data for position in world
      * @param world : World data
      * */
-    public Coin(Sprite texture, Location location, World world) {
+    public Coin(Sprite texture, Location location, String type, World world) {
         super(UUID.randomUUID(),Type.COINS, texture, location, texture.getHeight(), texture.getWidth());
         // Instantiating a body
         Body body;
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(location.getX(), location.getY());
+        this.type = type;
 
         // Creation of the body
         def.fixedRotation = true;
@@ -103,7 +105,16 @@ public class Coin extends Plunder {
         if(this.dead) return;
 
         // Gives money if collected
-        Currency.get().give(Currency.Type.GOLD, (10));
+        if (type == "Copper"){
+            Currency.get().give(Currency.Type.GOLD, (1));
+        }else if (type == "Silver"){
+            Currency.get().give(Currency.Type.GOLD, (5));
+        }else if (type == "Gold"){
+            Currency.get().give(Currency.Type.GOLD, (10));
+        }else{
+            Currency.get().give(Currency.Type.GOLD, (0));
+        }
+
 
         // Kills off the body
         world.destroyBody(body);

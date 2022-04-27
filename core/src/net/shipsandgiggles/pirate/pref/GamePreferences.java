@@ -18,6 +18,7 @@ public class GamePreferences {
 	private static final String PREF_VOLUME_ENABLED = "volume.enabled";
 	private static final String PREF_VOLUME_LEVEL = "volume.level";
 	private static final String PREF_MUSIC_LEVEL = "music.level";
+	private static final String HAS_SAVE = "save.check";
 	private static GamePreferences INSTANCE;
 
 	/**
@@ -112,5 +113,15 @@ public class GamePreferences {
 	public void setMusicVolumeLevel(float level) {
 		this.prefs().putFloat(PREF_MUSIC_LEVEL, level);
 		this.prefs().flush();
+	}
+
+	public void setHasSave(boolean hasSave){
+		this.prefs().putBoolean(HAS_SAVE, hasSave);
+		this.prefs().flush();
+
+	}
+	public boolean getHasSave(){
+		return this.prefs().getBoolean(HAS_SAVE, false);
+
 	}
 }

@@ -38,7 +38,7 @@ public class CurrencyTests {
         Currency.get().take(Currency.Type.GOLD, 100);
         int gold = Currency.get().balance(Currency.Type.GOLD);
 
-        assertEquals(0, gold);
+        assertEquals(2, gold);
     }
 
     @Test

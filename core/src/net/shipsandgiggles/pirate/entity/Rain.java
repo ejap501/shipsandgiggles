@@ -1,7 +1,6 @@
 package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Rain {
     private ParticleEffect rain;
-    private ShapeRenderer shapeRenderer;
     private Batch batch;
     private float deltaTime;
     private float count = 0;
@@ -23,7 +21,6 @@ public class Rain {
         rain.load(Gdx.files.internal("models/rain.p"), Gdx.files.internal("models"));
         rain.setPosition(Gdx.graphics.getHeight() / 2f, Gdx.graphics.getWidth() / 2f);
 
-        shapeRenderer = new ShapeRenderer();
         brightness = new Sprite(new Texture("models/black.png"));
         brightness.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }

@@ -42,15 +42,15 @@ public class EntityAi implements Steerable<Vector2> {
     public Boolean shooting = true;
     public Texture healthBar = new Texture("models/bar.png");
     float maxLinearSpeed, maxLinearAcceleration, maxAngularSpeed, maxAngularAcceleration, boundingRadius, zeroLinearSpeedThreshold, speedMultiplier, turnMultiplier;
-    Sprite texture;
+    public Sprite texture;
     boolean isPlayer;
     Body target;
     float amountOfRotations = 0;
     private boolean independentFacing = false; // Defines if the entity can move in a direction other than the way it faces)
     float angleToTarget = 0;
     public Rectangle hitBox;
-    int health;
-    int maxHealth;
+    public int health;
+    public int maxHealth;
     public boolean dead = false;
     public float counter = 0;
     public float timer = 0f;

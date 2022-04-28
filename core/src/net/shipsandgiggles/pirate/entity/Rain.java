@@ -14,6 +14,7 @@ public class Rain {
     private Sprite brightness;
     private float alpha = 0f;
     private boolean stopCycle = false;
+    public boolean isRaining;
 
     public Rain() {
         rain = new ParticleEffect();
@@ -46,9 +47,15 @@ public class Rain {
             batch.begin();
             rain.draw(batch, deltaTime);
             batch.end();
+            if(!isRaining) {
+                isRaining = true;
+            }
         }
         if(count >= 30.4f) {
             rain.allowCompletion();
+            if(isRaining) {
+                isRaining = false;
+            }
         }
         if(count >= 31f) {
             batch.begin();

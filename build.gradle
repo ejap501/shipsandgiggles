@@ -58,7 +58,7 @@ project(":desktop") {
         
     }
 }
-
+/*
 project(":ios") {
     apply plugin: "java-library"
     apply plugin: "robovm"
@@ -101,7 +101,7 @@ project(":html") {
         
     }
 }
-
+*/
 project(":core") {
     apply plugin: "java-library"
 

@@ -517,7 +517,9 @@ public class GameScreen implements Screen {
 				}
 			}
 		}
-
+		if(rain.isRaining) {
+			playerShips.getEntityBody().applyLinearImpulse(new Vector2(500, 0), playerShips.getEntityBody().getWorldCenter(), true);
+		}
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);

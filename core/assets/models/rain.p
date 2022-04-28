@@ -20,8 +20,8 @@ timeline0: 0.0
 - Life - 
 lowMin: 1000.0
 lowMax: 1000.0
-highMin: 2000.0
-highMax: 2000.0
+highMin: 2200.0
+highMax: 2200.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -91,8 +91,8 @@ timeline0: 0.0
 - X Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 30.0
+highMin: 18.0
+highMax: 18.0
 relative: false
 scalingCount: 1
 scaling0: 1.0

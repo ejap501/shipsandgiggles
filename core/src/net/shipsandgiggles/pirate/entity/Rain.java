@@ -2,10 +2,10 @@ package net.shipsandgiggles.pirate.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Rain {
@@ -13,15 +13,19 @@ public class Rain {
     private ShapeRenderer shapeRenderer;
     private Batch batch;
     private float deltaTime;
-    private float count;
+    private float count = 0;
+    private Sprite brightness;
+    private float alpha = 0f;
+    private boolean stopCycle = false;
 
     public Rain() {
         rain = new ParticleEffect();
         rain.load(Gdx.files.internal("models/rain.p"), Gdx.files.internal("models"));
         rain.setPosition(Gdx.graphics.getHeight() / 2f, Gdx.graphics.getWidth() / 2f);
-        rain.start();
 
         shapeRenderer = new ShapeRenderer();
+        brightness = new Sprite(new Texture("models/black.png"));
+        brightness.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void draw(Batch batch, float deltaTime) {
@@ -29,54 +33,44 @@ public class Rain {
         this.deltaTime = deltaTime;
         count += deltaTime;
 
-        if(count > 5f) {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(new Color(0, 0, 0, 0.05f));
-            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            shapeRenderer.end();
+        if((count >= 0) && (count < 1)) {
+            rain.start();
         }
-        if(count > 5.2f) {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(new Color(0, 0, 0, 0.05f));
-            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            shapeRenderer.end();
+        if(count >= 15f) {
+            if (!stopCycle){
+                batch.begin();
+                brightness.setAlpha(alpha + 0.0025f);
+                brightness.draw(batch);
+                if (alpha <= 0.3f) {
+                    alpha = alpha + 0.0025f;}
+                batch.end();
+            }
         }
-        if(count > 5.4f) {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(new Color(0, 0, 0, 0.05f));
-            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            shapeRenderer.end();
-        }
-        if(count > 5.6f) {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(new Color(0, 0, 0, 0.05f));
-            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            shapeRenderer.end();
-        }
-        if(count > 5.8f) {
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(new Color(0, 0, 0, 0.05f));
-            shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            shapeRenderer.end();
-        }
-        if(count > 6f) {
+        if(count >= 15.4f) {
             batch.begin();
             rain.draw(batch, deltaTime);
             batch.end();
         }
-
-        if (count > 15f) {
+        if(count >= 30.4f) {
+            rain.allowCompletion();
+        }
+        if(count >= 31f) {
+            batch.begin();
+            brightness.setAlpha(alpha - 0.001f);
+            brightness.draw(batch);
+            if (alpha >= 0.01f) {
+                alpha = alpha - 0.001f;
+            }
+            batch.end();
+            if (!stopCycle) {
+                stopCycle = true;
+            }
+        }
+        if(count >= 37f) {
             count = 0;
+            if (stopCycle) {
+                stopCycle = false;
+            }
         }
     }
 }

@@ -60,14 +60,14 @@ public class Duck extends EntityAi {
 
         // Gives instant money if collected
         Currency.get().give(Currency.Type.GOLD, 0);
-        if (!shooting){
+        if (!shooting){ //Regular duck
             Currency.get().give(Currency.Type.POINTS, 25);
             deadDuck = 1;
-        }else if (deadDuck == 3) {
+        }else if (deadDuck == 3) { // Long boi
             Currency.get().give(Currency.Type.POINTS, 10000);
             deadDuck = 2;
         }
-        else{
+        else{ //angry duck
             Currency.get().give(Currency.Type.POINTS, 250);
             deadDuck = 2;
         }

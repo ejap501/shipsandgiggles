@@ -75,10 +75,10 @@ public class GameScreen implements Screen {
 	// Implement world
 	public static World world;
 	public static Ship playerShips;
-	private static ArrayList<Coin> coinData = new ArrayList<>();
-	private static ArrayList<powerUp> powerUpData = new ArrayList<>();
-	private static ArrayList<Stone> stoneData = new ArrayList<>();
-	private static ArrayList<EnemyShip> hostileShips = new ArrayList<>();
+	public static ArrayList<Coin> coinData = new ArrayList<>();
+	public static ArrayList<powerUp> powerUpData = new ArrayList<>();
+	public static ArrayList<Stone> stoneData = new ArrayList<>();
+	public static ArrayList<EnemyShip> hostileShips = new ArrayList<>();
 	public static ArrayList<Duck> ducks = new ArrayList<>();
 
 	// Camera work
@@ -231,7 +231,7 @@ public class GameScreen implements Screen {
 
 		if (LoadingScreen.loadedGame){
 
-			load(bobBody);
+			load(bobBody,world,camera);
 		}
 		else {
 
@@ -576,6 +576,7 @@ public class GameScreen implements Screen {
 
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			closeAndSave();
+			Gdx.app.exit();
 		}
 
 	}
@@ -1021,7 +1022,7 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public void closeAndSave(){
+	public static void closeAndSave(){
 
 		Json currencySaveFile = new Json();
 
@@ -1052,8 +1053,11 @@ public class GameScreen implements Screen {
 			}
 		}
 
+
 		FileHandle coinFile = Gdx.files.local("saves/coinSaveFile.json");
 		coinFile.writeString(coinInfo,false);
+
+
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1096,7 +1100,7 @@ public class GameScreen implements Screen {
 				stoneInfo += stoneSaveFile.toJson("B");
 				stoneInfo += stoneSaveFile.toJson(",");
 			}
-			else if (stoneDatum.texture == stoneModelC){
+			else{
 				stoneInfo += stoneSaveFile.toJson("C");
 				stoneInfo += stoneSaveFile.toJson(",");
 
@@ -1303,12 +1307,10 @@ public class GameScreen implements Screen {
 
 		gamePreferences.setHasSave(true);
 
-		Gdx.app.exit();
-
 
 	}
 
-	public static void load(Body bobBody){
+	public static void load(Body bobBody,World world,OrthographicCamera camera){
 		//DIFFICULTY
 
 		FileHandle difficultyFile = Gdx.files.local("saves/difficultySaveFile.json");
@@ -1336,7 +1338,9 @@ public class GameScreen implements Screen {
 
 		playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f,
 				new Location(Float.parseFloat((playerList[0].substring(1,playerList[0].length() - 1))), Float.parseFloat((playerList[1].substring(1,playerList[1].length() - 1)))),
-				playerModel.getHeight(), playerModel.getWidth(), camera, world);
+				playerModel.getHeight(), playerModel.getWidth(),
+				camera,
+				world);
 		playerShips.createBody();
 
 		// Creates damping to player
@@ -1352,7 +1356,7 @@ public class GameScreen implements Screen {
 		playerShips.coinMulti = Integer.parseInt((playerList[5].substring(1,playerList[5].length() - 1)));
 		playerShips.pointMulti = Integer.parseInt((playerList[6].substring(1,playerList[6].length() - 1)));
 		playerShips.priorCoinMulti = Integer.parseInt((playerList[7].substring(1,playerList[7].length() - 1)));
-		playerShips.timeToRegen = Integer.parseInt((playerList[8].substring(1,playerList[8].length() - 1)));
+		playerShips.timeToRegen = Float.parseFloat((playerList[8].substring(1,playerList[8].length() - 1)));
 
 
 		//CURRENCY
@@ -1387,7 +1391,7 @@ public class GameScreen implements Screen {
 		String powerText = powerUpFile.readString();
 		String[] powerList = powerText.split(",");
 
-		System.out.println(Arrays.toString(powerList));
+		//System.out.println(Arrays.toString(powerList));
 
 
 		for(int i = 0; i < powerList.length - 1; i = i + 3) {
@@ -1412,7 +1416,7 @@ public class GameScreen implements Screen {
 		String stoneText = stoneFile.readString();
 		String[] stoneList = stoneText.split(",");
 
-
+		//System.out.println(Arrays.toString(stoneList));
 
 
 		for(int i = 0; i < stoneList.length - 1; i = i + 3) {

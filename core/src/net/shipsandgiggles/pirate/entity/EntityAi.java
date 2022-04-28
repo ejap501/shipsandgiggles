@@ -109,9 +109,8 @@ public class EntityAi implements Steerable<Vector2> {
         this.hitBox =  new Rectangle(this.body.getPosition().x - 300, this.body.getPosition().y - 300, texture.getWidth() + 600, texture.getHeight() + 600);
 
         // Constructs fixture
-        /*PolygonShape shape = new PolygonShape();
-        shape.setAsBox((width / 2f) / PIXEL_PER_METER , (height / 2f) / PIXEL_PER_METER);*/
-        ChainShape shape = createEllipse(width/2f, height/2f, 64);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox((width / 2f) / PIXEL_PER_METER , (height / 2f) / PIXEL_PER_METER);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
@@ -119,25 +118,6 @@ public class EntityAi implements Steerable<Vector2> {
 
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
-    }
-
-    ChainShape createEllipse(float width, float height) {
-        return createEllipse(width, height, 64);
-    }
-
-    ChainShape createEllipse(float width, float height, int STEPS)
-    {
-        ChainShape ellipse = new ChainShape();
-        Vector2[] verts = new Vector2[STEPS];
-
-        for(int i = 0; i < STEPS; i++)
-        {
-            float t = (float)(i*2*Math.PI)/STEPS;
-            verts[i] = new Vector2(width * (float)Math.cos(t), height * (float)Math.sin(t));
-        }
-
-        ellipse.createLoop(verts);
-        return ellipse;
     }
 
     /**

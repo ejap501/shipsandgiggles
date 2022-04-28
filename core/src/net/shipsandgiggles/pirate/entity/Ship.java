@@ -107,9 +107,8 @@ public class Ship extends MovableEntity {
 		bodyDef.fixedRotation = false;
 
 		this.entityBody = world.createBody(bodyDef);
-		/*PolygonShape shape = new PolygonShape();
-		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);*/
-		ChainShape shape = createEllipse(width/2f, height/2f, 64);
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
@@ -122,25 +121,6 @@ public class Ship extends MovableEntity {
 
 		// Sets world
 		this.world = GameScreen.world;
-	}
-
-	ChainShape createEllipse(float width, float height) {
-		return createEllipse(width, height, 64);
-	}
-
-	ChainShape createEllipse(float width, float height, int STEPS)
-	{
-		ChainShape ellipse = new ChainShape();
-		Vector2[] verts = new Vector2[STEPS];
-
-		for(int i = 0; i < STEPS; i++)
-		{
-			float t = (float)(i*2*Math.PI)/STEPS;
-			verts[i] = new Vector2(width * (float)Math.cos(t), height * (float)Math.sin(t));
-		}
-
-		ellipse.createLoop(verts);
-		return ellipse;
 	}
 
 	/**

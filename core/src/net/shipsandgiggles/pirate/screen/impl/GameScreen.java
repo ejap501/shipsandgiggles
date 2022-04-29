@@ -1530,6 +1530,7 @@ public class GameScreen implements Screen {
 			}
 
 
+
 			Body body = createEnemy(false, new Vector2(Float.parseFloat((enemyList[i].substring(1,enemyList[i].length() - 1))), Float.parseFloat((enemyList[i + 1].substring(1,enemyList[i + 1].length() - 1)))), world);
 			EnemyShip newEnemy = new EnemyShip(body, shipTexture, 300f,
 					new Location(Float.parseFloat((enemyList[i].substring(1,enemyList[i].length() - 1))), Float.parseFloat((enemyList[i + 1].substring(1,enemyList[i + 1].length() - 1)))),

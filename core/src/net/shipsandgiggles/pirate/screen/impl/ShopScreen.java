@@ -161,6 +161,7 @@ public class ShopScreen implements Screen {
 		if (Currency.get().balance(Currency.Type.GOLD) >= speedCost) {
 			Currency.get().take(Currency.Type.GOLD, speedCost);
 			GameScreen.currentSpeed = GameScreen.maxSpeed * 1.25f;
+			GameScreen.maxSpeed = GameScreen.maxSpeed * 1.25f;
 			speedCost +=  50;
 			speed.setText(speedCost + "coins");
 			coinAmount.setText(Currency.get().balance(Currency.Type.GOLD) + "coins");

@@ -24,23 +24,17 @@ public class ShopScreenTests {
 
     @Test
     public void cooldownListenerTest(){
-
-
         float beforeCooldown = Ship.burstCoolDown;
+
         Currency.get().give(Currency.Type.GOLD, ShopScreen.cooldownCost);
         ShopScreen.coolDownListener(); // Should run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.coolDownButton.getText().charAt(ShopScreen.coolDownButton.getText().length() -1));
-        assertEquals(95,ShopScreen.cooldownCost);
         assertEquals(beforeCooldown -0.25f, Ship.burstCoolDown,0.01f);
 
         ShopScreen.coolDownListener();// Should not run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.coolDownButton.getText().charAt(ShopScreen.coolDownButton.getText().length() -1));
-        assertEquals(95,ShopScreen.cooldownCost);
         assertEquals(beforeCooldown -0.25f, Ship.burstCoolDown,0.01f);
 
         Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        Ship.burstCoolDown += 0.25f;
     }
 
     @Test
@@ -49,18 +43,16 @@ public class ShopScreenTests {
         float speedBefore = GameScreen.maxSpeed;
         Currency.get().give(Currency.Type.GOLD, ShopScreen.speedCost);
         ShopScreen.speedListener(); // Should run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.speedButton.getText().charAt(ShopScreen.speedButton.getText().length() -1));
-        assertEquals(75,ShopScreen.speedCost);
         assertEquals(speedBefore * 1.25, GameScreen.currentSpeed, 0.01f);
+        assertEquals("max speed",speedBefore * 1.25, GameScreen.maxSpeed, 0.01f);
 
         ShopScreen.speedListener();// Should not run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.speedButton.getText().charAt(ShopScreen.speedButton.getText().length() -1));
-        assertEquals(75,ShopScreen.speedCost);
         assertEquals(speedBefore * 1.25, GameScreen.currentSpeed, 0.01f);
+        assertEquals(speedBefore * 1.25, GameScreen.maxSpeed, 0.01f);
 
         Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        GameScreen.currentSpeed = GameScreen.currentSpeed /1.25f;
+        GameScreen.maxSpeed = GameScreen.maxSpeed /1.25f;
     }
 
     @Test
@@ -73,21 +65,18 @@ public class ShopScreenTests {
         GameScreen.createSprites();
         GameScreen.createEntities(bobBody,world,camera);
 
-        float multiBefore = GameScreen.playerShips.getCoinMulti();
+        int multiBefore = GameScreen.playerShips.getCoinMulti();
         Currency.get().give(Currency.Type.GOLD, ShopScreen.multiCost);
-        ShopScreen.multiplierListener();; // Should run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.multiButton.getText().charAt(ShopScreen.multiButton.getText().length() -1));
-        assertEquals(85,ShopScreen.multiCost);
+        ShopScreen.multiplierListener();// Should run since enough coins
+
         assertEquals(multiBefore * 2, GameScreen.playerShips.getCoinMulti(), 0.01f);
 
         ShopScreen.multiplierListener();// Should not run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.multiButton.getText().charAt(ShopScreen.multiButton.getText().length() -1));
-        assertEquals(85,ShopScreen.multiCost);
+
         assertEquals(multiBefore * 2, GameScreen.playerShips.getCoinMulti(), 0.01f);
 
         Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        Ship.coinMulti = multiBefore;
     }
 
     @Test
@@ -104,19 +93,14 @@ public class ShopScreenTests {
 
         double healthBefore = Ship.maxHealth;
         Currency.get().give(Currency.Type.GOLD, ShopScreen.healthCost);
-        ShopScreen.healthListener();; // Should run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.healthButton.getText().charAt(ShopScreen.healthButton.getText().length() -1));
-        assertEquals(105,ShopScreen.healthCost);
+        ShopScreen.healthListener();// Should run since enough coins
         assertEquals(healthBefore +  20, Ship.maxHealth, 0.01f);
 
         ShopScreen.healthListener();// Should not run since enough coins
-        assertEquals(0,Currency.get().balance(Currency.Type.GOLD));
-        assertEquals('2',ShopScreen.healthButton.getText().charAt(ShopScreen.healthButton.getText().length() -1));
-        assertEquals(105,ShopScreen.healthCost);
         assertEquals(healthBefore + 20, Ship.maxHealth, 0.01f);
 
         Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        Ship.maxHealth-= 20;
     }
 
 

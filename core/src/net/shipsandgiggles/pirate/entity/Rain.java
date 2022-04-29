@@ -23,6 +23,7 @@ public class Rain {
 
         brightness = new Sprite(new Texture("models/black.png"));
         brightness.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        brightness.setAlpha(0);
     }
 
     public void draw(Batch batch, float deltaTime) {
@@ -59,10 +60,10 @@ public class Rain {
         }
         if(count >= 31f) {
             batch.begin();
-            brightness.setAlpha(alpha - 0.001f);
+            brightness.setAlpha(alpha - 0.002f);
             brightness.draw(batch);
             if (alpha >= 0.01f) {
-                alpha = alpha - 0.001f;
+                alpha = alpha - 0.002f;
             }
             batch.end();
             if (!stopCycle) {

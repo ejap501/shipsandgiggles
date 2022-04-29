@@ -37,6 +37,7 @@ public class WorldContactListener implements ContactListener {
                 College college = (College) fixtureA.getUserData();
                 // Applies damage to the college
                 college.damage(ball.getDamageDelt());
+                //ball.setToDestroy();
                 Gdx.app.log("cannonball - college", "collision");
             }
             // Checks for a player collision
@@ -44,6 +45,7 @@ public class WorldContactListener implements ContactListener {
                 Ship ship = (Ship) fixtureA.getUserData();
                 // Applies damage to the ship
                 ship.takeDamage(ball.getDamageDelt());
+                //ball.setToDestroy();
                 Gdx.app.log("cannonball - ship", "collision");
             }
             // Checks for a NPC collision
@@ -51,6 +53,7 @@ public class WorldContactListener implements ContactListener {
                 EntityAi npc = (EntityAi)  fixtureA.getUserData();
                 // Applies damage to the NPC
                 npc.damage(ball.getDamageDelt());
+                //ball.setToDestroy();
                 Gdx.app.log("cannonball - NPC", "collision");
 
             }

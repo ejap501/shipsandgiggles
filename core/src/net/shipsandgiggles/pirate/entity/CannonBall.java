@@ -38,6 +38,7 @@ public class CannonBall {
     public float finalX = 0;
     public float finalY = 0;
     public int multiplier;
+    private boolean setToDestroy;
 
     /**
      * Instantiates the cannon ball object
@@ -113,7 +114,6 @@ public class CannonBall {
         this.categoryBits = categoryBits;
         this.maskBits = maskBit;
 
-
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(position.x, position.y);
@@ -130,7 +130,6 @@ public class CannonBall {
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-        fixtureDef.isSensor = true;
 
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
@@ -146,9 +145,30 @@ public class CannonBall {
      */
     public void update(Batch batch) {
         movement();
-        batch.begin();
-        this.cannonBall.draw(batch);
-        batch.end();
+        if(setToDestroy && !this.isDestroyed) {
+            // Plays explosion noise
+            LoadingScreen.soundController.playExplosion();
+
+            // Sets final position
+            finalX = this.body.getPosition().x;
+            finalY = this.body.getPosition().y;
+
+            // Adds explosion animation
+            GameScreen.add(new Vector2(finalX, finalY));
+
+            // Destorys the cannonball
+            this.world.destroyBody(this.body);
+            this.isDestroyed = true;
+
+            // Removes the cannonball from the array
+            BallsManager.removeNext();
+        }
+
+        if(!this.isDestroyed) {
+            batch.begin();
+            this.cannonBall.draw(batch);
+            batch.end();
+        }
     }
 
     /**
@@ -212,6 +232,8 @@ public class CannonBall {
 
             // Removes the cannonball from the array
             BallsManager.removeNext();
+
+            //setToDestroy();
         }
 
         /*
@@ -242,5 +264,9 @@ public class CannonBall {
         this.body.setTransform(position, this.body.getAngle());
         this.cannonBall.setPosition(this.body.getPosition().x * PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y * PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
         this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
+    }
+
+    public void setToDestroy() {
+        setToDestroy = true;
     }
 }

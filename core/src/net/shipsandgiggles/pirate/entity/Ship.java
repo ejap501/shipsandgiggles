@@ -113,6 +113,7 @@ public class Ship extends MovableEntity {
 		fixtureDef.shape = shape;
 		fixtureDef. density = 1f;
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
+		fixtureDef.restitution = 0.1f;
 		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 

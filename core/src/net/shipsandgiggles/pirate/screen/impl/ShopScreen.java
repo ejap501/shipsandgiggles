@@ -28,8 +28,9 @@ import net.shipsandgiggles.pirate.conf.Configuration;
  */
 public class ShopScreen implements Screen {
 	// Main data store
-	private Stage stage;
-	private Table table;
+	private static Stage stage;
+	public static Table table;
+	public static Table Back;
 
 	// Costs
 	public static int speedCost = 25;
@@ -58,79 +59,12 @@ public class ShopScreen implements Screen {
 	/** Displays the shop screen */
 	@Override
 	public void show() {
-		// Construct table
-		this.stage = new Stage(new ScreenViewport());
-		Gdx.input.setInputProcessor(this.stage);
-		this.table = new Table();
-		this.table.setFillParent(true);
-		this.stage.addActor(this.table);
-		final Table Back = new Table();
-		Back.setFillParent(true);
+		stage = new Stage(new ScreenViewport());
+		Gdx.input.setInputProcessor(stage);
+		createParts();
+		stage.addActor(table);
 		stage.addActor(Back);
 
-
-		// Constructs buttons listeners
-		backButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						PirateGame.get().changeScreen(ScreenType.GAME);
-					}});
-
-
-		healthButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						healthListener();
-					}});
-
-
-		multiButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						multiplierListener();
-					}});
-
-
-		speedButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						speedListener();
-					}});
-
-		coolDownButton.addListener(
-				new ChangeListener() {
-					@Override
-					public void changed(ChangeEvent event, Actor actor) {
-						LoadingScreen.soundController.playButtonPress();
-						coolDownListener();
-					}});
-
-
-		// Creates a uniform X/Y table.
-		this.table.add(healthButton);
-		this.table.add(health);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(multiButton);
-		this.table.add(multi);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(speedButton);
-		this.table.add(speed);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(coolDownButton);
-		this.table.add(cooldown);
-		this.table.row().pad(10, 0, 10, 0);
-
-		Back.add(backButton).pad(0, 0, 0, 100);
-		Back.add(coinAmount);
-		Back.top().left();
 	}
 
 	/**
@@ -192,6 +126,78 @@ public class ShopScreen implements Screen {
 			healthTier +=1 ;
 			healthButton.setText("Health + 20 - Tier " + healthTier);
 		}
+	}
+
+	public static void createParts(){
+		// Construct table
+		table = new Table();
+		Back  = new Table();
+		table.setFillParent(true);
+		Back.setFillParent(true);
+
+
+		// Constructs buttons listeners
+		backButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						PirateGame.get().changeScreen(ScreenType.GAME);
+					}});
+
+
+		healthButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						healthListener();
+					}});
+
+
+		multiButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						multiplierListener();
+					}});
+
+
+		speedButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						speedListener();
+					}});
+
+		coolDownButton.addListener(
+				new ChangeListener() {
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.playButtonPress();
+						coolDownListener();
+					}});
+
+
+		// Creates a uniform X/Y table.
+		table.add(healthButton);
+		table.add(health);
+		table.row().pad(10, 0, 10, 0);
+		table.add(multiButton);
+		table.add(multi);
+		table.row().pad(10, 0, 10, 0);
+		table.add(speedButton);
+		table.add(speed);
+		table.row().pad(10, 0, 10, 0);
+		table.add(coolDownButton);
+		table.add(cooldown);
+		table.row().pad(10, 0, 10, 0);
+
+		Back.add(backButton).pad(0, 0, 0, 100);
+		Back.add(coinAmount);
+		Back.top().left();
 	}
 
 	/**

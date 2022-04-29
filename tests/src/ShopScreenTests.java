@@ -18,8 +18,9 @@ public class ShopScreenTests {
 
     @Test
     public void screenCreation(){
-        InformationScreen.createParts();
-        assertEquals(38,InformationScreen.table.getRows() );
+        ShopScreen.createParts();
+        assertEquals(4,ShopScreen.table.getRows() );
+        assertEquals(0,ShopScreen.Back.getRows() );
     }
 
     @Test

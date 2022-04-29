@@ -11,6 +11,7 @@ import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.impl.collectible.Coin;
 
+import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -46,7 +47,7 @@ public class CoinTests {
     }
     @Test
     public void killCoin() {
-        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        LoadingScreen.loadedGame = false;
         /////////////////////////
 
         World world = new World(new Vector2(0, 0), false);

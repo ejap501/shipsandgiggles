@@ -54,7 +54,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * Edited from original
  *
  * @author Team 23
- * @author Team 22: Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter
+ * @author Team 22: Ethan Alabaster,  Joe Dickinson, Sam Pearson,  Edward Poulter
  * @version 2.0
  */
 public class GameScreen implements Screen {
@@ -128,8 +128,8 @@ public class GameScreen implements Screen {
 	public static Sprite cannonBall;
 
 	// Abilities
-	static float currentSpeed = 100000f;
-	float maxSpeed = 100000f;
+	public static float currentSpeed = 100000f;
+	public static float maxSpeed = 100000f;
 	static float speedMul = 40f;
 	int damageMul = 2;
 	public static float speedTimer = -1f;
@@ -327,31 +327,7 @@ public class GameScreen implements Screen {
 		for (powerUp powerUpDatum : powerUpData) {
 
 			powerUpDatum.draw(batch);
-			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					speedTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					invincibilityTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					damageTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					coinTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					pointTimer = 10;
-				}
-			}
-			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-				powerUpDatum.death();
-
-			}
+			powerUpChecks(powerUpDatum);
 		}
 
 		for (Stone stoneDatum : stoneData) {
@@ -588,7 +564,7 @@ public class GameScreen implements Screen {
 	 *
 	 * @param playerShips : The player body
 	 */
-	private void processInput(Ship playerShips) {
+	public static void processInput(Ship playerShips) {
 		// Processing the input created
 		float speedMulSet = 1;
 		if (speedTimer > 0){
@@ -1601,6 +1577,35 @@ public class GameScreen implements Screen {
 
 		bob.health = Integer.parseInt((bobList[2].substring(1,bobList[2].length() - 1)));
 		bob.timer = Float.parseFloat((bobList[3].substring(1,bobList[3].length() - 1)));
+	}
+
+	public void powerUpChecks(powerUp powerUpDatum){
+
+		if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			speedTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			invincibilityTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			damageTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			coinTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			pointTimer = 10;
+		}
+	}
+		if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
+			powerUpDatum.death();
+
+		}
 	}
 
 	@Override

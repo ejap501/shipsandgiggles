@@ -225,7 +225,7 @@ public class HUDmanager {
 
         if(GameScreen.coinTimer > 0){
             String coinText = "" + GameScreen.coinTimer;
-            coinTimer.setText("" + coinText.substring(0,2));
+            coinTimer.setText("" + coinText.substring(0,1));
         }
         else{
             coinTimer.setText(0);
@@ -233,7 +233,7 @@ public class HUDmanager {
 
         if(GameScreen.pointTimer > 0){
             String pointText = "" + GameScreen.pointTimer;
-            pointTimer.setText("" + pointText.substring(0,2));
+            pointTimer.setText("" + pointText.substring(0,1));
         }
         else {
             pointTimer.setText(0);
@@ -241,7 +241,7 @@ public class HUDmanager {
 
         if(GameScreen.damageTimer > 0){
             String damageText = "" + GameScreen.damageTimer;
-            damTimer.setText("" + damageText.substring(0,2));
+            damTimer.setText("" + damageText.substring(0,1));
         }
         else {
             damTimer.setText(0);
@@ -249,7 +249,7 @@ public class HUDmanager {
 
         if(GameScreen.speedTimer > 0){
             String speedText = "" + GameScreen.speedTimer;
-            speedTimer.setText("" + speedText.substring(0,2));
+            speedTimer.setText("" + speedText.substring(0,1));
         }
         else {
             speedTimer.setText(0);
@@ -257,7 +257,7 @@ public class HUDmanager {
 
         if(GameScreen.invincibilityTimer > 0){
             String invText = "" + GameScreen.invincibilityTimer;
-            invTimer.setText("" + invText.substring(0,2));
+            invTimer.setText("" + invText.substring(0,1));
         }
         else {
             invTimer.setText(0);

@@ -32,21 +32,84 @@ import net.shipsandgiggles.pirate.task.ChangeScreenTask;
  */
 public class InformationScreen implements Screen {
     // Main data store
-    private Stage stage;
-    private Table table;
-    private Timer.Task task;
+    public static Stage stage;
+    public static Table table;
+    public static Timer.Task task;
     private final SpriteBatch batch = new SpriteBatch();
     public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
 
     /** Displays the information screen */
     @Override
     public void show() {
-        // Construct table
-        this.table = new Table();
-        this.table.setFillParent(true);
-        this.stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(this.stage);
-        this.stage.addActor(this.table);
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
+        createParts();
+        stage.addActor(table);
+    }
+
+    /**
+     * Renders the information screen to the world
+     *
+     * @param deltaTime : Delta time (elapsed time since last game tick)
+     */
+    @Override
+    public void render(float deltaTime) {
+        Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        background.draw(batch);
+        batch.end();
+
+        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        this.stage.draw();
+
+        takeInput();
+    }
+
+    /**
+     * Resizes the information screen to fit the viewport
+     *
+     * @param width : Width of the screen
+     * @param height : Height of the screen
+     */
+    @Override
+    public void resize(int width, int height) {
+        this.stage.getViewport().update(width, height, true);
+    }
+
+    /** Hiding the screen after display */
+    @Override
+    public void hide() {
+        this.stage.getRoot().getColor().a = 0;
+        this.stage.getRoot().addAction(Actions.fadeOut(1));
+    }
+
+    /** Disposing of the screen data */
+    @Override
+    public void dispose() {
+        this.stage.dispose();
+    }
+
+    /** User input to proceed to next step (termination of the information screen) */
+    public void takeInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            this.task.run();
+        }
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    public static void createParts(){
+        table = new Table();
+        table.setFillParent(true);
 
         // Creating all the textures
         Texture goldCoinTexture = new Texture(Gdx.files.internal("models/gold_1.png"));
@@ -123,150 +186,87 @@ public class InformationScreen implements Screen {
         spaceToSkip.setAlignment(Align.center);
 
         // Creates a uniform X/Y table.
-        this.table.add(informationLabel);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(keysInformation1);
-        this.table.row();
-        this.table.add(keysInformation2);
-        this.table.row();
-        this.table.add(keysInformation3);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(shootingInformation);
-        this.table.row();
-        this.table.add(shootingInformationTwo);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(burstShoot);
-        this.table.row();
-        this.table.add(singularShoot);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(gold);
-        this.table.row();
-        this.table.add(new Image(goldCoinTexture));
-        this.table.row();
-        this.table.add(silver);
-        this.table.row();
-        this.table.add(new Image(silverCoinTexture));
-        this.table.row();
-        this.table.add(copper);
-        this.table.row();
-        this.table.add(new Image(copperCoinTexture));
-        this.table.row();
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.row();
-        this.table.add(collegeInfo1);
-        this.table.row();
-        this.table.add(collegeInfo2);
-        this.table.row();
-        this.table.add(collegeInfo3);
-        this.table.row();
-        this.table.add(collegeInfo4);
-        this.table.row();
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(Configuration.SPACER_LABEL);
-        this.table.row();
-        this.table.add(speed);
-        this.table.row();
-        this.table.add(new Image(speedTexture));
-        this.table.row();
-        this.table.add(invincibility);
-        this.table.row();
-        this.table.add(new Image(invincibilityTexture));
-        this.table.row();
-        this.table.add(increasedDamage);
-        this.table.row();
-        this.table.add(new Image(damageIncreaseTexture));
-        this.table.row();
-        this.table.add(coinMultiplier);
-        this.table.row();
-        this.table.add(new Image(coinMultiplierTexture));
-        this.table.row();
-        this.table.add(pointMultiplier);
-        this.table.row();
-        this.table.add(new Image(pointMultiplierTexture));
-        this.table.row();
-        this.table.row();
-        this.table.add(warning);
-        this.table.row();
-        this.table.row();
-        this.table.row();
-        this.table.add(spaceToSkip);
-
-        this.task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);
-    }
-
-    /**
-     * Renders the information screen to the world
-     *
-     * @param deltaTime : Delta time (elapsed time since last game tick)
-     */
-    @Override
-    public void render(float deltaTime) {
-        Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        background.draw(batch);
-        batch.end();
-
-        this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        this.stage.draw();
-
-        takeInput();
-    }
-
-    /**
-     * Resizes the information screen to fit the viewport
-     *
-     * @param width : Width of the screen
-     * @param height : Height of the screen
-     */
-    @Override
-    public void resize(int width, int height) {
-        this.stage.getViewport().update(width, height, true);
-    }
-
-    /** Hiding the screen after display */
-    @Override
-    public void hide() {
-        this.stage.getRoot().getColor().a = 0;
-        this.stage.getRoot().addAction(Actions.fadeOut(1));
-    }
-
-    /** Disposing of the screen data */
-    @Override
-    public void dispose() {
-        this.stage.dispose();
-    }
-
-    /** User input to proceed to next step (termination of the information screen) */
-    public void takeInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            this.task.run();
-        }
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-}
+        table.add(informationLabel);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(keysInformation1);
+        table.row();
+        table.add(keysInformation2);
+        table.row();
+        table.add(keysInformation3);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(shootingInformation);
+        table.row();
+        table.add(shootingInformationTwo);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(burstShoot);
+        table.row();
+        table.add(singularShoot);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(gold);
+        table.row();
+        table.add(new Image(goldCoinTexture));
+        table.row();
+        table.add(silver);
+        table.row();
+        table.add(new Image(silverCoinTexture));
+        table.row();
+        table.add(copper);
+        table.row();
+        table.add(new Image(copperCoinTexture));
+        table.row();
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.row();
+        table.add(collegeInfo1);
+        table.row();
+        table.add(collegeInfo2);
+        table.row();
+        table.add(collegeInfo3);
+        table.row();
+        table.add(collegeInfo4);
+        table.row();
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(Configuration.SPACER_LABEL);
+        table.row();
+        table.add(speed);
+        table.row();
+        table.add(new Image(speedTexture));
+        table.row();
+        table.add(invincibility);
+        table.row();
+        table.add(new Image(invincibilityTexture));
+        table.row();
+        table.add(increasedDamage);
+        table.row();
+        table.add(new Image(damageIncreaseTexture));
+        table.row();
+        table.add(coinMultiplier);
+        table.row();
+        table.add(new Image(coinMultiplierTexture));
+        table.row();
+        table.add(pointMultiplier);
+        table.row();
+        table.add(new Image(pointMultiplierTexture));
+        table.row();
+        table.row();
+        table.add(warning);
+        table.row();
+        table.row();
+        table.row();
+        task = Timer.schedule(new ChangeScreenTask(ScreenType.GAME), 40);
+    }}

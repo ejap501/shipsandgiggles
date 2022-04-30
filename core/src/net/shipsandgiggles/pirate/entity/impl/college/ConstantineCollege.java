@@ -123,14 +123,14 @@ public class ConstantineCollege extends College {
          Checks if the college is dead or not
          Increments gold and points if not dead
          */
-        if(this.health == 1 && !this.dead){
-            this.counter += Gdx.graphics.getDeltaTime();
-            if(this.counter >= 1){
-                Currency.get().give(Currency.Type.POINTS, 3);
-                Currency.get().give(Currency.Type.GOLD, 5);
-                this.counter = 0;
-            }
-        }
+        //if(this.health == 1 && !this.dead){
+        //    this.counter += Gdx.graphics.getDeltaTime();
+        //    if(this.counter >= 1){
+        //        Currency.get().give(Currency.Type.POINTS, 3);
+        //        Currency.get().give(Currency.Type.GOLD, 5);
+        //        this.counter = 0;
+        //    }
+        //}
 
         // Creates shot and shoots
         if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {

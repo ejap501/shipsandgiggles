@@ -83,7 +83,6 @@ public class ShipTests {
 
         Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(x, y), playerModel.getHeight(), playerModel.getWidth(), camera, world);
         ship.createBody();
-        Vector2 startPos = ship.getPosition();
         Sprite cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 
         ship.burstShoot(world,cannonBall,camera,(short) 1,(short)1,(short)1);
@@ -95,6 +94,72 @@ public class ShipTests {
         Assert.assertEquals(9,world.getBodyCount());
 
     }
+
+
+    @Test
+    public void healthCheckTests() {
+
+        int x = 100;
+        int y = 100;
+
+
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+
+        Ship testShip = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(x, y), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+        testShip.createBody();
+
+
+        testShip.timeToRegen = 1;
+        testShip.healthCheck(testShip);
+        assertEquals(1 - Gdx.graphics.getDeltaTime(), testShip.timeToRegen,0.01);
+
+        testShip.timeToRegen = 0;
+        testShip.health = 170;
+        testShip.healthCheck(testShip);
+        assertEquals(testShip.health + testShip.healSpeed * Gdx.graphics.getDeltaTime(), testShip.health,0.1);
+
+        testShip.health = 220;
+        assertEquals(200, testShip.getMaximumHealth(),0.1);
+    }
+
+    @Test
+    public void cooldownTests() {
+
+        int x = 100;
+        int y = 100;
+
+
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+
+        Ship testShip = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(x, y), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+        testShip.createBody();
+
+
+        testShip.burstTimer = 1;
+        testShip.shootingTimer = 1;
+        testShip.cooldownManagement();
+        assertEquals(1 - Gdx.graphics.getDeltaTime(), testShip.burstTimer,0.01);
+        assertEquals(1 - Gdx.graphics.getDeltaTime(), testShip.shootingTimer,0.01);
+
+        testShip.burstTimer = 0;
+        testShip.shootingTimer = 0;
+        testShip.healthCheck(testShip);
+        assertEquals(0, testShip.burstTimer,0.1);
+        assertEquals(0, testShip.shootingTimer,0.1);
+
+    }
+
+
+
+
+
+
+
+
 
    //@Test
    //public void testMoveLeftMoving(){

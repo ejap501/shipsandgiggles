@@ -43,7 +43,7 @@ public class Ship extends MovableEntity {
 
 	public float shootingCoolDown = 0.6f;
 	public static float burstCoolDown = 4f;
-	public float shootingTimer = 0f;
+	public static float shootingTimer = 0f;
 	public static float burstTimer = 0f;
 	public World world;
 	public boolean dead = false;
@@ -60,7 +60,7 @@ public class Ship extends MovableEntity {
 	public static float health;
 	public static float maxHealth = 200f;
 	public float timeToRegen = 0;
-	private float healSpeed = 30;
+	public float healSpeed = 30;
 	public static int coinMulti = 1;
 	public static int pointMulti = 1;
 	public static int damageMulti = 1;
@@ -83,7 +83,7 @@ public class Ship extends MovableEntity {
 	 * @param world : World data
 	 */
 	public Ship(Sprite texture, float spawnSpeed, float maxSpeed, float driftFactor, float turnSpeed, Location location, float height, float width, Camera cam, World world) {
-		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 20, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
+		super(UUID.randomUUID(), texture, location, EntityType.SHIP, 200, spawnSpeed, maxSpeed, height, width); // TODO: Implement health.
 		// Constructor
 		this.health = this.maxHealth;
 		this.turnDirection = 0;
@@ -240,50 +240,28 @@ public class Ship extends MovableEntity {
 	 */
 	public void updateShots(World world, Sprite cannonBallSprite, Camera cam, short categoryBits, short maskBit, short groupIndex) {
 		// Checks if dead
-		if(this.dead) return;
+		if (this.dead) return;
 
 		// Health management
-		if(this.timeToRegen > 0){
-			this.timeToRegen -= Gdx.graphics.getDeltaTime();
-		}
-		else{
-			if(this.health > this.maxHealth){
-				this.health = this.maxHealth;
-			}
-			else if(this.timeToRegen <= 0 && this.health < this.maxHealth){
-				this.timeToRegen = 0;
-				this.health += this.healSpeed * Gdx.graphics.getDeltaTime();
-			}
-		}
+		healthCheck(this);
 
 		// Checks for rapid shots
 		rapidShot(world, cannonBallSprite, cam, categoryBits, maskBit, groupIndex);
 
 		// If player is shooting then shoot
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0){
+		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && shootingTimer <= 0) {
 			this.shoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short) (Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.shootingTimer = shootingCoolDown;
 		}
 
 		// If player uses burst then shoot burst
-		if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
-			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0) {
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short) (Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 
 		// Cool down management
-		if(burstTimer >= 0){
-			burstTimer -= Gdx.graphics.getDeltaTime();
-		}
-		else{
-			burstTimer = 0;
-		}
-		if(shootingTimer >= 0){
-			shootingTimer -= Gdx.graphics.getDeltaTime();
-		}
-		else {
-			shootingTimer = 0;
-		}
+		cooldownManagement();
 	}
 
 	/**
@@ -476,8 +454,41 @@ public class Ship extends MovableEntity {
 	 *
 	 * @param damageMulti : New multiplier value
 	 */
-	public static void setDamageMulti(int damageMulti) {
+	public void setDamageMulti(int damageMulti) {
 		Ship.damageMulti = damageMulti;
 	}
+
+	public void healthCheck(Ship player){
+		if(player.timeToRegen > 0){
+			player.timeToRegen -= Gdx.graphics.getDeltaTime();
+		}
+		else{
+			if(player.health > player.maxHealth){
+				player.health = player.maxHealth;
+			}
+			else if(player.timeToRegen <= 0 && player.health < player.maxHealth){
+				player.timeToRegen = 0;
+				player.health += player.healSpeed * Gdx.graphics.getDeltaTime();
+			}
+		}
+	}
+
+	public void cooldownManagement(){
+		if(burstTimer >= 0){
+			burstTimer -= Gdx.graphics.getDeltaTime();
+		}
+		else{
+			burstTimer = 0;
+		}
+		if(shootingTimer >= 0){
+			shootingTimer -= Gdx.graphics.getDeltaTime();
+		}
+		else {
+			shootingTimer = 0;
+		}
+	}
+
 }
+
+
 

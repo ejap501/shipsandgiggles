@@ -127,6 +127,7 @@ public class DuckTests {
 
         assertEquals(0, GameScreen.currentDuckKills);
         assertEquals(duckListLength + 1, GameScreen.ducks.size());
+        assertEquals(50000, GameScreen.ducks.get(GameScreen.ducks.size() -1).maxHealth);
         assertEquals(GameScreen.angryDuckAttack, GameScreen.ducks.get(16).cannonBallSprite);
     }
 

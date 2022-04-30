@@ -47,6 +47,7 @@ public class CoinTests {
     }
     @Test
     public void killCoin() {
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
         LoadingScreen.loadedGame = false;
         /////////////////////////
 

@@ -271,14 +271,14 @@ public class EntityAi implements Steerable<Vector2> {
      * @param world : World data
      */
     public void shootPlayer(Ship player, World world) {
-        if(this.health == 1 && !this.dead){
-            this.counter += Gdx.graphics.getDeltaTime();
-            if(this.counter >= 1){
-                Currency.get().give(Currency.Type.POINTS, 3);
-                Currency.get().give(Currency.Type.GOLD, 5);
-                this.counter = 0;
-            }
-        }
+        //if(this.health == 1 && !this.dead){
+        //    this.counter += Gdx.graphics.getDeltaTime();
+        //    if(this.counter >= 1){
+        //        Currency.get().give(Currency.Type.POINTS, 3);
+        //        Currency.get().give(Currency.Type.GOLD, 5);
+        //        this.counter = 0;
+        //    }
+        //}
 
 
         // Creates shot and shoots

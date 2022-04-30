@@ -364,13 +364,7 @@ public class GameScreen implements Screen {
 			gamePreferences.setHasSave(false);
 			return;
 		}
-		if(collegesCaptured == 4){
-			deathScreen.update(hud, 1);
-			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
-			deathScreen.stage.draw();
-			gamePreferences.setHasSave(false);
-			return;
-		}
+
 		if(collegesKilled == 4){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);

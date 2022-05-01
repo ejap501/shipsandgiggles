@@ -87,6 +87,21 @@ public class CannonBallTest {
 
     }
 
+    @Test
+    public void cannonBallDestroy(){
+        Sprite cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
+        World world = new World(new Vector2(0, 0), false);
+
+
+        CannonBall ball = new CannonBall(world, cannonBallSprite, 3, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), new Vector2(100,100), new Vector2(200,200), (short)5,(short)6,(short)7);
+
+        ball.setToDestroy();
+        ball.destroyBall();
+
+        assertEquals(0, world.getBodyCount());
+
+    }
+
 
 
 

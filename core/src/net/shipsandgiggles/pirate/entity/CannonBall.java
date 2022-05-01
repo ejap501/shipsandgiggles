@@ -172,7 +172,6 @@ public class CannonBall {
 
             return this.damageDelt;
         }
-        System.out.println(this.damageDelt * this.multiplier);
         return (this.damageDelt * this.multiplier);
     }
 
@@ -259,7 +258,7 @@ public class CannonBall {
     public void destroyBall(){
         if(setToDestroy && !this.isDestroyed) {
             // Plays explosion noise
-            LoadingScreen.soundController.playExplosion();
+            //LoadingScreen.soundController.playExplosion(); Commented out for testing
 
             // Sets final position
             finalX = this.body.getPosition().x;

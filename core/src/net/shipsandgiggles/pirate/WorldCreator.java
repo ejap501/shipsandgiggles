@@ -44,7 +44,6 @@ public class WorldCreator {
             shape.setAsBox(rect.getWidth() / 2 , rect.getHeight() / 2);
             fDef.shape = shape;
             fDef.filter.categoryBits = Configuration.Cat_walls;
-            fDef.restitution = 0.1f;
             fixture = body.createFixture(fDef);
 
         }

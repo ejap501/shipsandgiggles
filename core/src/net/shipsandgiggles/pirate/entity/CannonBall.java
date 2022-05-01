@@ -80,7 +80,7 @@ public class CannonBall {
         shape.setRadius(width / 2f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
+        //fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
 
@@ -130,7 +130,7 @@ public class CannonBall {
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
+        //fixtureDef.density = 1f;
 
         body.createFixture(fixtureDef).setUserData(this);
         this.body = body;
@@ -139,6 +139,7 @@ public class CannonBall {
         shape.dispose();
     }
 
+
     /**
      * Updates the state of each cannonball
      *
@@ -146,24 +147,7 @@ public class CannonBall {
      */
     public void update(Batch batch) {
         movement();
-        if(setToDestroy && !this.isDestroyed) {
-            // Plays explosion noise
-            LoadingScreen.soundController.playExplosion();
-
-            // Sets final position
-            finalX = this.body.getPosition().x;
-            finalY = this.body.getPosition().y;
-
-            // Adds explosion animation
-            GameScreen.add(new Vector2(finalX, finalY));
-
-            // Destorys the cannonball
-            this.world.destroyBody(this.body);
-            this.isDestroyed = true;
-
-            // Removes the cannonball from the array
-            BallsManager.removeNext();
-        }
+        destroyBall();
 
         if(!this.isDestroyed) {
             batch.begin();
@@ -218,24 +202,24 @@ public class CannonBall {
         // Checks if the ball has reached the maximum time it can be alive
         timer -= Gdx.graphics.getDeltaTime();
         if(timer <= 0 && !this.isDestroyed){
-            // Plays explosion noise
+            setToDestroy();
+            /*// Plays explosion noise
             LoadingScreen.soundController.playExplosion();
 
             // Sets final position
             finalX = this.body.getPosition().x;
-            finalY = this.body.getPosition().y;
+            finalY = this.body.getPosition().y;*/
 
             // Adds explosion animation
-            GameScreen.add(new Vector2(finalX, finalY));
+            /*GameScreen.add(new Vector2(finalX, finalY));
 
             // Destorys the cannonball
             this.world.destroyBody(this.body);
             this.isDestroyed = true;
 
             // Removes the cannonball from the array
-            BallsManager.removeNext();
+            BallsManager.removeNext();*/
 
-            //setToDestroy();
         }
 
         /*
@@ -270,5 +254,26 @@ public class CannonBall {
 
     public void setToDestroy() {
         setToDestroy = true;
+    }
+
+    public void destroyBall(){
+        if(setToDestroy && !this.isDestroyed) {
+            // Plays explosion noise
+            LoadingScreen.soundController.playExplosion();
+
+            // Sets final position
+            finalX = this.body.getPosition().x;
+            finalY = this.body.getPosition().y;
+
+            // Adds explosion animation
+            GameScreen.add(new Vector2(finalX, finalY));
+
+            // Destorys the cannonball
+            this.world.destroyBody(this.body);
+            this.isDestroyed = true;
+
+            // Removes the cannonball from the array
+            BallsManager.removeNext();
+        }
     }
 }

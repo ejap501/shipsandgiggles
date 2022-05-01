@@ -67,7 +67,8 @@ public class Ship extends MovableEntity {
 	public static int speedMulti = 1;
 	public int priorCoinMulti = -1;
 	public int priorPointMulti = -1;
-	private boolean inFog;
+
+	public static boolean inFog;
 
 	/**
 	 * Initialises the player ship

@@ -215,6 +215,9 @@ public class HUDmanager {
         if(timeCounter >= 2){
             Currency.get().give(Currency.Type.POINTS, 1);
             timeCounter = 0;
+            if(Ship.inFog) {
+                Currency.get().give(Currency.Type.POINTS, 1);
+            }
         }
         if(coolDownTimerTime > 0){
             cooldown.removeActor(burstLogo);

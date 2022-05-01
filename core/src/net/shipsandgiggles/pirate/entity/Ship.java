@@ -342,6 +342,9 @@ public class Ship extends MovableEntity {
 			if (turnDirection == 1){
 				this.turnDirection = turnDirection + 1;
 			}
+			if(turnDirection == 0){
+				this.turnDirection = 0;
+			}
 		}
 	}
 

@@ -102,7 +102,7 @@ public class CannonBall {
      * @param maskBit : Object mask
      * @param groupIndex : Position in group
      */
-    CannonBall(World world, Sprite cannonBall, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
+    public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
         //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
         this.world = world;
 
@@ -113,6 +113,7 @@ public class CannonBall {
         this.cannonBall = cannonBall;
         this.categoryBits = categoryBits;
         this.maskBits = maskBit;
+        this.multiplier = multiplier;
 
         def.bullet = true;
         def.type = BodyDef.BodyType.DynamicBody;
@@ -187,6 +188,7 @@ public class CannonBall {
 
             return this.damageDelt;
         }
+        System.out.println(this.damageDelt * this.multiplier);
         return (this.damageDelt * this.multiplier);
     }
 

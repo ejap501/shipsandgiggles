@@ -28,7 +28,7 @@ public class BallsManagerTest {
         Sprite cannonBallSprite = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
         World world = new World(new Vector2(0, 0), false);
 
-        createBallAtAngle(world, new Vector2(1,1), 5f, cannonBallSprite,(short)5,(short)6,(short)7);
+        createBallAtAngle(world, new Vector2(1,1), 1, 5,cannonBallSprite,(short)5,(short)6,(short)7);
 
         assertEquals(1, BallsManager.listOfBalls.size());
 

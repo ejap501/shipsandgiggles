@@ -55,9 +55,9 @@ public class BallsManager {
      * @param maskBit : Object mask
      * @param groupIndex : Position in group
      */
-    public static void createBallAtAngle(World world, Vector2 position, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
+    public static void createBallAtAngle(World world, Vector2 position, int multiplier, float angle, Sprite cannonBallSprite , short categoryBits, short maskBit, short groupIndex){
         // Creates cannon ball at a given angle
-        CannonBall ball = new CannonBall(world, cannonBallSprite, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);
+        CannonBall ball = new CannonBall(world, cannonBallSprite, multiplier, (int) cannonBallSprite.getWidth(), (int) cannonBallSprite.getHeight(), position, angle, categoryBits, maskBit, groupIndex);
 
         // Adds the cannonball to the array of cannonballs to manage them
         listOfBalls.add(ball);

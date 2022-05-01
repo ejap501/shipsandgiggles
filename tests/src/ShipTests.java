@@ -153,7 +153,33 @@ public class ShipTests {
 
     }
 
+    @Test
+    public void turnDirectionWeatherTests() {
 
+        int x = 100;
+        int y = 100;
+
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+
+        Ship testShip = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(x, y), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+        testShip.createBody();
+
+
+        testShip.inFog();
+        testShip.setTurnDirection(1);
+
+        assertEquals(2f,testShip.getTurnDirection());
+        testShip.setTurnDirection(2);
+        assertEquals(1f,testShip.getTurnDirection());
+
+        testShip.outFog();
+        testShip.setTurnDirection(1);
+        assertEquals(1f,testShip.getTurnDirection());
+
+
+    }
 
 
 

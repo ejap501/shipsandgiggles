@@ -53,11 +53,11 @@ public class LoadingScreen implements Screen {
 	 */
 	@Override
 	public void render(float deltaTime) {
-		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
+		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		background.draw(batch);
-		batch.end();
+		//batch.begin();
+		//background.draw(batch);
+		//batch.end();
 		this.soundController.update();
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();

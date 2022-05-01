@@ -123,10 +123,10 @@ public class HUDmanager {
 
         topRightTable.setSize(400,Gdx.graphics.getHeight());
         //topRightTable.setPosition(Gdx.graphics.getWidth() - 100, Gdx.graphics.getHeight() - 100);
-        topRightTable.pad(0,3300,750,587);
+        topRightTable.setPosition(1350,375);
 
         timerLabels.setSize(400,Gdx.graphics.getHeight());
-        timerLabels.pad(0,2800,750,587);
+        timerLabels.setPosition(1150,375);
 
 
         scoreLabel = new Label("Score: ", Configuration.SKIN, "big");

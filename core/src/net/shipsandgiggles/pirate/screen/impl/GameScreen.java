@@ -167,7 +167,7 @@ public class GameScreen implements Screen {
 		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 
-		weather = new Weather(this, 2000, 1200, 16);
+		weather = new Weather(world, 2000, 1200, 16);
 		rain = new Rain();
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;

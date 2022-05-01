@@ -8,7 +8,6 @@ import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 public class Weather extends Sprite {
-    private final GameScreen screen;
     private final float x;
     private final float y;
     private final int size;
@@ -16,10 +15,9 @@ public class Weather extends Sprite {
     public World world;
     public Body body;
 
-    public Weather(GameScreen screen, float x, float y, int size) {
-        this.screen = screen;
+    public Weather(World world, float x, float y, int size) {
         weather = new Texture("models/fog.png");
-        this.world = screen.getWorld();
+        this.world = world;
         this.x = x;
         this.y = y;
         this.size = size;
@@ -34,7 +32,7 @@ public class Weather extends Sprite {
 
     }
 
-    private void defineWeather() {
+    public void defineWeather() {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyDef.BodyType.StaticBody;

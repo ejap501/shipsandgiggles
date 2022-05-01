@@ -1,7 +1,12 @@
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import net.shipsandgiggles.pirate.HUDmanager;
 import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.screen.impl.DifficultyScreen;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import net.shipsandgiggles.pirate.screen.impl.InformationScreen;
 import org.junit.Test;
@@ -57,7 +62,7 @@ public class HUDTest {
         assertEquals(GameScreen.speedTimer,Float.parseFloat(HUDmanager.speedTimer.getText().substring(0)),0.01f);
         assertEquals(GameScreen.invincibilityTimer,Float.parseFloat(HUDmanager.invTimer.getText().substring(0)),0.01f);
 
-        HUDmanager.timeCounter = 0;
+        HUDmanager.timeCounter = 2;
         Ship.burstTimer = 0;
         GameScreen.coinTimer = 0;
         GameScreen.pointTimer = 0;
@@ -65,9 +70,17 @@ public class HUDTest {
         GameScreen.speedTimer = 0;
         GameScreen.invincibilityTimer = 0;
 
+
+        World world = new World(new Vector2(0, 0), false);
+        OrthographicCamera camera = new OrthographicCamera();
+        Body bobBody = GameScreen.createEnemy(false, new Vector2(100,100),world);
+        DifficultyScreen.difficulty = 1;
+        GameScreen.createSprites();
+        GameScreen.createEntities(bobBody,world,camera);
+        GameScreen.playerShips.inFog();
         HUDmanager.variableUpdates();
 
-        assertEquals(startPoints + 1,Currency.get().balance(Currency.Type.POINTS));
+        assertEquals(startPoints + 3,Currency.get().balance(Currency.Type.POINTS));
         assertEquals(GameScreen.coinTimer,Float.parseFloat(HUDmanager.coinTimer.getText().substring(0)),0.01f);
         assertEquals(GameScreen.pointTimer,Float.parseFloat(HUDmanager.pointTimer.getText().substring(0)),0.01f);
         assertEquals(GameScreen.damageTimer,Float.parseFloat(HUDmanager.damTimer.getText().substring(0)),0.01f);

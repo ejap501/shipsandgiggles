@@ -29,7 +29,7 @@ public class Ship extends MovableEntity {
 	private final float turnSpeed;
 	private final float driftFactor;
 
-	private float turnDirection;
+	public float turnDirection;
 	private float driveDirection;
 	private Sprite texture;
 

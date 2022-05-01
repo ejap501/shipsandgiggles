@@ -115,6 +115,10 @@ public class GamePreferences {
 		this.prefs().flush();
 	}
 
+	public float getMusicLevel() {
+		return this.prefs().getFloat(PREF_MUSIC_LEVEL, 0.5F);
+	}
+
 	public void setHasSave(boolean hasSave){
 		this.prefs().putBoolean(HAS_SAVE, hasSave);
 		this.prefs().flush();

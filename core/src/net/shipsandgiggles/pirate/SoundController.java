@@ -20,8 +20,6 @@ public class SoundController{
         public Sound Explosion;
         public Sound cannonShot;
         public Music seaNoises;
-        public float volume = 0;
-        public float musicVolume = 0;
 
         /** Construction of the controller */
         public SoundController(){
@@ -38,7 +36,7 @@ public class SoundController{
 
                 // Checks according to preferences and updates based on them
                 if(GamePreferences.get().isMusicEnabled() && !music.isPlaying()){
-                        music.setVolume(GamePreferences.get().getVolumeLevel());
+                        music.setVolume(GamePreferences.get().getMusicLevel());
                         music.setLooping(true);
                 }
                 if(GamePreferences.get().isVolumeEnabled() && !seaNoises.isPlaying()){
@@ -51,20 +49,16 @@ public class SoundController{
         public void update(){
                 if(!GamePreferences.get().isMusicEnabled()) music.stop();
                 if(!GamePreferences.get().isVolumeEnabled()) seaNoises.stop();
-                if(GamePreferences.get().isVolumeEnabled() && !music.isPlaying()){
+                if(GamePreferences.get().isMusicEnabled() && !music.isPlaying()){
                         music.play();
                 }
                 if(GamePreferences.get().isVolumeEnabled() && !seaNoises.isPlaying()){
                         seaNoises.play();
                 }
-                if(musicVolume != music.getVolume()) {
-                        music.setVolume(GamePreferences.get().getVolumeLevel());
-                        return;
-                }
-                if(volume != seaNoises.getVolume()) {
-                        seaNoises.setVolume(GamePreferences.get().getVolumeLevel());
-                        return;
-                }
+                music.setVolume(GamePreferences.get().getMusicLevel());
+                seaNoises.setVolume(GamePreferences.get().getVolumeLevel());
+
+
         }
 
         /** Play explosion noise*/

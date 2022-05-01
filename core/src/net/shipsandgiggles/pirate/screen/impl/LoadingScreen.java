@@ -29,7 +29,7 @@ import net.shipsandgiggles.pirate.conf.Configuration;
 public class LoadingScreen implements Screen {
 	// Main data store
 	private Stage stage;
-	private Table table;
+	public static Table table;
 	public static SoundController soundController;
 	private final SpriteBatch batch = new SpriteBatch();
 	public Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
@@ -38,14 +38,35 @@ public class LoadingScreen implements Screen {
 	/** Displays the loading screen */
 	@Override
 	public void show() {
-		// Construct table
-		this.soundController = new SoundController();
-		this.table = new Table();
-		this.table.setFillParent(true);
-		this.table.setDebug(true);
+
 		this.stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(this.stage);
-		this.stage.addActor(this.table);
+		createParts();
+		this.stage.addActor(table);
+
+	}
+
+	/**
+	 * Renders the loading screen to the world
+	 *
+	 * @param deltaTime : Delta time (elapsed time since last game tick)
+	 */
+	@Override
+	public void render(float deltaTime) {
+		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
+		this.soundController.update();
+		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+		this.stage.draw();
+	}
+
+	public static void createParts(){
+		soundController = new SoundController();
+		table = new Table();
+		table.setFillParent(true);
 
 		GamePreferences gamePreferences = GamePreferences.get();
 		/*
@@ -113,24 +134,6 @@ public class LoadingScreen implements Screen {
 		table.row();
 		table.add(exit).fillX().uniformX();
 	}
-
-	/**
-	 * Renders the loading screen to the world
-	 *
-	 * @param deltaTime : Delta time (elapsed time since last game tick)
-	 */
-	@Override
-	public void render(float deltaTime) {
-		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		background.draw(batch);
-		batch.end();
-		this.soundController.update();
-		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-		this.stage.draw();
-	}
-
 	/**
 	 * Resizes the loading screen to fit the viewport
 	 *

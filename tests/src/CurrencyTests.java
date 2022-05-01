@@ -1,6 +1,7 @@
 import net.shipsandgiggles.pirate.entity.Ship;
 import net.shipsandgiggles.pirate.currency.Currency;
 
+import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,10 +45,12 @@ public class CurrencyTests {
     @Test
     public void addCurrencyGold(){
         Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        LoadingScreen.loadedGame = false;
         ////////////////////////////////
 
 
         Currency.get().give(Currency.Type.GOLD, 100);
+
         int gold = Currency.get().balance(Currency.Type.GOLD);
 
         assertEquals(100, gold);

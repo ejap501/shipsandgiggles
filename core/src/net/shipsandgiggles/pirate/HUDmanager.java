@@ -31,44 +31,45 @@ public class HUDmanager {
     public Stage stage;
     public static int gold;
     public static int score;
-    private Viewport viewport;
+    private static Viewport viewport;
 
-    public float timeCounter = 0;
-    public float fontScale = 1.5f;
-    public float coolDownTimerTime;
+    public static float timeCounter = 0;
+    public static float fontScale = 1.5f;
+    public static float coolDownTimerTime = Ship.burstTimer;
 
     public Texture healthBar = new Texture("models/bar.png");
 
     // Setting labels and getting other textures
-    Label scoreLabelCounter;
-    Label goldLabel;
-    Label scoreLabel;
-    Label cooldownTimer;
-    Label health;
-    Label healthLabel;
-    Label invTimer;
-    Label speedTimer;
-    Label coinTimer;
-    Label pointTimer;
-    Label damTimer;
-    Label invLabel ;
-    Label coinLabel ;
-    Label pointLabel;
-    Label speedLabel;
-    Label damLabel ;
-    Image goldCoin = new Image(new Texture("models/gold_coin.png"));
-    Image burstLogo = new Image(new Texture("models/burst_icon.png"));
-    Image shootLogo = new Image(new Texture("models/attack_icon.png"));
-    Image burstCooldownLogo = new Image(new Texture("models/burst_onCoolDown.png"));
-    Image shopRange = new Image(new Texture("models/shop_icon.png"));
-    Image shopRangeCooldown = new Image(new Texture("models/shop_icon_cooldown.png"));
-    Stack cooldown = new Stack();
-    Stack shop = new Stack();
-    Table abalities = new Table();
-    Table bottomLeftTable = new Table();
-    Table topRightTable =  new Table();
-    Table topLeftTable = new Table();
-    Table timerLabels = new Table();
+    public static Label scoreLabelCounter = new Label(String.format("%06d", score), Configuration.SKIN, "big");
+    public static Label goldLabel = new Label(String.format("%06d", gold), Configuration.SKIN, "big");
+    public static Label scoreLabel;
+    public static Label cooldownTimer = new Label("" + coolDownTimerTime, Configuration.SKIN, "big");
+    public static Label invTimer  = new Label("" + GameScreen.invincibilityTimer, Configuration.SKIN, "big");
+    public static Label coinTimer  = new Label("" + GameScreen.coinTimer, Configuration.SKIN, "big");
+    public static Label pointTimer  = new Label("" + GameScreen.pointTimer, Configuration.SKIN, "big");
+    public static Label speedTimer  = new Label("" + GameScreen.speedTimer, Configuration.SKIN, "big");
+    public static Label damTimer  = new Label("" + GameScreen.damageTimer, Configuration.SKIN, "big");
+    public static Label invLabel ;
+    public static Label coinLabel ;
+    public static Label pointLabel;
+    public static Label speedLabel;
+    public static Label damLabel ;
+    public static Image goldCoin = new Image(new Texture("models/gold_coin.png"));
+    public static Image burstLogo = new Image(new Texture("models/burst_icon.png"));
+    public static Image shootLogo = new Image(new Texture("models/attack_icon.png"));
+    public static Image burstCooldownLogo = new Image(new Texture("models/burst_onCoolDown.png"));
+    public static Image shopRange = new Image(new Texture("models/shop_icon.png"));
+    public static Image shopRangeCooldown = new Image(new Texture("models/shop_icon_cooldown.png"));
+    public static Stack cooldown = new Stack();
+    public static Stack shop = new Stack();
+    public static Table abalities = new Table();
+    public static Table bottomLeftTable = new Table();
+    public static Table topRightTable =  new Table();
+    public static Table topLeftTable = new Table();
+    public static Table timerLabels = new Table();
+
+    public static Label healthLabel = new Label("Health: ", Configuration.SKIN, "big");
+    public static Label health = new Label("" + Ship.health + " / " + Ship.maxHealth, Configuration.SKIN, "big");
 
 
     /**
@@ -77,13 +78,43 @@ public class HUDmanager {
      * @param batch : The batch of sprite data
      */
     public HUDmanager(SpriteBatch batch){
+        // Setting a view port and stage for the camera to paste it on the screen and not map
+        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
+        stage = new Stage(viewport, batch);
+
+        createParts();
+        stage.addActor(topLeftTable);
+        stage.addActor(topRightTable);
+        stage.addActor(timerLabels);
+        stage.addActor(bottomLeftTable);
+        stage.addActor(abalities);
+
+    }
+
+    /**
+     * Updates all the variables on screen
+     *
+     * @param batch : The batch of sprite data
+     * */
+    public void updateLabels(Batch batch){
+        batch.setColor(healthBarChecker());
+        // Draws health bar
+        batch.begin();
+        batch.draw(healthBar, 0,140,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
+        batch.end();
+
+        batch.setColor(Color.WHITE);
+
+        variableUpdates();
+    }
+
+
+    public static void createParts(){
+
         // Setting the score
         score = Currency.get().balance(Currency.Type.POINTS);
         gold = Currency.get().balance(Currency.Type.GOLD);
 
-        // Setting a view port and stage for the camera to paste it on the screen and not map
-        viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), new OrthographicCamera());
-        stage = new Stage(viewport, batch);
 
         // Creation of the top left bit of the screen
 
@@ -97,9 +128,7 @@ public class HUDmanager {
         timerLabels.setSize(400,Gdx.graphics.getHeight());
         timerLabels.pad(0,2800,750,587);
 
-        scoreLabelCounter = new Label(String.format("%06d", score), Configuration.SKIN, "big");
-        goldLabel = new Label(String.format("%06d", gold), Configuration.SKIN, "big");
-        cooldownTimer = new Label("" + coolDownTimerTime, Configuration.SKIN, "big");
+
         scoreLabel = new Label("Score: ", Configuration.SKIN, "big");
 
         invLabel = new Label("Invincibility Timer : ", Configuration.SKIN, "big");
@@ -107,12 +136,6 @@ public class HUDmanager {
         pointLabel = new Label("Point Multiplier Timer : ", Configuration.SKIN, "big");
         speedLabel = new Label("Speed Boost Timer : ", Configuration.SKIN, "big");
         damLabel = new Label("Damage Boost Timer : ", Configuration.SKIN, "big");
-
-        invTimer  = new Label("" + GameScreen.invincibilityTimer, Configuration.SKIN, "big");
-        coinTimer  = new Label("" + GameScreen.coinTimer, Configuration.SKIN, "big");
-        pointTimer  = new Label("" + GameScreen.pointTimer, Configuration.SKIN, "big");
-        speedTimer  = new Label("" + GameScreen.speedTimer, Configuration.SKIN, "big");
-        damTimer  = new Label("" + GameScreen.damageTimer, Configuration.SKIN, "big");
 
         // Order of adding the UI
         topLeftTable.add(goldCoin);
@@ -143,9 +166,6 @@ public class HUDmanager {
         timerLabels.row();
         timerLabels.add(damLabel);
 
-        stage.addActor(topLeftTable);
-        stage.addActor(topRightTable);
-        stage.addActor(timerLabels);
 
         // Creation of bottom left of the screen
         abalities.setSize(Gdx.graphics.getWidth(),200);
@@ -160,49 +180,36 @@ public class HUDmanager {
 
         abalities.setPosition(0, -70);
 
-        stage.addActor(abalities);
 
-        healthLabel = new Label("Health: ", Configuration.SKIN, "big");
-        health = new Label("" + Ship.health + " / " + Ship.maxHealth, Configuration.SKIN, "big");
 
         // Adds order
         bottomLeftTable.add(healthLabel);
         bottomLeftTable.add(health);
         bottomLeftTable.setPosition(150, 200);
         bottomLeftTable.row();
-        stage.addActor(bottomLeftTable);
     }
 
-    /**
-     * Updates all the variables on screen
-     *
-     * @param batch : The batch of sprite data
-     * */
-    public void updateLabels(Batch batch){
-        coolDownTimerTime = Ship.burstTimer;
+    public static Color healthBarChecker(){
+
         String healthText = " " + Ship.health;
 
         // Changes colour of health bar based on health percentage
         if(Ship.health > (Ship.maxHealth * 0.49)){
-            batch.setColor(Color.GREEN);
             health.setText("" + healthText.substring(0,6) + " / " + Ship.maxHealth);
+            return Color.GREEN;
         }
         else if(Ship.health > (Ship.maxHealth * 0.25)){
-            batch.setColor(Color.ORANGE);
             health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
+            return Color.ORANGE;
         }
         else{
-            batch.setColor(Color.RED);
             health.setText("" + healthText.substring(0,5) + " / " + Ship.maxHealth);
+            return Color.RED;
         }
+    }
 
-        // Draws health bar
-        batch.begin();
-        batch.draw(healthBar, 0,140,Gdx.graphics.getWidth()/5 * (Ship.health/Ship.maxHealth), 30);
-        batch.end();
-
-        batch.setColor(Color.WHITE);
-
+    public static void variableUpdates(){
+        coolDownTimerTime = Ship.burstTimer;
         // Update variables and give points to player every 2 seconds
         timeCounter += Gdx.graphics.getDeltaTime();
         if(timeCounter >= 2){
@@ -225,7 +232,7 @@ public class HUDmanager {
 
         if(GameScreen.coinTimer > 0){
             String coinText = "" + GameScreen.coinTimer;
-            coinTimer.setText("" + coinText.substring(0,2));
+            coinTimer.setText("" + coinText.substring(0,1));
         }
         else{
             coinTimer.setText(0);
@@ -233,7 +240,7 @@ public class HUDmanager {
 
         if(GameScreen.pointTimer > 0){
             String pointText = "" + GameScreen.pointTimer;
-            pointTimer.setText("" + pointText.substring(0,2));
+            pointTimer.setText("" + pointText.substring(0,1));
         }
         else {
             pointTimer.setText(0);
@@ -241,7 +248,7 @@ public class HUDmanager {
 
         if(GameScreen.damageTimer > 0){
             String damageText = "" + GameScreen.damageTimer;
-            damTimer.setText("" + damageText.substring(0,2));
+            damTimer.setText("" + damageText.substring(0,1));
         }
         else {
             damTimer.setText(0);
@@ -249,7 +256,7 @@ public class HUDmanager {
 
         if(GameScreen.speedTimer > 0){
             String speedText = "" + GameScreen.speedTimer;
-            speedTimer.setText("" + speedText.substring(0,2));
+            speedTimer.setText("" + speedText.substring(0,1));
         }
         else {
             speedTimer.setText(0);
@@ -257,7 +264,7 @@ public class HUDmanager {
 
         if(GameScreen.invincibilityTimer > 0){
             String invText = "" + GameScreen.invincibilityTimer;
-            invTimer.setText("" + invText.substring(0,2));
+            invTimer.setText("" + invText.substring(0,1));
         }
         else {
             invTimer.setText(0);
@@ -278,6 +285,5 @@ public class HUDmanager {
         score = Currency.get().balance(Currency.Type.POINTS);
 
         scoreLabelCounter.setText(String.format("%06d", score));
-        goldLabel.setText(String.format("%06d", gold));
-    }
+        goldLabel.setText(String.format("%06d", gold));}
 }

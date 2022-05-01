@@ -33,7 +33,8 @@ import net.shipsandgiggles.pirate.task.ChangeScreenTask;
 public class DifficultyScreen implements Screen {
 	// Main data store
 	private Stage stage;
-	private Table table;
+	public static Table table;
+	public static Table Back;
 
 	public static int difficulty = 0;
 	public final Sprite background = new Sprite(new Texture(Gdx.files.internal("models/background.PNG")));
@@ -45,12 +46,34 @@ public class DifficultyScreen implements Screen {
 		// Construct table
 		this.stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(this.stage);
-		this.table = new Table();
-		this.table.setFillParent(true);
-		this.stage.addActor(this.table);
-		final Table Back = new Table();
+		createParts();
+		this.stage.addActor(table);
+		this.stage.addActor(Back);
+
+	}
+
+	/**
+	 * Renders the shop screen to the world
+	 *
+	 * @param deltaTime : Delta time (elapsed time since last game tick)
+	 */
+	@Override
+	public void render(float deltaTime) {
+		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
+		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+		this.stage.draw();
+	}
+
+	public static void createParts(){
+		table = new Table();
+		table.setFillParent(true);
+		Back = new Table();
 		Back.setFillParent(true);
-		stage.addActor(Back);
+
 
 		// Constructs buttons
 		TextButton backButton = new TextButton("Back", Configuration.SKIN);
@@ -93,8 +116,8 @@ public class DifficultyScreen implements Screen {
 						difficulty = 3;
 						PirateGame.get().changeScreen(ScreenType.INFORMATION);
 
-						}
-					});
+					}
+				});
 
 		TextButton nightmareButton = new TextButton("Nightmare", Configuration.SKIN);
 		nightmareButton.addListener(
@@ -110,34 +133,18 @@ public class DifficultyScreen implements Screen {
 
 
 		// Creates a uniform X/Y table.
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(easyButton);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(normalButton);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(hardButton);
-		this.table.row().pad(10, 0, 10, 0);
-		this.table.add(nightmareButton);
-		this.table.row().pad(10, 0, 10, 0);
+		table.row().pad(10, 0, 10, 0);
+		table.add(easyButton);
+		table.row().pad(10, 0, 10, 0);
+		table.add(normalButton);
+		table.row().pad(10, 0, 10, 0);
+		table.add(hardButton);
+		table.row().pad(10, 0, 10, 0);
+		table.add(nightmareButton);
+		table.row().pad(10, 0, 10, 0);
 
 		Back.add(backButton);
 		Back.top().left();
-	}
-
-	/**
-	 * Renders the shop screen to the world
-	 *
-	 * @param deltaTime : Delta time (elapsed time since last game tick)
-	 */
-	@Override
-	public void render(float deltaTime) {
-		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		background.draw(batch);
-		batch.end();
-		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-		this.stage.draw();
 	}
 
 	/**

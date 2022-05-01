@@ -54,7 +54,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * Edited from original
  *
  * @author Team 23
- * @author Team 22: Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter
+ * @author Team 22: Ethan Alabaster,  Joe Dickinson, Sam Pearson,  Edward Poulter
  * @version 2.0
  */
 public class GameScreen implements Screen {
@@ -83,7 +83,6 @@ public class GameScreen implements Screen {
 
 	// Camera work
 	private static OrthographicCamera camera;
-	private final float Scale = 2;
 
 	// Graphics
 	private final SpriteBatch batch; // Batch of images "objects"
@@ -128,10 +127,10 @@ public class GameScreen implements Screen {
 	public static Sprite cannonBall;
 
 	// Abilities
-	static float currentSpeed = 100000f;
-	float maxSpeed = 100000f;
-	static float speedMul = 40f;
-	int damageMul = 2;
+	public static float currentSpeed = 100000f;
+	public static float maxSpeed = 100000f;
+	public static float speedMul = 40f;
+	public static int damageMul = 2;
 	public static float speedTimer = -1f;
 	public static float damageTimer = -1f;
 	public static float invincibilityTimer = -1f;
@@ -144,7 +143,7 @@ public class GameScreen implements Screen {
 	static int maxShips;
 	static int maxDucks;
 	static int maxStones;
-	static int maxDuckKills;
+	public static int maxDuckKills;
 	public static int currentDuckKills = 0;
 	private static GamePreferences gamePreferences = GamePreferences.get();
 
@@ -327,31 +326,7 @@ public class GameScreen implements Screen {
 		for (powerUp powerUpDatum : powerUpData) {
 
 			powerUpDatum.draw(batch);
-			if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					speedTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					invincibilityTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					damageTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					coinTimer = 10;
-				}
-			} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
-				if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-					pointTimer = 10;
-				}
-			}
-			if (powerUpDatum.rangeCheck(playerShips) && !powerUpDatum.dead) {
-				powerUpDatum.death();
-
-			}
+			powerUpChecks(powerUpDatum, playerShips);
 		}
 
 		for (Stone stoneDatum : stoneData) {
@@ -389,13 +364,7 @@ public class GameScreen implements Screen {
 			gamePreferences.setHasSave(false);
 			return;
 		}
-		if(collegesCaptured == 4){
-			deathScreen.update(hud, 1);
-			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
-			deathScreen.stage.draw();
-			gamePreferences.setHasSave(false);
-			return;
-		}
+
 		if(collegesKilled == 4){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
@@ -432,95 +401,12 @@ public class GameScreen implements Screen {
 	public void update() {
 		world.step(1 / 60f, 6, 2);
 
-		// Updates power-up timers
-		if (speedTimer >= 0) {
-			speedTimer -= Gdx.graphics.getDeltaTime();
-			currentSpeed = maxSpeed * speedMul;
-		} else {
-			currentSpeed = maxSpeed;
-			speedTimer = -1f;
-		}
+		powerUpUpdates(playerShips);
+		duckUpdates(playerShips,world);
 
-		if (invincibilityTimer >= 0) {
-			invincibilityTimer -= Gdx.graphics.getDeltaTime();
-			playerShips.setInvincible(true);
-		}else{
-			playerShips.setInvincible(false);
-			invincibilityTimer = -1f;
-		}
-		if (damageTimer >= 0){
-			damageTimer -= Gdx.graphics.getDeltaTime();
-			playerShips.setDamageMulti(damageMul);
+		//if(rain.isRaining) {
 
-		}else{
-			playerShips.setDamageMulti(1);
-		}
-
-		if (coinTimer == 10){
-			coinTimer -= Gdx.graphics.getDeltaTime();
-			playerShips.setCoinMulti(1, true);
-		}else if (coinTimer <= 0f && coinTimer != -1f){
-			coinTimer = -1f;
-			playerShips.setCoinMulti(-1, false);
-		}
-		else if (coinTimer >= 0f){
-			coinTimer -= Gdx.graphics.getDeltaTime();
-		}
-
-
-
-		if (pointTimer == 10){
-			pointTimer -= Gdx.graphics.getDeltaTime();
-			playerShips.setPointMulti(playerShips.getPointMulti() * 3, true);
-		}else if (pointTimer <= 0 && pointTimer !=-1){
-			pointTimer = -1f;
-			playerShips.setPointMulti(-1, false);
-		}
-		else if (pointTimer >= 0f){
-			pointTimer -= Gdx.graphics.getDeltaTime();
-		}
-		if (currentDuckKills >= 0){
-			for (Duck duck : ducks){
-				if (duck.deadDuck == 1){
-					duck.deadDuck = 2;
-					currentDuckKills += 1;
-					duck.death(world);
-				}
-			}
-		}
-
-		if (currentDuckKills == maxDuckKills){
-			currentDuckKills = -maxDuckKills;
-			Body body = createEnemy(false, new Vector2(2000, 2000),world);
-			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(2000,2000), 50000, world);
-
-			newDuck.setTarget(playerShips.getEntityBody());
-			newDuck.cannonBallSprite = angryDuckModel;
-			newDuck.shooting = true;
-
-
-			// Status of entity AI
-			Arrive<Vector2> arrives = new Arrive<>(newDuck, player)
-					.setTimeToTarget(0.01f)
-					.setArrivalTolerance(175f)
-					.setDecelerationRadius(50);
-			newDuck.setBehavior(arrives);
-			ducks.add(newDuck);
-			for (Duck duck : ducks){
-				if (!duck.shooting && !duck.dead){
-					duck.shooting = true;
-					duck.health = 333 * DifficultyScreen.difficulty;
-					duck.maxHealth = duck.health;
-					duck.texture = angryDuckModel;
-					duck.cannonBallSprite = angryDuckAttack;
-					duck.hitBox =  new Rectangle(duck.body.getPosition().x - 300, duck.body.getPosition().y - 300, duck.texture.getWidth() + 600, duck.texture.getHeight() + 600);
-				}
-			}
-		}
-		if(rain.isRaining) {
-			currentSpeed = maxSpeed * 30 / speedMul;
-
-		}
+		//}
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);
@@ -589,7 +475,7 @@ public class GameScreen implements Screen {
 	 *
 	 * @param playerShips : The player body
 	 */
-	private void processInput(Ship playerShips) {
+	public static void processInput(Ship playerShips) {
 		// Processing the input created
 		float speedMulSet = 1;
 		if (speedTimer > 0){
@@ -1602,6 +1488,127 @@ public class GameScreen implements Screen {
 
 		bob.health = Integer.parseInt((bobList[2].substring(1,bobList[2].length() - 1)));
 		bob.timer = Float.parseFloat((bobList[3].substring(1,bobList[3].length() - 1)));
+	}
+
+	public static void powerUpChecks(powerUp powerUpDatum, Ship player){
+
+		if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			speedTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			invincibilityTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			damageTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			coinTimer = 10;
+		}
+	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			pointTimer = 10;
+		}
+	}
+		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
+			powerUpDatum.death();
+
+		}
+	}
+
+	public static void powerUpUpdates(Ship player){
+		// Updates power-up timers
+		if (speedTimer >= 0) {
+			speedTimer -= Gdx.graphics.getDeltaTime();
+			currentSpeed = maxSpeed * speedMul;
+		} else {
+			currentSpeed = maxSpeed;
+			speedTimer = -1f;
+		}
+
+		if (invincibilityTimer >= 0) {
+			invincibilityTimer -= Gdx.graphics.getDeltaTime();
+			player.setInvincible(true);
+		}else{
+			player.setInvincible(false);
+			invincibilityTimer = -1f;
+		}
+		if (damageTimer >= 0){
+			damageTimer -= Gdx.graphics.getDeltaTime();
+			player.setDamageMulti(damageMul);
+
+		}else{
+			player.setDamageMulti(1);
+			damageTimer = -1f;
+		}
+
+		if (coinTimer == 10){
+			coinTimer -= Gdx.graphics.getDeltaTime();
+			player.setCoinMulti(1, true);
+		}else if (coinTimer <= 0f && coinTimer != -1f){
+			coinTimer = -1f;
+			player.setCoinMulti(-1, false);
+		}
+		else if (coinTimer >= 0f){
+			coinTimer -= Gdx.graphics.getDeltaTime();
+		}
+
+
+
+		if (pointTimer == 10){
+			pointTimer -= Gdx.graphics.getDeltaTime();
+			player.setPointMulti(2, true);
+		}else if (pointTimer <= 0 && pointTimer !=-1){
+			pointTimer = -1f;
+			player.setPointMulti(-1, false);
+		}
+		else if (pointTimer >= 0f){
+			pointTimer -= Gdx.graphics.getDeltaTime();
+		}
+	}
+
+	public static void duckUpdates(Ship playerShip,World world){
+		if (currentDuckKills >= 0){
+			for (Duck duck : ducks){
+				if (duck.deadDuck == 1){
+					duck.deadDuck = 2;
+					currentDuckKills += 1;
+					duck.death(world);
+				}
+			}
+		}
+
+		if (currentDuckKills == maxDuckKills){
+			currentDuckKills -= maxDuckKills;
+			Body body = createEnemy(false, new Vector2(2000, 2000),world);
+			Duck newDuck = new Duck(body, bigDuckModel, 3f, new Location(2000,2000), 50000, world);
+
+			newDuck.setTarget(playerShip.getEntityBody());
+			newDuck.cannonBallSprite = angryDuckModel;
+			newDuck.shooting = true;
+
+
+			// Status of entity AI
+			Arrive<Vector2> arrives = new Arrive<>(newDuck, player)
+					.setTimeToTarget(0.01f)
+					.setArrivalTolerance(175f)
+					.setDecelerationRadius(50);
+			newDuck.setBehavior(arrives);
+			ducks.add(newDuck);
+			for (Duck duck : ducks){
+				if (!duck.shooting && !duck.dead){
+					duck.shooting = true;
+					duck.health = 333 * DifficultyScreen.difficulty;
+					duck.maxHealth = duck.health;
+					duck.texture = angryDuckModel;
+					duck.cannonBallSprite = angryDuckAttack;
+					duck.hitBox =  new Rectangle(duck.body.getPosition().x - 300, duck.body.getPosition().y - 300, duck.texture.getWidth() + 600, duck.texture.getHeight() + 600);
+				}
+			}
+		}
 	}
 
 	@Override

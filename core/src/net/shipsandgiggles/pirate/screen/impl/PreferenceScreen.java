@@ -25,18 +25,37 @@ import net.shipsandgiggles.pirate.pref.GamePreferences;
 public class PreferenceScreen implements Screen {
 	// Main data store
 	private Stage stage;
-	private Table table;
+	public static Table table;
 
 	/** Displays the preference screen */
 	@Override
 	public void show() {
 		// Construct table
-		this.table = new Table();
-		this.table.setFillParent(true);
 		this.stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(this.stage);
-		this.stage.addActor(this.table);
+		createParts();
+		this.stage.addActor(table);
 
+
+	}
+
+	/**
+	 * Renders the preference screen to the world
+	 *
+	 * @param deltaTime : Delta time (elapsed time since last game tick)
+	 */
+	@Override
+	public void render(float deltaTime) {
+		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		LoadingScreen.soundController.update();
+		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+		this.stage.draw();
+	}
+
+	public static void createParts(){
+		table = new Table();
+		table.setFillParent(true);
 		GamePreferences gamePreferences = GamePreferences.get();
 
 		// Sets labels
@@ -89,49 +108,36 @@ public class PreferenceScreen implements Screen {
 		TextButton backButton = new TextButton("Back", Configuration.SKIN);
 		backButton.addListener(
 				new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				LoadingScreen.soundController.pauseAll();
-				PirateGame.get().changeScreen(ScreenType.LOADING);
-			}
-		});
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						LoadingScreen.soundController.pauseAll();
+						PirateGame.get().changeScreen(ScreenType.LOADING);
+					}
+				});
 
 		// Creates a uniform X/Y table.
-		this.table.add(preferencesLabel);
-		this.table.row();
-		this.table.add(Configuration.SPACER_LABEL);
-		this.table.row();
-		this.table.add(VolumeLabel);
-		this.table.add(VolumeSlider);
-		this.table.row();
-		this.table.add(musicVolumeLabel);
-		this.table.add(musicVolumeSlider);
-		this.table.row();
-		this.table.add(musicEnabledLabel);
-		this.table.add(musicEnabled);
-		this.table.row();
-		this.table.add(volumeLabel);
-		this.table.add(volumeEnabled);
-		this.table.row();
-		this.table.add(Configuration.SPACER_LABEL);
-		this.table.row();
-		this.table.add(Configuration.SPACER_LABEL);
-		this.table.row();
-		this.table.add(backButton);
-	}
+		table.add(preferencesLabel);
+		table.row();
+		table.add(Configuration.SPACER_LABEL);
+		table.row();
+		table.add(VolumeLabel);
+		table.add(VolumeSlider);
+		table.row();
+		table.add(musicVolumeLabel);
+		table.add(musicVolumeSlider);
+		table.row();
+		table.add(musicEnabledLabel);
+		table.add(musicEnabled);
+		table.row();
+		table.add(volumeLabel);
+		table.add(volumeEnabled);
+		table.row();
+		table.add(Configuration.SPACER_LABEL);
+		table.row();
+		table.add(Configuration.SPACER_LABEL);
+		table.row();
+		table.add(backButton);
 
-	/**
-	 * Renders the preference screen to the world
-	 *
-	 * @param deltaTime : Delta time (elapsed time since last game tick)
-	 */
-	@Override
-	public void render(float deltaTime) {
-		Gdx.gl.glClearColor(165f / 255f, 220f / 255f, 236f / 255f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		LoadingScreen.soundController.update();
-		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-		this.stage.draw();
 	}
 
 	/**

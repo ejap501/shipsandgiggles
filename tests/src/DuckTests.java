@@ -1,4 +1,5 @@
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,7 @@ import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.npc.Duck;
 
+import net.shipsandgiggles.pirate.screen.impl.DifficultyScreen;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,7 +101,34 @@ public class DuckTests {
         assertEquals(0,world.getBodyCount());
         assertEquals(10275, Currency.get().balance(Currency.Type.POINTS));
 
+    }
+    @Test
+    public void duckUpdate(){
+        World world = new World(new Vector2(0, 0), false);
+        OrthographicCamera camera = new OrthographicCamera();
+        Body bobBody = GameScreen.createEnemy(false, new Vector2(100,100),world);
+        DifficultyScreen.difficulty = 1;
+        GameScreen.createSprites();
+        GameScreen.createEntities(bobBody,world,camera);
 
+
+        GameScreen.ducks.get(0).deadDuck = 1;
+        GameScreen.duckUpdates(GameScreen.playerShips,world);
+
+        assertEquals(1, GameScreen.currentDuckKills);
+
+        for(int i = 1; i < GameScreen.maxDuckKills - 1; i ++){
+            GameScreen.ducks.get(i).deadDuck = 1;
+        }
+
+        int duckListLength = GameScreen.ducks.size();
+
+        GameScreen.duckUpdates(GameScreen.playerShips,world);
+
+        assertEquals(0, GameScreen.currentDuckKills);
+        assertEquals(duckListLength + 1, GameScreen.ducks.size());
+        assertEquals(50000, GameScreen.ducks.get(GameScreen.ducks.size() -1).maxHealth);
+        assertEquals(GameScreen.angryDuckAttack, GameScreen.ducks.get(16).cannonBallSprite);
     }
 
 

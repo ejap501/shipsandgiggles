@@ -49,6 +49,7 @@ public class Weather extends Sprite {
         fDef.isSensor = true;
 
         body.createFixture(fDef).setUserData(this);
+        shape.dispose();
     }
 
     public void draw(Batch batch){

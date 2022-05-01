@@ -80,13 +80,13 @@ public class CannonBall {
         shape.setRadius(width / 2f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
+        fixtureDef.density = 0.5f;
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
 
         body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
         this.body = body;
+        shape.dispose();
     }
 
     /**
@@ -129,13 +129,13 @@ public class CannonBall {
         fixtureDef.filter.categoryBits = categoryBits; // Telling it what category it is
         fixtureDef.filter.maskBits = (short) (maskBit); // Telling it what can be hit
         fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
+        fixtureDef.density = 0.5f;
 
         body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
         this.body = body;
         this.body.setTransform(this.body.getPosition().x, this.body.getPosition().y, angle); //sets the angle
         this.setAngle = true;
+        shape.dispose();
     }
 
     /**

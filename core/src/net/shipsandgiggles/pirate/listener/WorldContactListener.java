@@ -45,7 +45,7 @@ public class WorldContactListener implements ContactListener {
                 Ship ship = (Ship) fixtureA.getUserData();
                 // Applies damage to the ship
                 ship.takeDamage(ball.getDamageDelt());
-                //ball.setToDestroy();
+                ball.setToDestroy();
                 Gdx.app.log("cannonball - ship", "collision");
             }
             // Checks for a NPC collision
@@ -63,6 +63,7 @@ public class WorldContactListener implements ContactListener {
             Ship ship = (Ship) fixtureB.getUserData();
             if(fixtureA.getUserData() instanceof Weather){
                 Weather weather = (Weather) fixtureA.getUserData();
+                ship.inFog();
                 Gdx.app.log("Weather", "collision");
             }
         }
@@ -74,7 +75,20 @@ public class WorldContactListener implements ContactListener {
      * @param contact : Contact instance
      */
     @Override
-    public void endContact(Contact contact) {}
+    public void endContact(Contact contact) {
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+        if(fixtureA == null || fixtureB == null || fixtureB.getUserData() == null || fixtureA.getUserData() == null) return;
+
+        if(fixtureB.getUserData() instanceof Ship){
+            Ship ship = (Ship) fixtureB.getUserData();
+            if(fixtureA.getUserData() instanceof Weather){
+                Weather weather = (Weather) fixtureA.getUserData();
+                ship.outFog();
+                Gdx.app.log("Weather", "collision");
+            }
+        }
+    }
 
     /**
      * Terminates contact with manifold

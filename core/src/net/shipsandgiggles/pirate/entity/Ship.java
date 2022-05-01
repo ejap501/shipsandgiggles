@@ -67,6 +67,7 @@ public class Ship extends MovableEntity {
 	public static int speedMulti = 1;
 	public int priorCoinMulti = -1;
 	public int priorPointMulti = -1;
+	private boolean inFog;
 
 	/**
 	 * Initialises the player ship
@@ -111,9 +112,8 @@ public class Ship extends MovableEntity {
 		shape.setAsBox((width / 2) / Configuration.PIXEL_PER_METER, (height / 2) / Configuration.PIXEL_PER_METER);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef. density = 1f;
+		fixtureDef.density = 0.8f;
 		fixtureDef.filter.categoryBits = Configuration.Cat_Player;
-		fixtureDef.restitution = 0.1f;
 		this.entityBody.createFixture(fixtureDef).setUserData(this);
 		shape.dispose();
 
@@ -267,7 +267,7 @@ public class Ship extends MovableEntity {
 
 		// If player uses burst then shoot burst
 		if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && burstTimer <= 0){
-			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
+			this.burstShoot(world, cannonBallSprite, cam, Configuration.Cat_Player, (short) (Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
 			this.burstTimer = burstCoolDown;
 		}
 
@@ -354,7 +354,25 @@ public class Ship extends MovableEntity {
 	 * @param turnDirection : Apply a new turn direction
 	 */
 	public void setTurnDirection(float turnDirection) {
-		this.turnDirection = turnDirection;
+		if(!inFog) {
+			this.turnDirection = turnDirection;
+		}
+		if(inFog) {
+			if (turnDirection == 2){
+				this.turnDirection = turnDirection - 1;
+			}
+			if (turnDirection == 1){
+				this.turnDirection = turnDirection + 1;
+			}
+		}
+	}
+
+	public void inFog() {
+		inFog = true;
+	}
+
+	public void outFog() {
+		inFog = false;
 	}
 
 	/**

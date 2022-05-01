@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
 		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 
-		weather = new Weather(this, 2000, 1600, 8);
+		weather = new Weather(this, 2000, 1200, 16);
 		rain = new Rain();
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
@@ -518,6 +518,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		if(rain.isRaining) {
+			currentSpeed = maxSpeed * 30 / speedMul;
 
 		}
 		updateCamera();

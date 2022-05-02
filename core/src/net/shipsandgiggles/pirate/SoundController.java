@@ -94,7 +94,7 @@ public class SoundController{
                 long id = rain.play(GamePreferences.get().getVolumeLevel());
                 rain.setPitch(id, 2);
                 rain.setLooping(id,true);
-                seaNoises.pause();
+                //seaNoises.pause();
         }
         /** Play rain noise*/
         public void stopRain(){

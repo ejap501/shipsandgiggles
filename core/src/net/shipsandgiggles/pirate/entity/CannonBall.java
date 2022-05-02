@@ -33,7 +33,7 @@ public class CannonBall {
     public boolean setAngle = false;
     public float angle;
     public Sprite cannonBall;
-    public float speed = 1.4f;
+    public float speed = 1.1f;
     public float damageDelt = 50f;
     public boolean teleported = false;
     public float finalX = 0;
@@ -56,7 +56,7 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
-        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
+        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -104,7 +104,7 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
-        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ COMMENTED OUT FOR TESTING
+        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -240,7 +240,7 @@ public class CannonBall {
         //this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 20f)), true);
 
         // Gets the direction the ball is going towards
-        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight() / 2)));
+        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight())));
         Vector2 position = this.body.getPosition();
 
         // Changes the direction and slightly teleports the ball so it can travel way faster
@@ -263,7 +263,7 @@ public class CannonBall {
     public void destroyBall(){
         if(setToDestroy && !this.isDestroyed) {
             // Plays explosion noise
-            //LoadingScreen.soundController.playExplosion(); Commented out for testing
+            LoadingScreen.soundController.playExplosion(); //Commented out for testing
 
             // Sets final position
             finalX = this.body.getPosition().x;

@@ -75,6 +75,9 @@ public class DeathScreen {
         if(victorykind == 2){
             gameOver.setText("Domination Victory!");
         }
+        if(victorykind == 3){
+            gameOver.setText("Combination Victory!");
+        }
         score = hud.score;
         Gold = hud.gold;
         scoreLabel.setText("Score: " + score);

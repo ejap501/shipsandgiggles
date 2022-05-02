@@ -16,6 +16,7 @@ import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.college.College;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 
 import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 
@@ -65,7 +66,7 @@ public class LangwithCollege extends College {
 		this.world = world;
 
 		//Creation of a hitbox detector
-		this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX(),(int)location.getY(), 700,400);
+		this.hitBox = new com.badlogic.gdx.math.Rectangle((int)location.getX() - 300,(int)location.getY() - 300, 700,400);
 	}
 
 	/** Oversees the death of the college body */
@@ -119,28 +120,40 @@ public class LangwithCollege extends College {
 	 */
 	@Override
 	public void shootPlayer(Ship player) {
-        /*
-         Checks if the college is dead or not
-         Increments gold and points if not dead
-         */
-		//if(this.health == 1 && !this.dead){
-		//	this.counter += Gdx.graphics.getDeltaTime();
-		//	if(this.counter >= 1){
-		//		Currency.get().give(Currency.Type.POINTS, 3);
-		//		Currency.get().give(Currency.Type.GOLD, 5);
-		//		this.counter = 0;
-		//	}
-		//}
 
-		// Creates shot and shoots
-		if(this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {
-			BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
-			this.timer = this.cooldownTimer;
+		if (!captured) {
+
+			// Creates shot and shoots
+			if (this.hitBox.overlaps(player.hitBox) && timer <= 0 && !this.dead && this.health != 1) {
+				BallsManager.createBall(this.world, new Vector2(this.body.getPosition().x, this.body.getPosition().y), new Vector2(player.getEntityBody().getPosition().x, player.getEntityBody().getPosition().y), 1, cannonBallSprite, (short) (Configuration.Cat_Enemy | Configuration.Cat_College), Configuration.Cat_Player, (short) 0);
+				this.timer = this.cooldownTimer;
+			}
+
+			// Ensures that there is a cool down between every shot
+			else if (timer <= 0) this.timer = 0;
+			else this.timer -= Gdx.graphics.getDeltaTime();
 		}
+		else{
 
-		// Ensures that there is a cool down between every shot
-		else if(timer <= 0) this.timer = 0;
-		else this.timer -= Gdx.graphics.getDeltaTime();
+			if (timer <= 0 ) {
+				Currency.get().give(Currency.Type.POINTS, 10);
+				this.timer = 5f;
+			}
+			else{
+				this.timer -= Gdx.graphics.getDeltaTime();
+			}
+		}}
+
+
+	/**
+	 * Captures the college
+	 */
+	public void capture(){
+
+		this.texture = GameScreen.derwentCollegeSprite;
+		this.captured = true;
+		this.health = this.maximumHealth;
+
 	}
 
 	/**
@@ -165,6 +178,16 @@ public class LangwithCollege extends College {
 	public float healthBarWidth(){
 		Float value = ((float) (this.getSkin().getWidth()/2 * (this.getHealth() /this.getMaximumHealth())));
 		return value;
+	}
+
+	/**
+	 * Checks if player is in range to capture the college
+	 *
+	 * @param player : The player body
+	 * @return if in range, true. if not then false
+	 * */
+	public boolean rangeCheck(Ship player){
+		return player.hitBox.overlaps(this.hitBox);
 	}
 
 	/**

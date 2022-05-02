@@ -109,6 +109,7 @@ public class GameScreen implements Screen {
 	public static Sprite constantineCollegeSprite;
 	public static Sprite goodrickeCollegeSprite;
 	public static Sprite langwithCollegeSprite;
+	public static Sprite derwentCollegeSprite;
 	public static Sprite bobsSprite;
 	public static Sprite shopSprite;
 
@@ -203,6 +204,7 @@ public class GameScreen implements Screen {
 		constantineCollegeSprite = new Sprite(new Texture("models/constantine_castle.png"));
 		goodrickeCollegeSprite = new Sprite(new Texture("models/goodricke_castle.png"));
 		langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
+		derwentCollegeSprite = new Sprite(new Texture("models/derwent_castle.png"));
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
 		playerModel = new Sprite(new Texture(Gdx.files.internal("models/derwent_ship.png")));
@@ -388,6 +390,22 @@ public class GameScreen implements Screen {
 			gamePreferences.setHasSave(false);
 			return;
 		}
+		else if(collegesCaptured == 4){
+			deathScreen.update(hud, 1);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
+			return;
+		}
+		else if(collegesKilled + collegesCaptured == 4){
+			deathScreen.update(hud, 3);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
+			return;
+		}
+
+
 		BallsManager.updateBalls(batch);
 
 		weather.draw(batch);
@@ -439,7 +457,7 @@ public class GameScreen implements Screen {
 
 	/**
 	 * Checks for input and performs an action
-	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "ESCAPE"  "NUM_1" "NUM_2"
+	 * Applies to key "W" "A" "S" "D" "UP" "DOWN" "LEFT" "RIGHT" "E" "P" "ESCAPE"  "NUM_1" "NUM_2" "C"
 	 */
 	public void inputUpdate() {
 		/*
@@ -473,6 +491,34 @@ public class GameScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			System.out.println(playerShips.getEntityBody().getPosition());
+		}
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.C )) {
+			if (!alcuin.captured && alcuin.rangeCheck(playerShips) && alcuin.health == 1){
+
+				alcuin.capture();
+				collegeCaptured();
+
+			}
+			if (!langwith.captured && langwith.rangeCheck(playerShips) && langwith.health == 1){
+
+				langwith.capture();
+				collegeCaptured();
+
+			}
+			if (!constantine.captured && constantine.rangeCheck(playerShips) && constantine.health == 1){
+
+				constantine.capture();
+				collegeCaptured();
+
+			}
+			if (!goodricke.captured && goodricke.rangeCheck(playerShips) && goodricke.health == 1){
+
+				goodricke.capture();
+				collegeCaptured();
+
+			}
+
 		}
 
 
@@ -643,7 +689,6 @@ public class GameScreen implements Screen {
 	public static void collegeKilled(){
 		// Adds for each college killed to count for victory
 		collegesKilled ++;
-		collegesCaptured--;
 	}
 
 	/** Adds college captured to check for victory */

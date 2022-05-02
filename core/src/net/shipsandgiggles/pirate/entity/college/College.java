@@ -36,6 +36,9 @@ public abstract class College extends Entity {
 	public float timer = 0f;
 	public float cooldownTimer = 1f;
 
+	public Boolean captured = false;
+	public Boolean givenChanceCapture = false;
+
 	/**
 	 * Instantiates the college type
 	 *
@@ -62,14 +65,35 @@ public abstract class College extends Entity {
 		return this.body;
 	}
 
+	/**
+	 * @param damage Damage you wish the entity to take.
+	 * @return Current health after damage (i.e. {@link #getHealth() - damage}
+	 */
+	@Override
+	public float damage(float damage) {
+		if(this.captured){
+			return 0f;
+		}
+
+		else if ((this.health - damage) <= 0f && !givenChanceCapture) {
+			this.health = 1;
+			givenChanceCapture = true;
+			return 1f;
+
+		}
+		else if ((this.health - damage) <= 0f){
+			this.health = 0;
+			this.death();
+			return 0f;
+		}
+
+		this.health -= damage;
+
+		return this.health;
+	}
+
 	/** Kills the college body */
 	public void death() {
-		// To give chance to player to keep the college alive
-		//if(this.getHealth() != 1){
-		//	this.health = 1;
-		//	GameScreen.collegeCaptured();
-		//	return;
-		//}
 
 		// Terminate method if already dead
 		if(this.dead) return;

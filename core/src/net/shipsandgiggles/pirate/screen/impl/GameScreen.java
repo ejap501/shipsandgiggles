@@ -1212,6 +1212,8 @@ public class GameScreen implements Screen {
 		gameInfo += gameScreenSaveFile.toJson("," );
 		gameInfo += gameScreenSaveFile.toJson(GameScreen.currentDuckKills); //Duck kills
 		gameInfo += gameScreenSaveFile.toJson("," );
+		gameInfo += gameScreenSaveFile.toJson(GameScreen.collegesKilled);	//Colleges captured
+		gameInfo += gameScreenSaveFile.toJson("," );
 
 
 
@@ -1407,17 +1409,33 @@ public class GameScreen implements Screen {
 		if (alcuin.health == 0 ){
 			alcuin.dead = true;
 		}
+		else if (alcuin.health == alcuin.maximumHealth + 1){
+			alcuin.capture();
+			collegeCaptured();
+		}
 		langwith.health =  Float.parseFloat(collegeList[1].substring(1,collegeList[1].length()-1));
 		if (langwith.health == 0 ){
 			langwith.dead = true;
+		}
+		else if (langwith.health == langwith.maximumHealth + 1){
+			langwith.capture();
+			collegeCaptured();
 		}
 		goodricke.health =  Float.parseFloat(collegeList[2].substring(1,collegeList[2].length()-1));
 		if (goodricke.health == 0 ){
 			goodricke.dead = true;
 		}
+		else if (goodricke.health == goodricke.maximumHealth + 1){
+			goodricke.capture();
+			collegeCaptured();
+		}
 		constantine.health =  Float.parseFloat(collegeList[3].substring(1,collegeList[3].length()-1));
 		if (constantine.health == 0 ){
 			constantine.dead = true;
+		}
+		else if (constantine.health == constantine.maximumHealth + 1){
+			constantine.capture();
+			collegeCaptured();
 		}
 		//DUCKS
 
@@ -1530,6 +1548,7 @@ public class GameScreen implements Screen {
 		coinTimer = Float.parseFloat((gameList[4].substring(1,gameList[4].length() - 1)));
 		pointTimer = Float.parseFloat((gameList[5].substring(1,gameList[5].length() - 1)));
 		currentDuckKills = Integer.parseInt((gameList[6].substring(1,gameList[6].length() - 1)));
+		collegesCaptured = Integer.parseInt((gameList[7].substring(1,gameList[7].length() - 1)));
 
 		//SHOPSCREEN
 

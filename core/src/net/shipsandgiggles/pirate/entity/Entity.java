@@ -20,7 +20,7 @@ public abstract class Entity {
 	public Sprite texture;
 	private final Location location;
 	private final EntityType entityType;
-	public final float maximumHealth;
+	public float maximumHealth;
 	private final float height;
 	private final float width;
 	public float health;

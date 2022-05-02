@@ -153,6 +153,7 @@ public class ConstantineCollege extends College {
 
         this.texture = GameScreen.derwentCollegeSprite;
         this.captured = true;
+        this.maximumHealth += 1;
         this.health = this.maximumHealth;
 
     }

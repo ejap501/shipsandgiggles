@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
 		langwithCollegeSprite = new Sprite(new Texture("models/langwith_castle.png"));
 		cannonBall = new Sprite(new Texture(Gdx.files.internal("models/cannonBall.png")));
 		water = new Sprite(new Texture(Gdx.files.internal("models/water.jpg")));
-		playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+		playerModel = new Sprite(new Texture(Gdx.files.internal("models/derwent_ship.png")));
 		copperCoinModel = new Sprite(new Texture(Gdx.files.internal("models/bronze_1.png")));
 		silverCoinModel = new Sprite(new Texture(Gdx.files.internal("models/silver_1.png")));
 		goldCoinModel = new Sprite(new Texture(Gdx.files.internal("models/gold_1.png")));

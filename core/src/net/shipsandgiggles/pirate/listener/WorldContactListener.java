@@ -8,6 +8,7 @@ import net.shipsandgiggles.pirate.entity.Weather;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.CannonBall;
 import net.shipsandgiggles.pirate.entity.college.College;
+import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
 
 /**
  * World contact listener
@@ -66,7 +67,13 @@ public class WorldContactListener implements ContactListener {
                 ship.inFog();
                 Gdx.app.log("Weather", "collision");
             }
+            if(fixtureA.getUserData() instanceof Stone){
+                Stone stone = (Stone) fixtureA.getUserData();
+                Gdx.app.log("ship - stone", "collision");
+            }
         }
+
+
     }
 
     /**

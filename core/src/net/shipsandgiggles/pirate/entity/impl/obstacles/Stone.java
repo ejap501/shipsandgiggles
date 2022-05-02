@@ -58,7 +58,7 @@ public class Stone extends Solid{
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-        fixtureDef.filter.categoryBits = Configuration.Cat_Collect; // Telling it what category it is
+        fixtureDef.filter.categoryBits = Configuration.Cat_Stone; // Telling it what category it is
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
         this.body = body;

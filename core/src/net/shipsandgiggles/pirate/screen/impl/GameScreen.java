@@ -308,6 +308,7 @@ public class GameScreen implements Screen {
 		for (Coin coinDatum : coinData) {
 			coinDatum.draw(batch);
 			if (coinDatum.rangeCheck(playerShips) && !coinDatum.dead) {
+				Gdx.app.log("coin - ship", "collision");
 				coinDatum.death();
 			}
 		}
@@ -1495,22 +1496,27 @@ public class GameScreen implements Screen {
 		if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
 			speedTimer = 10;
+			Gdx.app.log("Power Up - ship", "collision");
 		}
 	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Invincible")) {
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
 			invincibilityTimer = 10;
+			Gdx.app.log("Power Up - ship", "collision");
 		}
 	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Damage Increase")) {
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
 			damageTimer = 10;
+			Gdx.app.log("Power Up - ship", "collision");
 		}
 	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Coin Multiplier")) {
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
 			coinTimer = 10;
+			Gdx.app.log("Power Up - ship", "collision");
 		}
 	} else if (Objects.equals(powerUpDatum.getPowerUpType(), "Point Multiplier")) {
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {
 			pointTimer = 10;
+			Gdx.app.log("Power Up - ship", "collision");
 		}
 	}
 		if (powerUpDatum.rangeCheck(player) && !powerUpDatum.dead) {

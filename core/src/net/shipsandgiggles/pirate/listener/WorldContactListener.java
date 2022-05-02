@@ -50,7 +50,7 @@ public class WorldContactListener implements ContactListener {
                 ball.setToDestroy();
                 Gdx.app.log("cannonball - ship", "collision");
             }
-            // Checks for a NPC collision
+
             if(fixtureA.getUserData() instanceof CannonBall){
                 CannonBall ball2 = (CannonBall) fixtureA.getUserData();
                 ball.setToDestroy();
@@ -80,7 +80,7 @@ public class WorldContactListener implements ContactListener {
 
         if(fixtureB.getUserData() instanceof Stone){
             if(fixtureA.getUserData() instanceof Ship){
-                Gdx.app.log("ship -stone", "collision");
+                Gdx.app.log("ship - stone", "collision");
             }
             if(fixtureA.getUserData() instanceof EnemyShip){
                 Gdx.app.log("enemy ship - stone", "collision");

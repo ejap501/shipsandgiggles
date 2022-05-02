@@ -178,7 +178,7 @@ public class GameScreen implements Screen {
 
 		// Map initialization
 		map = new TmxMapLoader().load("models/map.tmx");
-		maprender = new OrthogonalTiledMapRenderer(map, 1f);
+		maprender = new OrthogonalTiledMapRenderer(map, 1f / PIXEL_PER_METER);
 		new WorldCreator(this);
 
 		// Set up hud
@@ -289,7 +289,7 @@ public class GameScreen implements Screen {
 		// Setting ship position for the sprite of the player ship
 
 
-		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
+		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x / PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y / PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 
@@ -404,9 +404,9 @@ public class GameScreen implements Screen {
 		powerUpUpdates(playerShips);
 		duckUpdates(playerShips,world);
 
-		//if(rain.isRaining) {
-
-		//}
+		if(rain.isRaining) {
+			currentSpeed = maxSpeed * 0.5f;
+		}
 		updateCamera();
 		inputUpdate();
 		processInput(playerShips);

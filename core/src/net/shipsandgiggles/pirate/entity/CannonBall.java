@@ -40,6 +40,8 @@ public class CannonBall {
     public float finalY = 0;
     public int multiplier;
     private boolean setToDestroy;
+    private boolean playedShoot = false;
+    private boolean playedExplosion = false;
 
     /**
      * Instantiates the cannon ball object
@@ -56,7 +58,6 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
-        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -104,7 +105,6 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
-//        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -140,6 +140,15 @@ public class CannonBall {
         shape.dispose();
     }
 
+    public void playShotNoise(){
+        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
+        playedShoot = true;
+    }
+    public void playExplosionNoise(){
+        LoadingScreen.soundController.playExplosion(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
+        playedExplosion = true;
+    }
+
 
     /**
      * Updates the state of each cannonball
@@ -147,6 +156,9 @@ public class CannonBall {
      * @param batch : The batch of spite data
      */
     public void update(Batch batch) {
+        if (!playedShoot) {
+            playShotNoise();
+        }
         movement();
         destroyBall();
 
@@ -154,6 +166,10 @@ public class CannonBall {
             batch.begin();
             this.cannonBall.draw(batch);
             batch.end();
+            return;
+        }
+        if (!playedExplosion) {
+            playExplosionNoise();
         }
     }
 
@@ -263,7 +279,6 @@ public class CannonBall {
     public void destroyBall(){
         if(setToDestroy && !this.isDestroyed) {
             // Plays explosion noise
-           // LoadingScreen.soundController.playExplosion(); //Commented out for testing
 
             // Sets final position
             finalX = this.body.getPosition().x;

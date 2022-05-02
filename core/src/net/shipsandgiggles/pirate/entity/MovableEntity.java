@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  * @author Team 23 : Modified (Some methods copied from other classes)
  * @author Team 22 : Edward Poulter
- * @version 1.0
+ * @version 2.0
  */
 public abstract class MovableEntity extends Entity {
 	// Main data store

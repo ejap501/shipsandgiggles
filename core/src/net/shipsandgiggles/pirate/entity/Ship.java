@@ -20,8 +20,8 @@ import java.util.UUID;
  * Creation of the main player class
  *
  * @author Team 23
- * @author Team 22 : Edward Poulter
- * @version 1.0
+ * @author Team 22 : Edward Poulter, Sam Pearson
+ * @version 2.0
  */
 public class Ship extends MovableEntity {
 	// Main data store
@@ -480,6 +480,11 @@ public class Ship extends MovableEntity {
 		Ship.damageMulti = damageMulti;
 	}
 
+	/**
+	 * Checks the health of the player to see if it needs regenerating. If so, regenerates it
+	 *
+	 * @param player : The player
+	 */
 	public void healthCheck(Ship player){
 		if(player.timeToRegen > 0){
 			player.timeToRegen -= Gdx.graphics.getDeltaTime();
@@ -495,6 +500,10 @@ public class Ship extends MovableEntity {
 		}
 	}
 
+	/**
+	 * Checks the cooldown of the player's cannon ball shooting. Updates it if necessary
+	 *
+	 */
 	public void cooldownManagement(){
 		if(burstTimer >= 0){
 			burstTimer -= Gdx.graphics.getDeltaTime();

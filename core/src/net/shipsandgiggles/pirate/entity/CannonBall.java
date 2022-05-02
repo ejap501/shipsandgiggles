@@ -18,7 +18,8 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * This is the creation and update for each individual ball
  *
  * @author Team 23
- * @version 1.0
+ * @author Team 22 - Ethan Alaaster, Sam Pearson
+ * @version 2.0
  */
 public class CannonBall {
     public short maskBits;
@@ -93,6 +94,7 @@ public class CannonBall {
      *
      * @param world : World data
      * @param cannonBall : Image used for the object
+     * @param multiplier : Damage multiplier
      * @param width : Width of the object sprite
      * @param height : Height of the object sprite
      * @param position : Ball location of the object in the world
@@ -255,6 +257,9 @@ public class CannonBall {
         setToDestroy = true;
     }
 
+    /**
+     * Used to destroy the ball
+     */
     public void destroyBall(){
         if(setToDestroy && !this.isDestroyed) {
             // Plays explosion noise

@@ -190,6 +190,11 @@ public class EntityAi implements Steerable<Vector2> {
         draw(batch);
     }
 
+    /**
+     * Draws the entity in the batch
+     *
+     * @param batch: The batch of sprite data
+     */
     public void draw(Batch batch){
         // Terminates if dead
         if(dead){return;}
@@ -550,18 +555,6 @@ public class EntityAi implements Steerable<Vector2> {
         this.dead = true;
     }
 
-    /**
-     * Oversees the death of the enemy body
-     * Prevent increment of coins
-     * */
-    //public void kill(World world){
-    //    // Does nothing if already dead
-    //    if(this.dead) return;
-//
-    //    // Kills off the body
-    //    world.destroyBody(body);
-    //    this.dead = true;
-    //}
 
     /**
      * Applies damage to enemy

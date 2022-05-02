@@ -6,7 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 import net.shipsandgiggles.pirate.conf.Configuration;
 import net.shipsandgiggles.pirate.screen.impl.GameScreen;
-
+/**
+ * Weather
+ * Creates fog areas
+ *
+ * @author Team 22 : Ethan Alabaster
+ * @version 1.0
+ */
 public class Weather extends Sprite {
     private final float x;
     private final float y;
@@ -15,6 +21,14 @@ public class Weather extends Sprite {
     public World world;
     public Body body;
 
+    /**
+     * Instantiates weather in the given coordinates and alters the size
+     *
+     * @param world : the game world
+     * @param x : x coordinate of the weather origin
+     * @param y : y coordinate of the weather origin
+     * @param size :size of the weather box
+     */
     public Weather(World world, float x, float y, int size) {
         weather = new Texture("models/fog.png");
         this.world = world;
@@ -31,7 +45,9 @@ public class Weather extends Sprite {
     public void update(float dt) {
 
     }
-
+    /**
+     * Creates the weather body
+     */
     public void defineWeather() {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
@@ -49,7 +65,9 @@ public class Weather extends Sprite {
         body.createFixture(fDef).setUserData(this);
         shape.dispose();
     }
-
+    /**
+     * Draws the weather body
+     */
     public void draw(Batch batch){
         batch.begin();
         int c = 32 * size;

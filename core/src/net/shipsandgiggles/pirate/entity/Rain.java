@@ -6,6 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+/**
+ * Rain
+ * Creates the animation for rain
+ *
+ * @author Team 22 : Ethan Alabaster
+ * @version 1.0
+ */
 public class Rain {
     private ParticleEffect rain;
     private Batch batch;
@@ -16,6 +23,10 @@ public class Rain {
     private boolean stopCycle = false;
     public boolean isRaining;
 
+
+    /**
+     * Instantiates rain
+     */
     public Rain() {
         rain = new ParticleEffect();
         rain.load(Gdx.files.internal("models/rain.p"), Gdx.files.internal("models"));
@@ -26,6 +37,12 @@ public class Rain {
         brightness.setAlpha(0);
     }
 
+    /**
+     * Draws the rain, with a timer
+     *
+     * @param batch : The batch of sprite data
+     * @param deltaTime : Delta time (elapsed time since last game tick)
+     */
     public void draw(Batch batch, float deltaTime) {
         this.batch = batch;
         this.deltaTime = deltaTime;

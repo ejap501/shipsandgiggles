@@ -5,6 +5,8 @@ package net.shipsandgiggles.pirate.entity;
  * Determines an entity type
  *
  * @author Team 23
+ * @author Team 22: Edward Poulter
+ * @version 2.0
  * */
 public enum EntityType {
 	SHIP,

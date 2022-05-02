@@ -152,7 +152,8 @@ public class LangwithCollege extends College {
 
 		this.texture = GameScreen.derwentCollegeSprite;
 		this.captured = true;
-		this.health = this.maximumHealth;
+		this.maximumHealth += 1;
+		this.health = this.maximumHealth ;
 
 	}
 

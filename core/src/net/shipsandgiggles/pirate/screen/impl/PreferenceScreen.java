@@ -67,15 +67,17 @@ public class PreferenceScreen implements Screen {
 		VolumeSlider.setValue(gamePreferences.getVolumeLevel());
 		VolumeSlider.addListener(event -> {
 			gamePreferences.setVolumeLevel(VolumeSlider.getValue());
+			LoadingScreen.soundController.update();
 			return true;
 		});
 
 		Label VolumeLabel = new Label("Volume", Configuration.SKIN);
 
 		Slider musicVolumeSlider = new Slider(0f, 1f, 0.1f, false, Configuration.SKIN);
-		musicVolumeSlider.setValue(gamePreferences.getVolumeLevel());
+		musicVolumeSlider.setValue(gamePreferences.getMusicLevel());
 		musicVolumeSlider.addListener(event -> {
 			gamePreferences.setMusicVolumeLevel(musicVolumeSlider.getValue());
+			LoadingScreen.soundController.update();
 			return true;
 		});
 
@@ -88,6 +90,7 @@ public class PreferenceScreen implements Screen {
 
 			boolean enabled = musicEnabled.isChecked();
 			gamePreferences.setMusicEnabled(enabled);
+			LoadingScreen.soundController.update();
 			return true;
 		});
 
@@ -99,6 +102,7 @@ public class PreferenceScreen implements Screen {
 		volumeEnabled.addListener(event -> {
 			boolean enabled = volumeEnabled.isChecked();
 			gamePreferences.setVolumeEnabled(enabled);
+			LoadingScreen.soundController.update();
 			return true;
 		});
 

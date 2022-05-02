@@ -167,7 +167,7 @@ public class GameScreen implements Screen {
 		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 
-		weather = new Weather(this, 2000, 1200, 16);
+		weather = new Weather(world, 2000, 1200, 16);
 		rain = new Rain();
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
@@ -289,7 +289,7 @@ public class GameScreen implements Screen {
 		// Setting ship position for the sprite of the player ship
 
 
-		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x / PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y / PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
+		playerShips.getSprite().setPosition(playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		playerShips.getSprite().setRotation((float) Math.toDegrees(playerShips.getEntityBody().getAngle()));
 
 
@@ -299,7 +299,7 @@ public class GameScreen implements Screen {
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
-		renderer.render(world, camera.combined);
+		//renderer.render(world, camera.combined);
 		// Update all the colleges and entities
 
 

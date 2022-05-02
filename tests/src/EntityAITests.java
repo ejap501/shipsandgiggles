@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import net.shipsandgiggles.pirate.conf.Configuration;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
@@ -46,6 +47,28 @@ public class EntityAITests {
         assertEquals(1,world.getBodyCount());
 
     }
+    @Test
+    public void EntityAiDeath() {
+        World world = new World(new Vector2(0, 0), false);
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+
+        Ship player = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, new Location(100, 100), playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        player.createBody();
+
+        EntityAi playerEntity = new EntityAi(player.getEntityBody(),300f);
+
+        playerEntity.death(world);
+        assertEquals(0,world.getBodyCount());
+
+        Currency.get().take(Currency.Type.GOLD, Currency.get().balance(Currency.Type.GOLD));
+        Currency.get().take(Currency.Type.POINTS, Currency.get().balance(Currency.Type.POINTS));
+
+    }
+
+
+
+
 
     @Test
     public void EntityAiEnemyShipNoMovement() {

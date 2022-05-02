@@ -181,6 +181,7 @@ public class InformationScreen implements Screen {
         Label collegeInfo2 = new Label("taking down a college will give you 5 gold and 3 score a second and if you capture all of them you win!", Configuration.SKIN, "big");
         Label collegeInfo3 = new Label("the other way is to destroy all of them which will give you instant gold and points!", Configuration.SKIN, "big");
         Label collegeInfo4 = new Label("destroying all of them will result in a victory!", Configuration.SKIN, "big");
+        Label weather = new Label("More points are recieved in bad weather, but watch out for the penalties", Configuration.SKIN, "big");
 
         Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
         spaceToSkip.setAlignment(Align.center);
@@ -237,6 +238,8 @@ public class InformationScreen implements Screen {
         table.add(collegeInfo3);
         table.row();
         table.add(collegeInfo4);
+        table.row();
+        table.add(weather);
         table.row();
         table.row();
         table.add(Configuration.SPACER_LABEL);

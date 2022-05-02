@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import net.shipsandgiggles.pirate.screen.impl.LoadingScreen;
 
 /**
  * Rain
@@ -67,12 +68,14 @@ public class Rain {
             batch.end();
             if(!isRaining) {
                 isRaining = true;
+                LoadingScreen.soundController.playRain();
             }
         }
         if(count >= 30.4f) {
             rain.allowCompletion();
             if(isRaining) {
                 isRaining = false;
+                LoadingScreen.soundController.stopRain();
             }
         }
         if(count >= 31f) {
@@ -92,6 +95,7 @@ public class Rain {
             if (stopCycle) {
                 stopCycle = false;
             }
+
         }
     }
 }

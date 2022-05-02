@@ -19,6 +19,7 @@ public class SoundController{
         public Sound buttonPress;
         public Sound Explosion;
         public Sound cannonShot;
+        public Sound rain;
         public Music seaNoises;
 
         /** Construction of the controller */
@@ -33,6 +34,7 @@ public class SoundController{
                 cannonShot = Gdx.audio.newSound(Gdx.files.internal("models/cannonShot.mp3"));
                 buttonPress = Gdx.audio.newSound(Gdx.files.internal("models/buttonPress.mp3"));
                 Explosion = Gdx.audio.newSound(Gdx.files.internal("models/explosion.mp3"));
+                rain = Gdx.audio.newSound(Gdx.files.internal("models/rain.mp3"));
 
                 // Checks according to preferences and updates based on them
                 if(GamePreferences.get().isMusicEnabled() && !music.isPlaying()){
@@ -85,6 +87,21 @@ public class SoundController{
                 cannonShot.setLooping(id,false);
         }
 
+
+        /** Play rain noise*/
+        public void playRain(){
+                if(!GamePreferences.get().isVolumeEnabled()) return;
+                long id = rain.play(GamePreferences.get().getVolumeLevel());
+                rain.setPitch(id, 2);
+                rain.setLooping(id,true);
+                seaNoises.pause();
+        }
+        /** Play rain noise*/
+        public void stopRain(){
+                if(!GamePreferences.get().isVolumeEnabled()) return;
+                rain.pause();
+                seaNoises.play();
+        }
         /** Pauses all noises */
         public void pauseAll() {
                 music.pause();

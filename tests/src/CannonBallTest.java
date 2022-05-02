@@ -39,7 +39,7 @@ public class CannonBallTest {
         ball.body.getPosition();
         ball.movement();
 
-        assertEquals(new Vector2(104.94975f,104.94975f), ball.body.getPosition());
+        assertEquals(new Vector2(105.30331f,105.30331f), ball.body.getPosition());
 
     }
 

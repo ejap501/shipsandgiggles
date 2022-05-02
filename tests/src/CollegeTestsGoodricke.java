@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import net.shipsandgiggles.pirate.currency.Currency;
 import net.shipsandgiggles.pirate.entity.BallsManager;
 import net.shipsandgiggles.pirate.entity.Location;
 import net.shipsandgiggles.pirate.entity.Ship;
+import net.shipsandgiggles.pirate.entity.impl.college.AlcuinCollege;
 import net.shipsandgiggles.pirate.entity.impl.college.GoodrickeCollege;
+import net.shipsandgiggles.pirate.screen.impl.GameScreen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +48,7 @@ public class CollegeTestsGoodricke {
 
         GoodrickeCollege college = new GoodrickeCollege(texture,location,maximumHealth,world);
         college.damage(2);
+        college.damage(2);
         college.removeFromWorld();
         assertEquals(0, world.getBodyCount());
     }
@@ -59,10 +63,29 @@ public class CollegeTestsGoodricke {
 
         GoodrickeCollege college = new GoodrickeCollege(texture,location,maximumHealth,world);
         college.damage(2);
+        college.damage(2);
         college.removeFromWorld();
         college.damage(2);
         assertEquals(maximumHealth - 2,college.health);
 
+    }
+
+    @Test
+    public void testCaptureCollege(){
+
+        GameScreen.createSprites();
+        Sprite texture = new Sprite();
+        Location location = new Location(100f,100f);
+        float maximumHealth = 200;
+        World world = new World(new Vector2(0, 0), false);
+
+        GoodrickeCollege college = new GoodrickeCollege(texture,location,maximumHealth,world);
+        college.capture();
+        assertEquals(201f,college.health);
+        assertEquals(GameScreen.derwentCollegeSprite,college.texture);
+
+        college.damage(2);
+        assertEquals(201f,college.health);
     }
 
     @Test
@@ -166,6 +189,32 @@ public class CollegeTestsGoodricke {
         assertEquals(0,BallsManager.listOfBalls.size());
 
 
+    }
+    @Test
+    public void CollegeShootCaptured(){
+        Currency.get().take(Currency.Type.POINTS,Currency.get().balance(Currency.Type.POINTS));
+
+        GameScreen.createSprites();
+        Sprite playerModel = new Sprite(new Texture(Gdx.files.internal("models/player_ship.png")));
+        OrthographicCamera camera = new OrthographicCamera();
+        World world = new World(new Vector2(0, 0), false);
+        Location location = new Location(100f,100f);
+
+
+        Ship ship = new Ship(playerModel, 40000f, 100f, 0.3f, 1f, location, playerModel.getHeight(), playerModel.getWidth(), camera,world);
+        ship.createBody();
+
+        Sprite GoodrickeCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
+        float maximumHealth = 100;
+
+        GoodrickeCollege college = new GoodrickeCollege(GoodrickeCollegeSprite,location,maximumHealth,world);
+        college.capture();
+        college.shootPlayer(ship);
+        assertEquals(10, Currency.get().balance(Currency.Type.POINTS));
+        college.shootPlayer(ship);
+        assertEquals(10, Currency.get().balance(Currency.Type.POINTS));
+
+        Currency.get().take(Currency.Type.POINTS,Currency.get().balance(Currency.Type.POINTS));
     }
 
 

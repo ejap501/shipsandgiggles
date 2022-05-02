@@ -32,7 +32,6 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
 public class ConstantineCollege extends College {
     // World data
     public World world;
-    public Boolean captured = false;
 
     /**
      * This is the class to control the construction of Constantine college

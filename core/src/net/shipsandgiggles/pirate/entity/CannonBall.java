@@ -56,7 +56,7 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, Vector2 target, short categoryBits, short maskBit, short groupIndex){ //constructor
-        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
+        //LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -104,7 +104,7 @@ public class CannonBall {
      * @param groupIndex : Position in group
      */
     public CannonBall(World world, Sprite cannonBall, int multiplier, int width, int height, Vector2 position, float target, short categoryBits, short maskBit, short groupIndex){ // constructor
-        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
+//        LoadingScreen.soundController.playCannonShot(); /**plays sound of shooting */ //COMMENTED OUT FOR TESTING
         this.world = world;
 
         // Instantiating a body
@@ -176,24 +176,24 @@ public class CannonBall {
         return (this.damageDelt * this.multiplier);
     }
 
-    /**
-     * Used to increase the speed of the cannon fire
-     * Applies the explosion sound effect (when initially fired)
-     */
-    public void teleportBall(){
-        // Checks if teleported
-        if(teleported) return;
-
-        // Plays explosion noise
-        LoadingScreen.soundController.playExplosion();
-
-        // Teleports cannonball
-        finalX = this.body.getPosition().x;
-        finalY = this.body.getPosition().y;
-        GameScreen.add(new Vector2(finalX, finalY));
-        this.body.setTransform(10000,10000,0);
-        this.teleported = true;
-    }
+    ///**
+    // * Used to increase the speed of the cannon fire
+    // * Applies the explosion sound effect (when initially fired)
+    // */
+    //public void teleportBall(){
+    //    // Checks if teleported
+    //    if(teleported) return;
+//
+    //    // Plays explosion noise
+    //    LoadingScreen.soundController.playExplosion();
+//
+    //    // Teleports cannonball
+    //    finalX = this.body.getPosition().x;
+    //    finalY = this.body.getPosition().y;
+    //    GameScreen.add(new Vector2(finalX, finalY));
+    //    this.body.setTransform(10000,10000,0);
+    //    this.teleported = true;
+    //}
 
     /**
      * Applies movement to the cannonball
@@ -263,7 +263,7 @@ public class CannonBall {
     public void destroyBall(){
         if(setToDestroy && !this.isDestroyed) {
             // Plays explosion noise
-            LoadingScreen.soundController.playExplosion(); //Commented out for testing
+           // LoadingScreen.soundController.playExplosion(); //Commented out for testing
 
             // Sets final position
             finalX = this.body.getPosition().x;

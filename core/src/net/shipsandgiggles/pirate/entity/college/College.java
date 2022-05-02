@@ -86,10 +86,13 @@ public abstract class College extends Entity {
 			this.death();
 			return 0f;
 		}
+		else{
+			this.health -= damage;
 
-		this.health -= damage;
+			return this.health;
+		}
 
-		return this.health;
+
 	}
 
 	/** Kills the college body */

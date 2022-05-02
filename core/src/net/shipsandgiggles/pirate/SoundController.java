@@ -11,7 +11,8 @@ import net.shipsandgiggles.pirate.pref.GamePreferences;
  * Controls all the sound effects and music
  *
  * @author Team 23
- * @version 1.0
+ * @author Team 22 : Sam Pearson
+ * @version 2.0
  */
 public class SoundController{
         // Main data store

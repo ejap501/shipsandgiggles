@@ -15,7 +15,8 @@ import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
  * Checks for world collisions
  *
  * @author Team 23
- * @version 1.0
+ * @author Team 22 - Ethan Alabaster, Sam Pearson
+ * @version 2.0
  */
 public class WorldContactListener implements ContactListener {
     /**
@@ -67,8 +68,12 @@ public class WorldContactListener implements ContactListener {
                 ship.inFog();
                 Gdx.app.log("Weather", "collision");
             }
-            if(fixtureA.getUserData() instanceof Stone){
-                Stone stone = (Stone) fixtureA.getUserData();
+        }
+
+        if(fixtureB.getUserData() instanceof Stone){
+            Stone stone = (Stone) fixtureB.getUserData();
+            if(fixtureA.getUserData() instanceof Ship){
+                Ship ship = (Ship) fixtureA.getUserData();
                 Gdx.app.log("ship - stone", "collision");
             }
         }

@@ -54,7 +54,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * Edited from original
  *
  * @author Team 23
- * @author Team 22: Ethan Alabaster,  Joe Dickinson, Sam Pearson,  Edward Poulter
+ * @author Team 22 : Ethan Alabaster, Joe Dickinson, Sam Pearson, Edward Poulter
  * @version 2.0
  */
 public class GameScreen implements Screen {
@@ -123,6 +123,10 @@ public class GameScreen implements Screen {
 	static EntityAi player;
 	public static int collegesCaptured = 0;
 	private Weather weather;
+	private Weather weather2;
+	private Weather weather3;
+	private Weather weather4;
+	private Weather weather5;
 
 	public static Sprite cannonBall;
 
@@ -167,7 +171,11 @@ public class GameScreen implements Screen {
 		//camera.setToOrtho(false, _width / Scale, _height / Scale);
 		batch = new SpriteBatch();
 
-		weather = new Weather(world, 2000, 1200, 16);
+		weather = new Weather(world, 1700, 4000, 10);
+		weather2 = new Weather(world, 396, 1200, 15);
+		weather3 = new Weather(world, 2000, 1032, 12);
+		weather4 = new Weather(world, 3136, 3538, 8);
+		weather5 = new Weather(world, 240, 3900, 20);
 		rain = new Rain();
 		world.setContactListener(new WorldContactListener());
 		camera.zoom = 2;
@@ -242,7 +250,7 @@ public class GameScreen implements Screen {
 		}
 		else {
 
-			playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(2000f, 1800f), playerModel.getHeight(), playerModel.getWidth(), camera, world);
+			playerShips = new Ship(playerModel, currentSpeed, 100f, 0.3f, 1f, new Location(1950f, 1750f), playerModel.getHeight(), playerModel.getWidth(), camera, world);
 			playerShips.createBody();
 
 			// Creates damping to player
@@ -292,7 +300,6 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(.98f, .91f, .761f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		maprender.render();
-		BallsManager.updateBalls(batch);
 
 		// Setting ship position for the sprite of the player ship
 
@@ -307,7 +314,7 @@ public class GameScreen implements Screen {
 		//batch.draw(playerShips.getSkin(), playerShips.getEntityBody().getPosition().x * PIXEL_PER_METER - (playerShips.getSkin().getWidth() / 2f), playerShips.getEntityBody().getPosition().y * PIXEL_PER_METER - (playerShips.getSkin().getHeight() / 2f));
 		//batch.draw(islandsTextures[0], islands[0].getPosition().x * PixelPerMeter - (islandsTextures[0].getWidth()/2), islands[0].getPosition().y * PixelPerMeter - (islandsTextures[0].getHeight()/2));
 		//enemyShips.draw(batch);
-		//renderer.render(world, camera.combined);
+		renderer.render(world, camera.combined);
 		// Update all the colleges and entities
 
 
@@ -381,8 +388,13 @@ public class GameScreen implements Screen {
 			gamePreferences.setHasSave(false);
 			return;
 		}
+		BallsManager.updateBalls(batch);
 
 		weather.draw(batch);
+		weather2.draw(batch);
+		weather3.draw(batch);
+		weather4.draw(batch);
+		weather5.draw(batch);
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
 		rain.draw(batch, deltaTime);
 		hud.stage.draw();

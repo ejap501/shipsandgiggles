@@ -11,7 +11,7 @@ public class informationScreenTest {
         @Test
         public void screenCreation(){
             InformationScreen.createParts();
-            assertEquals(38,InformationScreen.table.getRows() );
+            assertEquals(39,InformationScreen.table.getRows() );
         }
 
 

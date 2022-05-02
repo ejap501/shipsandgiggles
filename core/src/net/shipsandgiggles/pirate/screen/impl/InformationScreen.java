@@ -106,7 +106,9 @@ public class InformationScreen implements Screen {
     public void resume() {
 
     }
-
+    /**
+     * Creates screen elements
+     */
     public static void createParts(){
         table = new Table();
         table.setFillParent(true);

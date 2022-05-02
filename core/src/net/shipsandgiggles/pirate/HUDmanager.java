@@ -108,7 +108,9 @@ public class HUDmanager {
         variableUpdates();
     }
 
-
+    /**
+     * Creates screen elements
+     */
     public static void createParts(){
 
         // Setting the score
@@ -194,7 +196,11 @@ public class HUDmanager {
         bottomLeftTable.setPosition(150, 200);
         bottomLeftTable.row();
     }
-
+    /**
+     * Calculates the colour for the player health bar
+     *
+     * @return the health bar colour
+     */
     public static Color healthBarChecker(){
 
         String healthText = " " + Ship.health;
@@ -214,6 +220,9 @@ public class HUDmanager {
         }
     }
 
+    /**
+     * Updates variables of onscreen timers, health and gold/points
+     */
     public static void variableUpdates(){
         coolDownTimerTime = Ship.burstTimer;
         // Update variables and give points to player every 2 seconds

@@ -67,7 +67,9 @@ public class DifficultyScreen implements Screen {
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}
-
+	/**
+	 * Creates screen elements
+	 */
 	public static void createParts(){
 		table = new Table();
 		table.setFillParent(true);

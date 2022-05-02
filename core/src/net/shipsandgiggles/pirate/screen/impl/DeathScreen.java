@@ -34,7 +34,7 @@ public class DeathScreen {
     public Label gameOver;
 
     /**
-     * Construcs the death screen ui
+     * Constructs the death screen ui
      *
      * @param batch : The batch of spite data
      */

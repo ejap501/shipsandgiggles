@@ -114,16 +114,31 @@ public class GamePreferences {
 		this.prefs().putFloat(PREF_MUSIC_LEVEL, level);
 		this.prefs().flush();
 	}
-
+	/**
+	 * Get the music level, where 1 is 100%, and 0 is 0%.
+	 *
+	 * @return Current volume level.
+	 */
 	public float getMusicLevel() {
 		return this.prefs().getFloat(PREF_MUSIC_LEVEL, 0.5F);
 	}
 
+	/**
+	 * Set if there is a save file
+	 *
+	 * @param hasSave true or false
+	 */
 	public void setHasSave(boolean hasSave){
 		this.prefs().putBoolean(HAS_SAVE, hasSave);
 		this.prefs().flush();
 
 	}
+
+	/**
+	 * Get if there is a save file
+	 *
+	 * @return If there is a save file true, else false
+	 */
 	public boolean getHasSave(){
 		return this.prefs().getBoolean(HAS_SAVE, false);
 

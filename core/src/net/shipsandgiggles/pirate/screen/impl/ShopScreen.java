@@ -79,7 +79,10 @@ public class ShopScreen implements Screen {
 		this.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		this.stage.draw();
 	}
-
+	/**
+	 * Creates the function for the cool down button.
+	 * Changes the cost, tier and timer if enough gold is owned
+	 */
 	public static void coolDownListener(){
 		if (Currency.get().balance(Currency.Type.GOLD) >= cooldownCost) {
 			Currency.get().take(Currency.Type.GOLD, cooldownCost);
@@ -91,6 +94,10 @@ public class ShopScreen implements Screen {
 			coolDownButton.setText("Cooldown - 0.25 - Tier " + cooldownTier);
 		}
 	}
+	/**
+	 * Creates the function for the speed button.
+	 * Changes the cost, tier and speed if enough gold is owned
+	 */
 	public static void speedListener(){
 		if (Currency.get().balance(Currency.Type.GOLD) >= speedCost) {
 			Currency.get().take(Currency.Type.GOLD, speedCost);
@@ -103,7 +110,10 @@ public class ShopScreen implements Screen {
 			speedButton.setText("Speed x 1.25 - Tier " + speedTier);
 		}
 	}
-
+	/**
+	 * Creates the function for the multiplier button.
+	 * Changes the cost, tier and multiplier if enough gold is owned
+	 */
 	public static void multiplierListener(){
 		if (Currency.get().balance(Currency.Type.GOLD) >= multiCost) {
 			Currency.get().take(Currency.Type.GOLD, multiCost);
@@ -115,7 +125,10 @@ public class ShopScreen implements Screen {
 			multiButton.setText("Multiplier + 1 - Tier " + multiTier);
 		}
 	}
-
+	/**
+	 * Creates the function for the health button.
+	 * Changes the cost, tier and health if enough gold is owned
+	 */
 	public static void healthListener(){
 		if (Currency.get().balance(Currency.Type.GOLD) >= healthCost) {
 			Currency.get().take(Currency.Type.GOLD, healthCost);
@@ -127,7 +140,9 @@ public class ShopScreen implements Screen {
 			healthButton.setText("Health + 20 - Tier " + healthTier);
 		}
 	}
-
+	/**
+	 * Creates screen elements
+	 */
 	public static void createParts(){
 		// Construct table
 		table = new Table();

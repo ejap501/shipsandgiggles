@@ -186,6 +186,9 @@ public class GameScreen implements Screen {
 		deathScreen = new DeathScreen(batch);
 	}
 
+	/**
+	 * Creates all the sprites needed
+	 */
 	public static boolean createSprites(){
 		world = new World(new Vector2(0, 0), true);
 		alcuinCollegeSprite = new Sprite(new Texture("models/alcuin_castle.png"));
@@ -217,7 +220,12 @@ public class GameScreen implements Screen {
 		shopSprite = new Sprite(new Texture(Gdx.files.internal("models/castle.png")));
 		return true; //Successful
 	}
-
+	/**
+	 * Creates all Entities in the world. Checks if needs loading from a save file
+	 * @param bobBody : The body of Bob
+	 * @param world : The game world
+	 * @param camera : The game camera
+	 */
 	public static void createEntities(Body bobBody,World world,OrthographicCamera camera){
 
 		// Set up spawning
@@ -633,6 +641,8 @@ public class GameScreen implements Screen {
 	 * Determines spawning
 	 * Manages spawning of coins, ships, powerups, stones, and ducks
 	 *
+	 * @param world : The game world
+	 * @param pp : The player target
 	 */
 	public static void spawn(World world, Steerable<Vector2> pp){
 		int longBoi = 0;
@@ -912,6 +922,9 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Manages the save files of the game
+	 */
 	public static void closeAndSave(){
 
 		Json currencySaveFile = new Json();
@@ -1200,6 +1213,12 @@ public class GameScreen implements Screen {
 
 	}
 
+	/**
+	 * Creates loads all the entities into world from save file
+	 * @param bobBody : The body of Bob
+	 * @param world : The game world
+	 * @param camera : The game camera
+	 */
 	public static void load(Body bobBody,World world,OrthographicCamera camera){
 		//DIFFICULTY
 
@@ -1491,6 +1510,11 @@ public class GameScreen implements Screen {
 		bob.timer = Float.parseFloat((bobList[3].substring(1,bobList[3].length() - 1)));
 	}
 
+	/**
+	 * Checks collision between power ups and player. Sets timers
+	 * @param powerUpDatum : power up to be checked
+	 * @param player : player to be checked
+	 */
 	public static void powerUpChecks(powerUp powerUpDatum, Ship player){
 
 		if (Objects.equals(powerUpDatum.getPowerUpType(), "Speed Up")) {
@@ -1525,6 +1549,10 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Checks power up timers and changes status accordingly
+	 * @param player : player to be checked
+	 */
 	public static void powerUpUpdates(Ship player){
 		// Updates power-up timers
 		if (speedTimer >= 0) {
@@ -1576,6 +1604,11 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Does checks on the amount of duck kills
+	 * @param playerShip : player to be checked
+	 * @param world : Game world
+	 */
 	public static void duckUpdates(Ship playerShip,World world){
 		if (currentDuckKills >= 0){
 			for (Duck duck : ducks){

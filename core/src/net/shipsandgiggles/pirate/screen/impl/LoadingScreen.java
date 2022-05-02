@@ -63,6 +63,9 @@ public class LoadingScreen implements Screen {
 		this.stage.draw();
 	}
 
+	/**
+	 * Creates screen elements
+	 */
 	public static void createParts(){
 		soundController = new SoundController();
 		table = new Table();

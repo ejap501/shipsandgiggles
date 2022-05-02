@@ -24,7 +24,8 @@ import net.shipsandgiggles.pirate.screen.impl.GameScreen;
  * Manages the data displayed on the hud
  *
  * @author Team 23
- * @version 1.0
+ * @author Team 22 : Ethan Alabaster, Sam Pearson, Edward Poulter
+ * @version 2.0
  */
 public class HUDmanager {
     // Main data store

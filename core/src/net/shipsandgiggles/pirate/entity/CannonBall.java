@@ -18,7 +18,7 @@ import static net.shipsandgiggles.pirate.conf.Configuration.PIXEL_PER_METER;
  * This is the creation and update for each individual ball
  *
  * @author Team 23
- * @author Team 22 - Ethan Alaaster, Sam Pearson
+ * @author Team 22 : Ethan Alabaster, Sam Pearson
  * @version 2.0
  */
 public class CannonBall {
@@ -33,7 +33,7 @@ public class CannonBall {
     public boolean setAngle = false;
     public float angle;
     public Sprite cannonBall;
-    public float speed = 1.1f;
+    public float speed = 1.4f;
     public float damageDelt = 50f;
     public boolean teleported = false;
     public float finalX = 0;
@@ -240,7 +240,7 @@ public class CannonBall {
         //this.body.applyForceToCenter(this.body.getWorldVector(new Vector2(0, 20f)), true);
 
         // Gets the direction the ball is going towards
-        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight())));
+        Vector2 direction = new Vector2(this.body.getWorldPoint(new Vector2(0,this.cannonBall.getHeight() / 2)));
         Vector2 position = this.body.getPosition();
 
         // Changes the direction and slightly teleports the ball so it can travel way faster
@@ -249,7 +249,7 @@ public class CannonBall {
 
         // Moves ball forward
         this.body.setTransform(position, this.body.getAngle());
-        this.cannonBall.setPosition(this.body.getPosition().x / PIXEL_PER_METER - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y / PIXEL_PER_METER - (this.cannonBall.getHeight() / 2f));
+        this.cannonBall.setPosition(this.body.getPosition().x - (this.cannonBall.getWidth() / 2f), this.body.getPosition().y - (this.cannonBall.getHeight() / 2f));
         this.cannonBall.setRotation((float) Math.toDegrees(this.body.getAngle()));
     }
 

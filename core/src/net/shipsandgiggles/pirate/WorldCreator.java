@@ -13,7 +13,7 @@ import net.shipsandgiggles.pirate.screen.impl.GameScreen;
  * World Creator
  * This is the class where all boundaries and collisions are created for the map.
  *
- * @author Ethan Alabaster
+ * @author Team 22 : Ethan Alabaster
  * @version 1.0
  */
 public class WorldCreator {

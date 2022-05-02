@@ -20,7 +20,7 @@ import java.util.UUID;
  * Creation of the main player class
  *
  * @author Team 23
- * @author Team 22 : Edward Poulter, Sam Pearson
+ * @author Team 22 : Edward Poulter, Ethan Alabaster, Sam Pearson
  * @version 2.0
  */
 public class Ship extends MovableEntity {

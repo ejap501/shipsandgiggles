@@ -134,8 +134,15 @@ public class InformationScreen implements Screen {
         Label keysInformation2 = new Label("1 and 2 to zoom.", Configuration.SKIN, "big");
         keysInformation2.setAlignment(Align.center);
 
-        Label keysInformation3 = new Label("ESC to save and exit.", Configuration.SKIN, "big");
+
+        Label keysInformation3 = new Label("When in range of the shop, press E to open. ", Configuration.SKIN, "big");
         keysInformation3.setAlignment(Align.center);
+
+        Label keysInformation4 = new Label("When in range of a college on 1 health, press C to capture", Configuration.SKIN, "big");
+        keysInformation4.setAlignment(Align.center);
+
+        Label keysInformation5 = new Label("ESC to save and exit.", Configuration.SKIN, "big");
+        keysInformation5.setAlignment(Align.center);
 
         Label shootingInformation = new Label("There are two methods of shooting, burst and singular.", Configuration.SKIN, "big");
         shootingInformation.setAlignment(Align.center);
@@ -179,8 +186,9 @@ public class InformationScreen implements Screen {
 
 
 
-        Label collegeInfo1 = new Label("taking down a college will give you 5 gold and 3 score a second and if you capture all of them you win!", Configuration.SKIN, "big");
-        Label collegeInfo2 = new Label("destroying all of them will result in a victory!", Configuration.SKIN, "big");
+        Label collegeInfo1 = new Label("Taking down a college will give you 500 gold", Configuration.SKIN, "big");
+        Label collegeInfo2 = new Label("Capturing a college will give you 10 score every 5 seconds", Configuration.SKIN, "big");
+        Label collegeInfo3 = new Label("Destroying or Capturing all of them will result in a victory!", Configuration.SKIN, "big");
         Label weather = new Label("More points are recieved in bad weather, but watch out for the penalties", Configuration.SKIN, "big");
 
         Label spaceToSkip = new Label("Press the space bar to skip the information!", Configuration.SKIN);
@@ -196,6 +204,10 @@ public class InformationScreen implements Screen {
         table.add(keysInformation2);
         table.row();
         table.add(keysInformation3);
+        table.row();
+        table.add(keysInformation4);
+        table.row();
+        table.add(keysInformation5);
         table.row();
         table.add(Configuration.SPACER_LABEL);
         table.row();
@@ -234,6 +246,8 @@ public class InformationScreen implements Screen {
         table.add(collegeInfo1);
         table.row();
         table.add(collegeInfo2);
+        table.row();
+        table.add(collegeInfo3);
         table.row();
         table.add(weather);
         table.row();

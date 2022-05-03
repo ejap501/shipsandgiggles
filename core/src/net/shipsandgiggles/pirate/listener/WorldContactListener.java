@@ -9,7 +9,6 @@ import net.shipsandgiggles.pirate.entity.EntityAi;
 import net.shipsandgiggles.pirate.entity.CannonBall;
 import net.shipsandgiggles.pirate.entity.college.College;
 import net.shipsandgiggles.pirate.entity.impl.obstacles.Stone;
-import net.shipsandgiggles.pirate.entity.npc.EnemyShip;
 
 /**
  * World contact listener
@@ -82,18 +81,18 @@ public class WorldContactListener implements ContactListener {
             if(fixtureA.getUserData() instanceof Ship){
                 Gdx.app.log("ship - stone", "collision");
             }
-            if(fixtureA.getUserData() instanceof EnemyShip){
-                Gdx.app.log("enemy ship - stone", "collision");
+            if(fixtureA.getUserData() instanceof EntityAi){
+                Gdx.app.log("NPC - stone", "collision");
             }
         }
 
-        if(fixtureB.getUserData() instanceof EnemyShip){
+        if(fixtureB.getUserData() instanceof EntityAi){
             if(fixtureA.getUserData() instanceof Ship){
-                Gdx.app.log("ship - enemy ship", "collision");
+                Gdx.app.log("ship - NPC", "collision");
             }
 
-            if(fixtureA.getUserData() instanceof EnemyShip){
-                Gdx.app.log("enemy ship - enemy ship", "collision");
+            if(fixtureA.getUserData() instanceof EntityAi){
+                Gdx.app.log("NPC - NPC", "collision");
             }
         }
 

@@ -375,30 +375,34 @@ public class GameScreen implements Screen {
 		updateExplosions();
 
 		// Change of UI in case of victory or death or normal hud
-		if(playerShips.dead){
-			deathScreen.update(hud, 0);
-			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
-			deathScreen.stage.draw();
-			gamePreferences.setHasSave(false);
-			return;
-		}
 
-		if(collegesKilled == 4){
+
+		if(collegesKilled == 1){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);
+			playerShips.death();
 			return;
 		}
-		else if(collegesCaptured == 4){
+		else if(collegesCaptured == 1){
 			deathScreen.update(hud, 1);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);
+			playerShips.death();
 			return;
 		}
 		else if(collegesKilled + collegesCaptured == 4){
 			deathScreen.update(hud, 3);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
+			playerShips.death();
+			return;
+		}
+		else if(playerShips.dead){
+			deathScreen.update(hud, 0);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);

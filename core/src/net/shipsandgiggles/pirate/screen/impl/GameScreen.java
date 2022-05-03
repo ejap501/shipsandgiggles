@@ -385,7 +385,7 @@ public class GameScreen implements Screen {
 			return;
 		}
 
-		if(collegesKilled == 1){
+		if(collegesKilled == 4){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
@@ -394,7 +394,7 @@ public class GameScreen implements Screen {
 
 			return;
 		}
-		else if(collegesCaptured == 1){
+		else if(collegesCaptured == 4){
 			deathScreen.update(hud, 1);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();

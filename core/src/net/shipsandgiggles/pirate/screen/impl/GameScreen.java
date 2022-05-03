@@ -153,6 +153,7 @@ public class GameScreen implements Screen {
 	private static GamePreferences gamePreferences = GamePreferences.get();
 
 	private Rain rain;
+	private boolean gameFinish;
 
 	/**
 	 * Initialises the Game Screen,
@@ -375,14 +376,22 @@ public class GameScreen implements Screen {
 		updateExplosions();
 
 		// Change of UI in case of victory or death or normal hud
-
+		if(playerShips.dead){
+			deathScreen.update(hud, 0);
+			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
+			deathScreen.stage.draw();
+			gamePreferences.setHasSave(false);
+			gameFinish = true;
+			return;
+		}
 
 		if(collegesKilled == 1){
 			deathScreen.update(hud, 2);
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);
-			playerShips.death();
+			gameFinish = true;
+
 			return;
 		}
 		else if(collegesCaptured == 1){
@@ -390,7 +399,7 @@ public class GameScreen implements Screen {
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);
-			playerShips.death();
+			gameFinish = true;
 			return;
 		}
 		else if(collegesKilled + collegesCaptured == 4){
@@ -398,14 +407,7 @@ public class GameScreen implements Screen {
 			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
 			deathScreen.stage.draw();
 			gamePreferences.setHasSave(false);
-			playerShips.death();
-			return;
-		}
-		else if(playerShips.dead){
-			deathScreen.update(hud, 0);
-			batch.setProjectionMatrix(deathScreen.stage.getCamera().combined);
-			deathScreen.stage.draw();
-			gamePreferences.setHasSave(false);
+			gameFinish = true;
 			return;
 		}
 
@@ -452,8 +454,10 @@ public class GameScreen implements Screen {
 		}
 		updateCamera();
 		inputUpdate();
-		processInput(playerShips);
-		handleDrift();
+		if (!gameFinish) {
+			processInput(playerShips);
+			handleDrift();
+		}
 		maprender.setView(camera);
 		batch.setProjectionMatrix(camera.combined);
 		playerShips.updateShots(world, cannonBall, camera, Configuration.Cat_Player, (short)(Configuration.Cat_Enemy | Configuration.Cat_College), (short) 0);
